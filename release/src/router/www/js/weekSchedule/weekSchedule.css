@@ -1,0 +1,1128 @@
+﻿.current_time_text, .offtime_schedule_text, .sub_desc{
+	font-family: Arial, Helvetica, MS UI Gothic, MS P Gothic, Microsoft Yahei UI, Microsoft JhengHei, sans-serif;
+	font-size: 14px;
+	color: #FFFFFF;
+	margin-left: 18px;
+	margin-bottom: 20px;
+}
+.sub_desc{
+	margin-left: 10px;
+	margin-bottom: 8px;
+	font-size: 13px;
+}
+.current_time_text_div{
+	font-family: Arial, Helvetica, MS UI Gothic, MS P Gothic, Microsoft Yahei UI, Microsoft JhengHei, sans-serif;
+	font-size: 14px;
+	color: #FFF;
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	width: 80%;
+	margin-left: 10px;
+}
+.current_time_text_div > div{
+	margin-left: initial;
+	margin-bottom: initial;
+	width: 100%;
+}
+.timezone_hint_div{
+	display: none;
+}
+.timezone_hint_div .timezone_hint{
+	color: #FFCC00;
+	text-decoration: underline;
+	cursor: pointer;
+}
+.offtime_schedule_text_bg{
+	position: relative;
+	margin-left: 68px;
+	margin-top: 15px;
+	height: 20px;
+}
+.offtime_schedule_text{
+	position: relative;
+	float: left;
+	margin-right: 20px;
+}
+.offtime_schedule_text:before{
+	content: "";
+	position: absolute;
+	left: -25px;
+	top: 1px;
+	width: 18px;
+	height: 18px;
+	background-color: #F79800;
+}
+.PC_SCHED.offline .offtime_schedule_text:before{
+	background-color: #F79800;
+}
+.PC_SCHED.online .offtime_schedule_text:before{
+	background-color: #1EA2FF;
+}
+.offtime_schedule_text.dis:before{
+	background-color: rgb(255 255 255 / 20%) !important;
+}
+.overview_a_week_bg .weekday_bg{
+	margin-bottom: 10px;
+	height: 32px;
+	line-height: 32px;
+	font-size: 14px;
+	text-align: center;
+}
+.overview_a_week_bg .weekday_bg > div{
+	position: relative;
+	float: left;
+	height: 32px;
+}
+.overview_a_week_bg .weekday_bg .weekday_title, .overview_time_title_bg .space_bg{
+	width: 60px;
+}
+.overview_a_week_bg .weekday_bg .weekday_title.current_weekday:before{
+	content: "";
+	position: absolute;
+	left: 0;
+	right: 0;
+	margin: auto;
+	bottom: 5px;
+	width: 60%;
+	border-bottom: 3px solid #00BFFF;
+}
+.overview_a_week_bg .weekday_bg .weekday_time_bg{
+	width: 90%;
+	background-color: rgb(255 255 255 / 8%);
+	z-index: 1;
+	cursor: pointer;
+}
+.overview_a_week_bg .weekday_bg .demarcation_line{
+	width: 1px;
+	background-color: rgb(255 255 255 / 15%);
+	position: absolute;
+	height: 100%;
+	z-index: 4;
+}
+.overview_a_week_bg .weekday_bg .offtime_bg{
+	background-color: #F79800;
+	position: absolute;
+	height: 100%;
+	z-index: 3;
+}
+.PC_SCHED.offline .overview_a_week_bg .weekday_bg .offtime_bg{
+	background-color: #F79800;
+}
+.PC_SCHED.online .overview_a_week_bg .weekday_bg .offtime_bg{
+	background-color: #1EA2FF;
+}
+.overview_a_week_bg .weekday_bg .offtime_bg.dis{
+	background-color: rgb(255 255 255 / 20%) !important;
+	z-index: 2;
+}
+.overview_time_title_bg{
+	height: 32px;
+	line-height: 32px;
+	font-family: Arial, Helvetica, MS UI Gothic, MS P Gothic, Microsoft Yahei UI, Microsoft JhengHei, sans-serif;
+	font-size: 14px;
+	color: #FFFFFF;
+}
+.overview_time_title_bg > div{
+	position: relative;
+	float: left;
+	height: 32px;
+}
+.overview_time_title_bg .time_title_bg{
+	width: 90%;
+	z-index: 1;
+}
+.overview_time_title_bg .time_title_bg > span{
+	position: absolute;
+}
+.overview_time_title_bg .time_title_bg > span.first_time_text{
+	left: 0;
+}
+.overview_time_title_bg .time_title_bg > span.last_time_text{
+	right: 0;
+}
+.popup_edit_weekSchedule, .popup_hint_component.popup_hint_bg{
+	display: none;
+	height: auto;
+	width: 55%;
+	background: #1c272c;
+	border: 1px solid #364752;
+	box-shadow: 0 2px 4px 0 rgba(0,0,0,0.20), 0 1px 4px 0 rgba(60,60,60,0.30);
+	border-radius: 4px;
+	position: absolute;
+	padding: 18px;
+	font-family: Arial, Helvetica, MS UI Gothic, MS P Gothic, Microsoft Yahei UI, Microsoft JhengHei, sans-serif;
+	font-size: 16px;
+	left: 12%;
+	z-index: 250;
+}
+.popup_hint_component.popup_hint_bg{
+	z-index: 1250;
+}
+.popup_edit_weekSchedule .close_btn{
+	background-image: url(/images/button-close.gif);
+	position: absolute;
+	width: 32px;
+	height: 32px;
+	right: 0;
+	top: 0;
+	background-repeat: no-repeat;
+	background-size: contain;
+	cursor: pointer;
+}
+.popup_edit_weekSchedule .edit_offtime_title{
+	font-family: Arial, Helvetica, MS UI Gothic, MS P Gothic, Microsoft Yahei UI, Microsoft JhengHei, sans-serif;
+	font-size: 14px;
+	color: #FFFFFF;
+}
+.popup_edit_weekSchedule .selected_weekday_title{
+	font-size: 26px;
+	margin-left: 10px;
+}
+.popup_edit_weekSchedule .edit_time_setting_bg{
+	height: 32px;
+	margin-left: 10px;
+	margin-top: 35px;
+}
+.popup_edit_weekSchedule .edit_time_setting_bg ~.edit_time_setting_bg{
+	margin-top: 50px;
+}
+.popup_edit_weekSchedule .edit_time_setting_bg > div{
+	float: left;
+	height: 100%;
+	position: relative;
+}
+.popup_edit_weekSchedule .edit_time_setting_bg > div:first-child{
+	width: 32%;
+}
+.popup_edit_weekSchedule .edit_time_setting_bg > div.time_setting_title{
+	display: table;
+}
+.popup_edit_weekSchedule .edit_time_setting_bg > div.time_setting_title > span{
+	display: table-cell;
+    vertical-align: middle;
+}
+.popup_edit_weekSchedule .edit_time_setting_bg > div:not(:first-child){
+	width: 25%;
+}
+.popup_edit_weekSchedule .edit_time_setting_bg > div:nth-child(2){
+	margin-right: 10%;
+}
+.popup_edit_weekSchedule .time_setting_unit_title{
+	font-size: 12px;
+	position: absolute;
+	top: -20px;
+}
+.popup_edit_weekSchedule .custom_select_input_bg{
+	position: relative;
+	width: 100%;
+	font-size: 14px;
+}
+.popup_edit_weekSchedule .custom_select_input_bg .custom_input{
+	z-index: 20;
+	position: absolute;
+	height: auto;
+	width: 35%;
+	padding-left: 37%;
+	border: 0;
+	top: 0;
+	bottom: 0;
+	margin: auto;
+	outline: none;
+	color: #ffffff;
+	font-size: 14px;
+	font-family: Arial, Helvetica, MS UI Gothic, MS P Gothic, Microsoft Yahei UI, Microsoft JhengHei, sans-serif;
+	background: transparent;
+}
+.popup_edit_weekSchedule .custom_select_input_bg .custom_select{
+	z-index: 10;
+	position: relative;
+	height: 25px;
+	background-color: #43494B;
+	border-radius: 2px;
+	font-size: 14px;
+	font-family: Arial, Helvetica, MS UI Gothic, MS P Gothic, Microsoft Yahei UI, Microsoft JhengHei, sans-serif;
+	color: #ffffff;
+	padding: 2px;
+	border: 1px solid #979797;
+	cursor: pointer;
+	user-select: none;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	cursor: pointer;
+}
+.popup_edit_weekSchedule .custom_select_input_bg .custom_select.focus{
+	border-color: #ff0000;
+}
+.popup_edit_weekSchedule .custom_select_input_bg .custom_select:after{
+	position: absolute;
+	content: "";
+	top: 8px;
+	right: 10px;
+	width: 8px;
+	height: 8px;
+	border-top: 2px solid #A8AAB7;
+	border-right: 2px solid #A8AAB7;
+	-o-transform: rotate(135deg);
+	-ms-transform: rotate(135deg);
+	-moz-transform: rotate(135deg);
+	-webkit-transform: rotate(135deg);
+	transform: rotate(135deg);
+}
+.popup_edit_weekSchedule .custom_select_input_bg .custom_select.arrow_active:after{
+	-o-transform: rotate(-45deg);
+	-ms-transform: rotate(-45deg);
+	-moz-transform: rotate(-45deg);
+	-webkit-transform: rotate(-45deg);
+	transform: rotate(-45deg);
+	top: 12px;
+}
+.popup_edit_weekSchedule .custom_select_input_bg .custom_select_list{
+	z-index: 30;
+	position: absolute;
+	background-color: #43494B;
+	left: 0;
+	right: 0;
+	height: auto;
+	min-height: 120px;
+	max-height: 175px;
+	overflow-y: scroll;
+	border-radius: 0px 0px 2px 2px;
+	font-family: Arial, Helvetica, MS UI Gothic, MS P Gothic, Microsoft Yahei UI, Microsoft JhengHei, sans-serif;
+}
+.popup_edit_weekSchedule .custom_select_input_bg .custom_select_option{
+	color: #ffffff;
+	padding: 3px 0px 3px 0px;
+	text-align: center;
+	border: 1px solid #979797;
+	border-color: transparent transparent rgba(151, 151, 151, 0.4) transparent;
+	cursor: pointer;
+	user-select: none;
+	position: relative;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.popup_edit_weekSchedule .custom_select_list div:hover{
+	background-color: #696F71;
+}
+.popup_edit_weekSchedule .custom_select_list::-webkit-scrollbar-track{
+	border: 4px solid #43494B;
+	background-color: rgba(168, 170, 183, 0.5);
+}
+.popup_edit_weekSchedule .custom_select_list::-webkit-scrollbar{
+	width: 10px;
+}
+.popup_edit_weekSchedule .custom_select_list::-webkit-scrollbar-thumb{
+	border-radius: 10px;
+	background-color: #A8AAB7;
+	border: 1px solid #43494B;
+}
+.popup_edit_weekSchedule .custom_select_list.custom_select_hide{
+	display: none;
+}
+.popup_edit_weekSchedule .all_day_bg{
+	margin-left: 10px;
+	margin-top: 30px;
+	position: relative;
+	height: 27px;
+}
+.popup_edit_weekSchedule .all_day_checkbox{
+	width: 25px;
+	height: 25px;
+	border: 1px solid #979797;
+	cursor: pointer;
+	position: relative;
+	float: left;
+}
+.popup_edit_weekSchedule .all_day_checkbox.clicked{
+	background-color: #33ACFF;
+	border: 1px solid #33ACFF;
+	box-shadow: initial;
+}
+.popup_edit_weekSchedule .all_day_checkbox.clicked:before{
+	position: absolute;
+	content: "";
+	top: -3px;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	margin: auto;
+	width: 12px;
+	height: 6px;
+	border-top: 2px solid #FFFFFF;
+	border-right: 2px solid #FFFFFF;
+	-o-transform: rotate(135deg);
+	-ms-transform: rotate(135deg);
+	-moz-transform: rotate(135deg);
+	-webkit-transform: rotate(135deg);
+	transform: rotate(135deg);
+}
+.popup_edit_weekSchedule .all_day_text{
+	float: left;
+	line-height: 27px;
+	margin-left: 12px;
+}
+.popup_edit_weekSchedule .horizontal_line{
+	background: #202424; /* Old browsers */
+	background: -moz-linear-gradient(top, #202424 0%, #434E53 50%, #728792 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#758084), color-stop(50%,#434E53), color-stop(100%,#728792)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, #202424 0%,#434E53 50%,#728792 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, #202424 0%,#434E53 50%,#728792 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top, #202424 0%,#434E53 50%,#728792 100%); /* IE10+ */
+	background: linear-gradient(to bottom, #202424 0%,#434E53 50%,#728792 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#202424', endColorstr='#728792',GradientType=0 ); /* IE6-9 */
+	height: 2px;
+	margin: 15px 0;
+}
+.popup_edit_weekSchedule .routine_schedule_bg{
+	height: 50px;
+	margin-top: 12px;
+}
+.popup_edit_weekSchedule .routine_schedule_bg > div{
+	width: 35px;
+	height: 35px;
+	float: left;
+	border-radius: 50%;
+	border: 1px solid #979797;
+	font-size: 12px;
+	text-align: center;
+	line-height: 35px;
+	font-family: Arial, Helvetica, MS UI Gothic, MS P Gothic, Microsoft Yahei UI, Microsoft JhengHei, sans-serif;
+	margin-right: 25px;
+	cursor: pointer;
+	position: relative;
+}
+.popup_edit_weekSchedule .routine_schedule_bg > div.clicked{
+	border: 1px solid #F79800;
+	background-color: #F79800;
+	color: #000000;
+	font-weight: bolder;
+	box-shadow: initial;
+}
+.PC_SCHED.offline .popup_edit_weekSchedule .routine_schedule_bg > div.clicked{
+	border: 1px solid #F79800;
+	background-color: #F79800;
+}
+.PC_SCHED.online .popup_edit_weekSchedule .routine_schedule_bg > div.clicked{
+	border: 1px solid #1EA2FF;
+	background-color: #1EA2FF;
+}
+.popup_edit_weekSchedule .routine_schedule_bg > div.current_weekday:before{
+	position: absolute;
+	content: "";
+	width: 6px;
+	height: 6px;
+	border-radius: 50%;
+	background-color: #F79800;
+	bottom: -12px;
+	right: 0;
+	left: 0;
+	margin: auto;
+}
+.PC_SCHED.offline .popup_edit_weekSchedule .routine_schedule_bg > div.current_weekday:before{
+	background-color: #F79800;
+}
+.PC_SCHED.online .popup_edit_weekSchedule .routine_schedule_bg > div.current_weekday:before{
+	background-color: #1EA2FF;
+}
+.popup_edit_weekSchedule .routine_schedule_bg > div:last-child{
+	margin-right: 0px;
+}
+.popup_edit_weekSchedule .edit_time_error{
+	position: absolute;
+	width: 142%;
+	color: #FC0;
+	line-height: 100%;
+	font-size: 12px;
+	margin-top: 5px;
+}
+.popup_edit_weekSchedule .edit_done_btn{
+	line-height: 33px;
+	text-align: center;
+	float: right;
+	margin-top: 15px;
+}
+.popup_edit_weekSchedule .each_period_bg{
+	height: 80px;
+	margin: 15px 0px;
+	line-height: 80px;
+	font-size: 32px;
+	background-color: #3E494C;
+	border-radius: 4px;
+	cursor: pointer;
+	position: relative;
+}
+.popup_edit_weekSchedule .each_period_bg:hover{
+	background-color: #5C6C71;
+	box-shadow: 0 0 0 2px #979797;
+}
+.each_period_bg .period_text{
+	width: 70%;
+	float: left;
+	text-align: center;
+}
+.each_period_bg .period_switch, .PC_SCHED .grid_period_content .period_switch,
+.each_period_bg .period_switch, .WL_SCHED .grid_period_content .period_switch{
+	background: #2B353C;
+	border-radius: 50px;
+	width: 60px;
+	height: 30px;
+	position: relative;
+	display: inline-block;
+	-webkit-transition: all 0.6s;
+	transition: all 0.6s;
+	cursor: pointer;
+	top: 25px;
+}
+.each_period_bg .period_switch:before, .PC_SCHED .grid_period_content .period_switch:before,
+.each_period_bg .period_switch:before, .WL_SCHED .grid_period_content .period_switch:before{
+	border-radius: 83px;
+	display: block;
+	position: absolute;
+	content: "";
+	height: 24px;
+	width: 24px;
+	left: 3px;
+	top: 3px;
+	-webkit-transition: 0.6s;
+	transition: all 0.6s;
+	-webkit-transition-delay: 0.01s;
+	transition-delay: 0.01s;
+}
+.each_period_bg .period_switch.off:before, .PC_SCHED .grid_period_content .period_switch.off:before,
+.each_period_bg .period_switch.off:before, .WL_SCHED .grid_period_content .period_switch.off:before{
+	background: #A4B7C3;
+}
+.each_period_bg .period_switch.on:before, .PC_SCHED .grid_period_content .period_switch.on:before,
+.each_period_bg .period_switch.on:before, .WL_SCHED .grid_period_content .period_switch.on:before{
+	-webkit-transform: translateX(30px);
+	-ms-transform: translateX(30px);
+	transform: translateX(30px);
+	background: #1EA2FF;
+}
+.PC_SCHED.offline .grid_period_content .period_switch.on:before,
+.WL_SCHED.offline .grid_period_content .period_switch.on:before{
+	background: #F79800;
+}
+.PC_SCHED.online .grid_period_content .period_switch.on:before,
+.WL_SCHED.online .grid_period_content .period_switch.on:before{
+	background: #1EA2FF;
+}
+.each_period_bg .period_trash_icon, .PC_SCHED .grid_period_content .period_trash_icon,
+.each_period_bg .period_trash_icon, .WL_SCHED .grid_period_content .period_trash_icon{
+	background-image: url(/images/New_ui/delete_hover.svg);
+	width: 30px;
+	height: 30px;
+	background-color: #2B353C;
+	background-size: 60%;
+	background-repeat: no-repeat;
+	background-position: 50%;
+	position: absolute;
+	right: 12px;
+	top: 25px;
+	border-radius: 50%;
+}
+.popup_edit_weekSchedule .add_new_offtime{
+	text-align: center;
+}
+.popup_edit_weekSchedule .add_new_offtime span{
+	cursor: pointer;
+	color: #00BFFF;
+	font-size: 17px;
+}
+.popup_edit_weekSchedule .add_new_offtime span:hover{
+	text-decoration: underline;
+}
+.popup_edit_weekSchedule span.valid_hint{
+	color: #FC0;
+	position: absolute;
+	font-size: 12px;
+	width: 150%;
+	height: 30px;
+	line-height: 110%;
+	margin-top: 5px;
+}
+.popup_edit_weekSchedule div.valid_hint_bg{
+	color: #FC0;
+	font-size: 12px;
+	width: 95%;
+	line-height: 110%;
+	word-break: break-word;
+	margin: auto;
+	margin-top: 12px;
+	margin-bottom: -20px;
+	display: none;
+}
+.popup_edit_weekSchedule .change_mode_hint{
+	color: #FC0;
+	position: relative;
+	margin-left: 30px;
+}
+.popup_edit_weekSchedule .change_mode_hint:before{
+	position: absolute;
+	content: "!";
+	width: 24px;
+	height: 24px;
+	border-radius: 50%;
+	background-color: #FC0;
+	color: #000;
+	font-family: fantasy;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	left: -30px;
+}
+.popup_edit_weekSchedule .mode_item_bg{
+	display: flex;
+	margin: 12px 0px;
+	position: relative;
+}
+.mode_item_bg .mode_icon_bg,
+.mode_item_bg .mode_status{
+	width: 60px;
+	min-width: 60px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.mode_icon_bg .mode_icon{
+	width: 32px;
+	height: 32px;
+	border-radius: 50%;
+	position: relative;
+}
+.mode_icon_bg .mode_icon.offline{
+	border: 2px solid #F79800;
+}
+.mode_icon_bg .mode_icon.offline:before{
+	position: absolute;
+	content: "";
+	top: 15px;
+	width: 100%;
+	border-top: 2px solid #F79800;
+	-o-transform: rotate(135deg);
+	-ms-transform: rotate(135deg);
+	-moz-transform: rotate(135deg);
+	-webkit-transform: rotate(135deg);
+	transform: rotate(135deg);
+}
+.mode_icon_bg .mode_icon.online{
+	border: 2px solid #1EA2FF;
+}
+.mode_icon_bg .mode_icon.online:before{
+	position: absolute;
+	content: "";
+	top: 8px;
+	border-radius: 1px;
+	right: 8px;
+	width: 14px;
+	height: 9px;
+	border-top: 2px solid #1EA2FF;
+	border-right: 2px solid #1EA2FF;
+	-o-transform: rotate(133deg);
+	-ms-transform: rotate(133deg);
+	-moz-transform: rotate(133deg);
+	-webkit-transform: rotate(133deg);
+	transform: rotate(133deg);
+}
+.mode_item_bg .mode_desc{
+	padding-left: 12px;
+}
+.mode_item_bg .mode_desc > div{
+	height: 30px;
+	align-items: center;
+	display: flex;
+	font-weight: bolder;
+}
+.mode_item_bg .mode_desc > div:not(:first-child){
+	height: auto;
+	font-size: 14px;
+	color: #A4B7C3;
+	line-height: 120%;
+	font-weight: initial;
+}
+.mode_item_bg .mode_status{
+	cursor: pointer;
+}
+.mode_item_bg .mode_status .radio_icon{
+	width: 24px;
+	height: 24px;
+	border-radius: 50%;
+	border: 2px solid rgb(255 255 255 / 50%);
+	position: relative;
+}
+.mode_item_bg .mode_status .radio_icon.selected{
+	border: 2px solid #FFF;
+	background-color: #FFF;
+}
+.mode_item_bg .mode_status .radio_icon.selected:before{
+	position: absolute;
+	content: "";
+	top: 6px;
+	right: 5px;
+	width: 11px;
+	height: 7px;
+	border-top: 2px solid #000;
+	border-right: 2px solid #000;
+	-o-transform: rotate(133deg);
+	-ms-transform: rotate(133deg);
+	-moz-transform: rotate(133deg);
+	-webkit-transform: rotate(133deg);
+	transform: rotate(133deg);
+}
+.action_btn_bg{
+	margin-top: 25px;
+	position: relative;
+	height: 40px;
+}
+.action_btn_bg > div{
+	width: 122px;
+	text-align: center;
+	line-height: 33px;
+	position: absolute;
+}
+.action_btn_bg  div:nth-of-type(1){
+	left: 10px;
+}
+.action_btn_bg  div:nth-of-type(2){
+	right: 170px;
+}
+.action_btn_bg  div:nth-of-type(3){
+	right: 10px;
+}
+.popup_hint_bg .action_bg{
+	margin-top: 18px;
+	text-align: right;
+}
+.popup_hint_bg .action_bg .button_gen{
+	margin-left: 18px;
+}
+.popup_hint_component.mask_bg, .popup_edit_weekSchedule.mask_bg{
+	display: none;
+	position:fixed;
+	width:100%;
+	height:100%;
+	left: 0;
+	top: 0;
+	z-index: 200;
+	background: #424D52;
+	opacity: .94;
+}
+.popup_hint_component.mask_bg{
+	z-index: 1000;
+}
+.PC_SCHED .grid_period_content .period_text_bg, .WL_SCHED .grid_period_content .period_text_bg{
+	width: 80%;
+	float: left;
+	text-align: center;
+	position: relative;
+	color: rgba(158,158,158,0.5);
+}
+.PC_SCHED .grid_period_content .period_text_bg:before, .WL_SCHED .grid_period_content .period_text_bg:before{
+	position: absolute;
+	content: "";
+	right: 10%;
+	height: 60%;
+	top: 20%;
+	border-left: 1px solid rgba(158,158,158,0.5);
+}
+.PC_SCHED .grid_period_content .period_text_bg > div, .WL_SCHED .grid_period_content .period_text_bg > div{
+	float: left;
+	height: 70px;
+	letter-spacing: 1px;
+	font-size: 30px;
+	height: 70px;
+	position: relative;
+	text-align: center;
+}
+.PC_SCHED .grid_period_content .period_text_bg .start_time, .PC_SCHED .grid_period_content .period_text_bg .end_time,
+.WL_SCHED .grid_period_content .period_text_bg .start_time, .WL_SCHED .grid_period_content .period_text_bg .end_time{
+	margin-left: 25px;
+	width: 110px;
+	padding-top: 10px;
+}
+.PC_SCHED .grid_period_content .period_text_bg .start_time:before, .PC_SCHED .grid_period_content .period_text_bg .end_time:before,
+.WL_SCHED .grid_period_content .period_text_bg .start_time:before, .WL_SCHED .grid_period_content .period_text_bg .end_time:before{
+	content: attr(title);
+	position: absolute;
+	height: 100%;
+	font-size: 14px;
+	top: -15px;
+	letter-spacing: 0;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	width: 130px;
+	text-align: left;
+	left: 18px;
+}
+.PC_SCHED .grid_period_content .period_text_bg .dash:before, .WL_SCHED .grid_period_content .period_text_bg .dash:before{
+	content: "";
+	position: absolute;
+	left: 5px;
+	bottom: 20px;
+	width: 14px;
+	border-bottom: 2px solid rgba(158,158,158,0.5);
+}
+.PC_SCHED .grid_period_content.on .period_text_bg, .WL_SCHED .grid_period_content.on .period_text_bg{
+	color: #FFF;
+}
+.PC_SCHED .grid_period_content.on .period_text_bg .dash:before, .WL_SCHED .grid_period_content.on .period_text_bg .dash:before{
+	border-bottom: 2px solid #FFF;
+}
+.PC_SCHED .level_demarcation_line, .WL_SCHED .level_demarcation_line{
+	background: #32393B;
+	background: -webkit-linear-gradient(#32393B 0%, #32393B 20%, #667881 80%, #667881 100%);
+	background: -o-linear-gradient(#32393B 0%, #32393B 20%, #667881 80%, #667881 100%);
+	background: linear-gradient(#32393B 0%, #32393B 20%, #667881 80%,#667881 100%);
+	height: 2px;
+	width: 99%;
+	margin: 12px 0 12px 1%;
+}
+.PC_SCHED .offtime_schedule_header, .WL_SCHED .offtime_schedule_header{
+	position: relative;
+	display: flex;
+	justify-content: space-between;
+}
+.PC_SCHED .offtime_schedule_header .title, .WL_SCHED .offtime_schedule_header .title{
+	font-family: Arial, Helvetica, MS UI Gothic, MS P Gothic, Microsoft Yahei UI, Microsoft JhengHei, sans-serif;
+	font-size: 14px;
+	color: #FFF;
+	margin-left: 10px;
+	display: flex;
+	align-items: center;
+	position: relative;
+}
+.PC_SCHED .offtime_schedule_header .title.offline, .WL_SCHED .offtime_schedule_header .title.offline{
+	color: #FFCC00;
+	cursor: pointer;
+}
+.PC_SCHED .offtime_schedule_header .title.offline:hover, .WL_SCHED .offtime_schedule_header .title.offline:hover{
+	color: #FFEA97;
+}
+.PC_SCHED .offtime_schedule_header .title.online, .WL_SCHED .offtime_schedule_header .title.online{
+	color: #32C5FF;
+	cursor: pointer;
+}
+.PC_SCHED .offtime_schedule_header .title.online:hover, .WL_SCHED .offtime_schedule_header .title.online:hover{
+	color: #8FDFFF;
+}
+.PC_SCHED .offtime_schedule_header .title.offline:before, .WL_SCHED .offtime_schedule_header .title.offline:before,
+.PC_SCHED .offtime_schedule_header .title.online:before, .WL_SCHED .offtime_schedule_header .title.online:before{
+	content: "";
+	position: absolute;
+	width: 21px;
+	height: 21px;
+	background-repeat: no-repeat;
+	right: -30px;
+}
+.PC_SCHED .offtime_schedule_header .title.offline:before, .WL_SCHED .offtime_schedule_header .title.offline:before{
+	background-image: url(/images/New_ui/weekSchedule/switch-offline.svg);
+}
+.PC_SCHED .offtime_schedule_header .title.offline:hover:before, .WL_SCHED .offtime_schedule_header .title.offline:hover:before{
+	background-image: url(/images/New_ui/weekSchedule/switch-offline-hover.svg);
+}
+.PC_SCHED .offtime_schedule_header .title.online:before, .WL_SCHED .offtime_schedule_header .title.online:before{
+	background-image: url(/images/New_ui/weekSchedule/switch-online.svg);
+}
+.PC_SCHED .offtime_schedule_header .title.online:hover:before, .WL_SCHED .offtime_schedule_header .title.online:hover:before{
+	background-image: url(/images/New_ui/weekSchedule/switch-online-hover.svg);
+}
+.offtime_schedule_header .btn_control_bg{
+	display: flex;
+	width: auto;
+	justify-content: flex-end;
+	align-items: center;
+	margin-right: 12px;
+}
+.PC_SCHED .offtime_schedule_header .btn_icon_bg, .WL_SCHED .offtime_schedule_header .btn_icon_bg{
+	background-repeat: no-repeat;
+	background-size: cover;
+	cursor: pointer;
+	width: 30px;
+	height: 30px;
+	margin-left: 18px;
+}
+.PC_SCHED .offtime_schedule_header .btn_icon_bg.add_icon, .WL_SCHED .offtime_schedule_header .btn_icon_bg.add_icon{
+	background-image: url(/images/New_ui/weekSchedule/add.png);
+	right: 60px;
+}
+.PC_SCHED .offtime_schedule_header .add_icon:hover, .WL_SCHED .offtime_schedule_header .add_icon:hover{
+	background-image: url(/images/New_ui/weekSchedule/add-hover.png);
+}
+.PC_SCHED .offtime_schedule_header .overview_icon, .WL_SCHED .offtime_schedule_header .overview_icon{
+	background-image: url(/images/New_ui/weekSchedule/over-view.png);
+	right: 10px;
+}
+.PC_SCHED .offtime_schedule_header .overview_icon:hover, .WL_SCHED .offtime_schedule_header .overview_icon:hover{
+	background-image: url(/images/New_ui/weekSchedule/over-view-hover.png);
+}
+.PC_SCHED .offtime_schedule_header .gridview_icon, .WL_SCHED .offtime_schedule_header .gridview_icon{
+	background-image: url(/images/New_ui/weekSchedule/grid-view.png);
+	right: 10px;
+}
+.PC_SCHED .offtime_schedule_header .gridview_icon:hover, .WL_SCHED .offtime_schedule_header .gridview_icon:hover{
+	background-image: url(/images/New_ui/weekSchedule/grid-view-hover.png);
+}
+.PC_SCHED .offtime_schedule_header .btn_icon_bg.tips_icon, .WL_SCHED .offtime_schedule_header .btn_icon_bg.tips_icon{
+	background-image: url(/images/New_ui/weekSchedule/tips.png);
+	right: 10px;
+}
+.PC_SCHED .offtime_schedule_header .btn_icon_bg.tips_icon:hover, .WL_SCHED .offtime_schedule_header .btn_icon_bg.tips_icon:hover{
+	background-image: url(/images/New_ui/weekSchedule/tips-hover.png);
+}
+.PC_SCHED .no_data_bg, .WL_SCHED .no_data_bg{
+	height: 200px;
+}
+.PC_SCHED .no_data_bg > div, .WL_SCHED .no_data_bg > div{
+	margin: auto;
+	text-align: center;
+	top: 40px;
+	position: relative;
+}
+.PC_SCHED .no_data_bg .no_data_icon, .WL_SCHED .no_data_bg .no_data_icon{
+	background-image: url(/images/New_ui/weekSchedule/over-view.png);
+	width: 80px;
+	height: 80px;
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+.PC_SCHED .no_data_bg .no_data_text, .WL_SCHED .no_data_bg .no_data_text{
+	margin-top: 20px;
+	font-size: 14px;
+}
+.PC_SCHED .grid_period_title, .WL_SCHED .grid_period_title{
+	font-family: Arial, Helvetica, MS UI Gothic, MS P Gothic, Microsoft Yahei UI, Microsoft JhengHei, sans-serif;
+	font-size: 20px;
+	margin-left: 10px;
+	margin-top: 10px;
+	font-weight: bolder;
+}
+.PC_SCHED .grid_period_content, .WL_SCHED .grid_period_content{
+	height: 80px;
+	margin: 10px;
+	line-height: 80px;
+	font-size: 26px;
+	background-color: #3E494C;
+	border-radius: 4px;
+	cursor: pointer;
+	position: relative;
+}
+.PC_SCHED .grid_period_content:hover, .WL_SCHED .grid_period_content:hover{
+	background-color: #5C6C71;
+	box-shadow: 0 0 0 2px #979797;
+}
+.PC_SCHED .offtime_overview_content_bg, .WL_SCHED .offtime_overview_content_bg{
+	margin-top: 20px;
+}
+.tutorial_guide_bg{
+	width: 100%;
+	height: 100%;
+	background: rgb(0 0 0 / 70%);
+	display: flex;
+	position: absolute;
+	z-index: 1000;
+	color: #FFF;
+}
+.tutorial_guide_bg .main_bg{
+	width: 100%;
+	height: 57%;
+	background: #1B272C;
+	margin-top: 10%;
+	position: relative;
+	border-radius: 4px;
+}
+.main_bg .close_icon{
+	background-image: url(/images/button-close.gif);
+	width: 30px;
+	height: 30px;
+	background-repeat: no-repeat;
+	background-size: 120%;
+	cursor: pointer;
+	background-position: 50%;
+	position: absolute;
+	right: 6px;
+	top: 6px;
+	z-index: 1500;
+}
+.main_bg .tutorial_guide_content{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100%;
+	width: 100%;
+}
+.tutorial_guide_content .start_bg{
+	display: flex;
+	width: 40%;
+	height: 100%;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+.tutorial_guide_content .start_bg .icon{
+	background-image: url(/images/New_ui/weekSchedule/icon_schedule.svg);
+	width: 140px;
+	height: 140px;
+	background-repeat: no-repeat;
+	background-position: 50%;
+	margin-bottom: 30px;
+}
+.tutorial_guide_content .start_bg .text{
+	color: #32c5ff;
+	font-size: 22px;
+	text-align: center;
+}
+.tutorial_guide_content .start_bg .btn{
+	width: 120px;
+	min-height: 30px;
+	border-radius: 22px;
+	background: #0091ff;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 5px 15px;
+	height: auto;
+	cursor: pointer;
+	color: #ffffff;
+	font-size: 16px;
+	margin-top: 40px;
+}
+.tutorial_guide_content .guide_bg{
+	display: flex;
+	width: 100%;
+	height: 100%;
+}
+.tutorial_guide_content .guide_bg .left_bg{
+	width: 35%;
+	background: #20323C;
+}
+.tutorial_guide_content .guide_bg .right_bg{
+	width: 65%;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+.guide_bg .left_bg > div{
+	margin-left: 24px;
+}
+.guide_bg .left_bg .menu_title{
+	margin-top: 60px;
+	margin-bottom: 20px;
+	font-size: 18px;
+}
+.guide_bg .left_bg .menu_item{
+	height: 45px;
+	display: flex;
+	align-items: center;
+	cursor: pointer;
+	position: relative;
+	padding-left: 30px;
+}
+.guide_bg .left_bg .menu_item:before{
+	position: absolute;
+	content: "";
+	background-image: url(/images/New_ui/weekSchedule/icon_menu.svg);
+	background-repeat: no-repeat;
+	width: 24px;
+	height: 24px;
+	left: 0;
+}
+.guide_bg .left_bg .menu_item.clicked{
+	color: #32c5ff;
+}
+.guide_bg .left_bg .menu_item.add:before{
+	background-position-y: 1px;
+}
+.guide_bg .left_bg .menu_item.add.clicked:before{
+	background-position-y: -32px;
+}
+.guide_bg .left_bg .menu_item.edit:before{
+	background-position-y: -66px;
+}
+.guide_bg .left_bg .menu_item.edit.clicked:before{
+	background-position-y: -99px;
+}
+.guide_bg .left_bg .menu_item.switch:before{
+	background-position-y: -132px;
+}
+.guide_bg .left_bg .menu_item.switch.clicked:before{
+	background-position-y: -165px;
+}
+.guide_bg .left_bg .menu_item.en_dis:before{
+	background-position-y: -198px;
+}
+.guide_bg .left_bg .menu_item.en_dis.clicked:before{
+	background-position-y: -231px;
+}
+.guide_bg .right_bg .guide_content{
+	width: 100%;
+	height: 80%;
+	background-image: url(/images/New_ui/weekSchedule/tutorial_guide/c_1_1.svg);
+	background-repeat: no-repeat;
+	background-size: 100%;
+	background-position: 50%;
+	background-position-y: -40px;
+}
+.guide_bg .right_bg .paging_desc_bg{
+	width: 90%;
+	height: 17%;
+	margin: 0 auto;
+}
+.guide_bg .right_bg .paging_desc_bg > div{
+	display: flex;
+	justify-content: center;
+}
+.paging_desc_bg .paging_desc{
+	height: 45px;
+	align-items: flex-start;
+}
+.paging_desc_bg .paging_icon_bg{
+	align-items: center;
+}
+.paging_icon_bg .left_arrow, .paging_icon_bg .right_arrow{
+	width: 24px;
+	height: 24px;
+	border-radius: 50%;
+	border: 1px solid #32C5FF;
+	cursor: pointer;
+	position: relative;
+}
+.paging_icon_bg .left_arrow:before, .paging_icon_bg .right_arrow:before{
+	position: absolute;
+	content: "";
+	top: 8px;
+	right: 6px;
+	width: 6px;
+	height: 6px;
+	border-top: 2px solid #32C5FF;
+	border-right: 2px solid #32C5FF;
+	-o-transform: rotate(225deg);
+	-ms-transform: rotate(225deg);
+	-moz-transform: rotate(225deg);
+	-webkit-transform: rotate(225deg);
+	transform: rotate(225deg);
+}
+.paging_icon_bg .right_arrow:before{
+	right: 9px;
+	-o-transform: rotate(45deg);
+	-ms-transform: rotate(45deg);
+	-moz-transform: rotate(45deg);
+	-webkit-transform: rotate(45deg);
+	transform: rotate(45deg);
+}
+.paging_icon_bg .left_arrow:hover, .paging_icon_bg .right_arrow:hover{
+	background-color: #32C5FF;
+}
+.paging_icon_bg .left_arrow:hover:before, .paging_icon_bg .right_arrow:hover:before{
+	border-top: 2px solid #FFF;
+	border-right: 2px solid #FFF;
+}
+.paging_icon_bg .paging_num{
+	margin: 0 16px;
+	color: #32C5FF;
+	font-size: 14px;
+	font-weight: bolder;
+}

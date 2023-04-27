@@ -1,0 +1,31 @@
+charon {
+  retransmit_tries = 2
+  retransmit_timeout = 1.0
+  retransmit_base = 1
+  plugins {
+    kernel-netlink {
+      xfrm_acq_expires = 60
+    }
+  }
+  syslog {
+    daemon {
+    }
+    auth {
+      default = 0
+    }
+  }
+  journal {
+    default = -1
+  }
+}
+
+swanctl {
+  plugins {
+    # disabled because of entropy issues
+    gcrypt {
+      load = no
+    }
+  }
+}
+
+include strongswan.conf
