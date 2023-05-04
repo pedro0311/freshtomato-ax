@@ -2774,3 +2774,7 @@ config RTCONFIG_SW_SPDLED
 config RTCONFIG_BCM4906_504
 	bool "962118G in 504"
 	default n
+
+config TCONFIG_FTAX
+	bool "enable FreshTomato AX features"
+	default y
