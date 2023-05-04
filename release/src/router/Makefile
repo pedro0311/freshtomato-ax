@@ -5150,6 +5150,7 @@ dropbear/config.h.in: $(if $(RTCONFIG_PROTECTION_SERVER),protect_srv-stage,)
 dropbear/config.h: dropbear/config.h.in
 	cd dropbear && \
 		CPPFLAGS="-Os -Wall $(EXTRACFLAGS) -DARGTYPE=3 -ffunction-sections -fdata-sections -I$(STAGEDIR)/usr/include \
+			$(if $(TCONFIG_FTAX),-DHAVE_TOMATO,) \
 			$(if $(RTCONFIG_PROTECTION_SERVER),-DSECURITY_NOTIFY,)" \
 		LDFLAGS="-Wl,--gc-sections -L$(STAGEDIR)/usr/lib" \
 		LIBS="$(if $(RTCONFIG_PROTECTION_SERVER),-lptcsrv)" \
@@ -5168,10 +5169,18 @@ dropbear: dropbear/config.h
 dropbear-install:
 	install -D dropbear/dropbearmulti $(INSTALLDIR)/dropbear/usr/bin/dropbearmulti
 	$(STRIP) $(INSTALLDIR)/dropbear/usr/bin/dropbearmulti
+ifeq ($(TCONFIG_FTAX),y)
+	cd $(INSTALLDIR)/dropbear/usr/bin && \
+	ln -sf dropbearmulti dropbearkey && \
+	ln -sf dropbearmulti dbclient && \
+	ln -sf dropbearmulti ssh && \
+	ln -sf dropbearmulti scp
+else
 	cd $(INSTALLDIR)/dropbear/usr/bin && \
 	ln -sf dropbearmulti dropbearkey && \
 	ln -sf dropbearmulti dbclient && \
 	ln -sf dropbearmulti ssh
+endif
 	install -d $(INSTALLDIR)/dropbear/usr/sbin
 	cd $(INSTALLDIR)/dropbear/usr/sbin && \
 	ln -sf ../bin/dropbearmulti dropbear
