@@ -2711,54 +2711,56 @@ roldconf: config/conf
 ifeq ($(RTCONFIG_BCMARM),y)
 	$(MAKE) compressed-clean
 endif
-ifeq ($(RTCONFIG_DHDAP),y)
-ifeq ($(RTCONFIG_BCM7),y)
-ifneq ($(wildcard $(SRCBASE_FW)/wl/sys),)
-ifeq ($(wildcard /projects/hnd/tools/linux/hndtools-armeabi-2011.09),)
-	# build 43602 src and to match its path
-	sudo mkdir /projects/hnd/tools/linux -p
-	sudo rm -rf /projects/hnd/tools/linux/hndtools-armeabi-2011.09
-	sudo ln -sf $(SRCBASE)/toolchains/hndtools-armeabi-2011.09 /projects/hnd/tools/linux/hndtools-armeabi-2011.09
-endif
-endif
-else ifeq ($(RTCONFIG_BCM_7114),y) # hnd models use same dongle toolchain as 7114
-ifeq ($(wildcard /projects/hnd/tools/linux/hndtools-armeabi-2013.11),)
-	# build pciefd
-	sudo mkdir /projects/hnd/tools/linux/bin -p
-	sudo rm -rf /projects/hnd/tools/linux/hndtools-armeabi-2013.11
-	sudo ln -sf $(SRCBASE)/toolchains/hndtools-armeabi-2013.11 /projects/hnd/tools/linux/hndtools-armeabi-2013.11
-	sudo ln -sf $(SRCBASE)/toolchains/fwtag.ini /projects/hnd/tools/linux/bin/fwtag.ini
-endif
-else ifeq ($(HND_ROUTER_AX),y)
-ifeq ($(wildcard /projects/bca/tools/linux/hndtools-armeabi-2013.11),)
-        # build pciefd
-	sudo mkdir /projects/bca/tools/linux/bin -p
-	sudo rm -rf /projects/bca/tools/linux/hndtools-armeabi-2013.11
-	sudo ln -sf $(SRCBASE)/toolchains/hndtools-armeabi-2013.11 /projects/bca/tools/linux/hndtools-armeabi-2013.11
-	sudo ln -sf $(SRCBASE)/toolchains/fwtag.ini /projects/bca/tools/linux/bin/fwtag.ini
-endif
-endif
-endif
-ifeq ($(HND_ROUTER),y)
-ifeq ($(wildcard /opt/toolchains),)
-	sudo mkdir /opt/toolchains -p
-endif
-ifeq ($(HND_ROUTER_AX),y)
-ifeq ($(wildcard /opt/toolchains/crosstools-aarch64-gcc-5.5-linux-4.1-glibc-2.26-binutils-2.28.1),)
-	sudo ln -sf $(SRCBASE)/toolchains/crosstools-aarch64-gcc-5.5-linux-4.1-glibc-2.26-binutils-2.28.1 /opt/toolchains/crosstools-aarch64-gcc-5.5-linux-4.1-glibc-2.26-binutils-2.28.1
-endif
-ifeq ($(wildcard /opt/toolchains/crosstools-arm-gcc-5.5-linux-4.1-glibc-2.26-binutils-2.28.1),)
-	sudo ln -sf $(SRCBASE)/toolchains/crosstools-arm-gcc-5.5-linux-4.1-glibc-2.26-binutils-2.28.1 /opt/toolchains/crosstools-arm-gcc-5.5-linux-4.1-glibc-2.26-binutils-2.28.1
-endif
-else
-ifeq ($(wildcard /opt/toolchains/crosstools-aarch64-gcc-5.3-linux-4.1-glibc-2.22-binutils-2.25),)
-	sudo ln -sf $(SRCBASE)/toolchains/crosstools-aarch64-gcc-5.3-linux-4.1-glibc-2.22-binutils-2.25 /opt/toolchains/crosstools-aarch64-gcc-5.3-linux-4.1-glibc-2.22-binutils-2.25
-endif
-ifeq ($(wildcard /opt/toolchains/crosstools-arm-gcc-5.3-linux-4.1-glibc-2.22-binutils-2.25),)
-	sudo ln -sf $(SRCBASE)/toolchains/crosstools-arm-gcc-5.3-linux-4.1-glibc-2.22-binutils-2.25 /opt/toolchains/crosstools-arm-gcc-5.3-linux-4.1-glibc-2.22-binutils-2.25
-endif
-endif
-endif
+#FreshTomato AX (not needed)
+#ifeq ($(RTCONFIG_DHDAP),y)
+#ifeq ($(RTCONFIG_BCM7),y)
+#ifneq ($(wildcard $(SRCBASE_FW)/wl/sys),)
+#ifeq ($(wildcard /projects/hnd/tools/linux/hndtools-armeabi-2011.09),)
+# build 43602 src and to match its path
+#	sudo mkdir /projects/hnd/tools/linux -p
+#	sudo rm -rf /projects/hnd/tools/linux/hndtools-armeabi-2011.09
+#	sudo ln -sf $(SRCBASE)/toolchains/hndtools-armeabi-2011.09 /projects/hnd/tools/linux/hndtools-armeabi-2011.09
+#endif
+#endif
+#else ifeq ($(RTCONFIG_BCM_7114),y) # hnd models use same dongle toolchain as 7114
+#ifeq ($(wildcard /projects/hnd/tools/linux/hndtools-armeabi-2013.11),)
+# build pciefd
+#	sudo mkdir /projects/hnd/tools/linux/bin -p
+#	sudo rm -rf /projects/hnd/tools/linux/hndtools-armeabi-2013.11
+#	sudo ln -sf $(SRCBASE)/toolchains/hndtools-armeabi-2013.11 /projects/hnd/tools/linux/hndtools-armeabi-2013.11
+#	sudo ln -sf $(SRCBASE)/toolchains/fwtag.ini /projects/hnd/tools/linux/bin/fwtag.ini
+#endif
+#else ifeq ($(HND_ROUTER_AX),y)
+#ifeq ($(wildcard /projects/bca/tools/linux/hndtools-armeabi-2013.11),)
+# build pciefd
+#	sudo mkdir /projects/bca/tools/linux/bin -p
+#	sudo rm -rf /projects/bca/tools/linux/hndtools-armeabi-2013.11
+#	sudo ln -sf $(SRCBASE)/toolchains/hndtools-armeabi-2013.11 /projects/bca/tools/linux/hndtools-armeabi-2013.11
+#	sudo ln -sf $(SRCBASE)/toolchains/fwtag.ini /projects/bca/tools/linux/bin/fwtag.ini
+#endif
+#endif
+#endif
+#ifeq ($(HND_ROUTER),y)
+#ifeq ($(wildcard /opt/toolchains),)
+#	sudo mkdir /opt/toolchains -p
+#endif
+#ifeq ($(HND_ROUTER_AX),y)
+#ifeq ($(wildcard /opt/toolchains/crosstools-aarch64-gcc-5.5-linux-4.1-glibc-2.26-binutils-2.28.1),)
+#	sudo ln -sf $(SRCBASE)/toolchains/crosstools-aarch64-gcc-5.5-linux-4.1-glibc-2.26-binutils-2.28.1 /opt/toolchains/crosstools-aarch64-gcc-5.5-linux-4.1-glibc-2.26-binutils-2.28.1
+#endif
+#ifeq ($(wildcard /opt/toolchains/crosstools-arm-gcc-5.5-linux-4.1-glibc-2.26-binutils-2.28.1),)
+#	sudo ln -sf $(SRCBASE)/toolchains/crosstools-arm-gcc-5.5-linux-4.1-glibc-2.26-binutils-2.28.1 /opt/toolchains/crosstools-arm-gcc-5.5-linux-4.1-glibc-2.26-binutils-2.28.1
+#endif
+#else
+#ifeq ($(wildcard /opt/toolchains/crosstools-aarch64-gcc-5.3-linux-4.1-glibc-2.22-binutils-2.25),)
+#	sudo ln -sf $(SRCBASE)/toolchains/crosstools-aarch64-gcc-5.3-linux-4.1-glibc-2.22-binutils-2.25 /opt/toolchains/crosstools-aarch64-gcc-5.3-linux-4.1-glibc-2.22-binutils-2.25
+#endif
+#ifeq ($(wildcard /opt/toolchains/crosstools-arm-gcc-5.3-linux-4.1-glibc-2.22-binutils-2.25),)
+#	sudo ln -sf $(SRCBASE)/toolchains/crosstools-arm-gcc-5.3-linux-4.1-glibc-2.22-binutils-2.25 /opt/toolchains/crosstools-arm-gcc-5.3-linux-4.1-glibc-2.22-binutils-2.25
+#endif
+#endif
+#endif
+#FreshTomato AX (not needed) - END
 
 kconf:
 	$(MAKE) -C $(LINUXDIR) config
