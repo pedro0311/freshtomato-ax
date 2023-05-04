@@ -171,7 +171,8 @@ RC_EXT_NO1=$(shell expr $(RCNO) + 1)
 RC_EXT_NO=$(shell expr $(RC_EXT_NO1) \* 10000)
 
 # At runtime, set the tag of RCNO.
-export RUN_TAG=$(shell git tag -fa asuswrt_$(KERNEL_VER).$(FS_VER).$(SERIALNO)$(RCSTRING) -m "Released $(RCSTRING)" HEAD)
+# FreshTomato AX (no tag)
+#export RUN_TAG=$(shell git tag -fa asuswrt_$(KERNEL_VER).$(FS_VER).$(SERIALNO)$(RCSTRING) -m "Released $(RCSTRING)" HEAD)
 else
 RCSTRING:=
 RC_EXT_NO=0
