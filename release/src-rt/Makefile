@@ -350,12 +350,18 @@ mips_rev =
 KERN_SIZE_OPT ?= y
 endif
 
+#FreshTomato AX image name
+V1 ?= "--def"
+current_TOMATO_VER = $(strip $(shell grep "TOMATO_MAJOR" router/shared/tomato_version.h | cut -d"\"" -f2)).$(strip $(shell grep "TOMATO_MINOR" router/shared/tomato_version.h | cut -d"\"" -f2))$(if $(filter $(V1),"--def"),,.$(strip $(shell grep -w "TOMATO_BUILD" router/shared/tomato_version.h | cut -d"\"" -f2)))
 ifeq ($(FAKEID),y)
-export IMGNAME := $(BUILD_NAME)_$(KERNEL_VER).$(FS_VER)_$(FORCE_SN)_$(SWPJVER)$(FORCE_EN)$(ISPCTRL_POSTFIX)
+#export IMGNAME := $(BUILD_NAME)_$(KERNEL_VER).$(FS_VER)_$(FORCE_SN)_$(SWPJVER)$(FORCE_EN)$(ISPCTRL_POSTFIX)
+export IMGNAME := freshtomato-$(BUILD_NAME)-ARM-$(current_TOMATO_VER)$(ISPCTRL_POSTFIX)
 else ifneq ($(CUSTOM_MODEL),)
-export IMGNAME := $(CUSTOM_MODEL)_$(KERNEL_VER).$(FS_VER)_$(SERIALNO)_$(SWPJVER)$(EXTENDNO)$(ISPCTRL_POSTFIX)
+#export IMGNAME := $(CUSTOM_MODEL)_$(KERNEL_VER).$(FS_VER)_$(SERIALNO)_$(SWPJVER)$(EXTENDNO)$(ISPCTRL_POSTFIX)
+export IMGNAME := freshtomato-$(CUSTOM_MODEL)-ARM-$(current_TOMATO_VER)$(ISPCTRL_POSTFIX)
 else
-export IMGNAME := $(BUILD_NAME)_$(KERNEL_VER).$(FS_VER)_$(SERIALNO)_$(SWPJVER)$(EXTENDNO)$(ISPCTRL_POSTFIX)
+#export IMGNAME := $(BUILD_NAME)_$(KERNEL_VER).$(FS_VER)_$(SERIALNO)_$(SWPJVER)$(EXTENDNO)$(ISPCTRL_POSTFIX)
+export IMGNAME := freshtomato-$(BUILD_NAME)-ARM-$(current_TOMATO_VER)$(ISPCTRL_POSTFIX)
 endif
 
 ifeq ($(OPDBG),y)
