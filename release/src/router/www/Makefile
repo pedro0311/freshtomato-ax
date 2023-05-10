@@ -57,6 +57,11 @@ install:
 	echo $(VISWWW)
 	rm -rf $(INSTALLDIR)/www
 
+#FreshTomato AX (adjust logo)
+ifeq ($(TCONFIG_FTAX), y)
+	cp -f ../patches/www/images/logo_TUF.png sysdep/TUF-AX3000/www/images/New_ui/logo_TUF.png
+endif
+
 	# INSTALLDIR is $(INSTALLDIR)/www here
 	mkdir -p $(INSTALLDIR)
 	cp ../www $(INSTALLDIR)/. -rf
