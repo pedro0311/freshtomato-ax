@@ -5167,6 +5167,9 @@ rstats-install:
 dropbear/config.h.in: $(if $(RTCONFIG_PROTECTION_SERVER),protect_srv-stage,)
 
 dropbear/config.h: dropbear/config.h.in
+ifeq ($(TCONFIG_FTAX),y)
+	$(call patch_files,dropbear)
+endif
 	cd dropbear && \
 		CPPFLAGS="-Os -Wall $(EXTRACFLAGS) -DARGTYPE=3 -ffunction-sections -fdata-sections -I$(STAGEDIR)/usr/include \
 			$(if $(TCONFIG_FTAX),-DHAVE_TOMATO,) \
@@ -5207,6 +5210,9 @@ endif
 dropbear-clean:
 	-@$(MAKE) -C dropbear clean
 	@rm -f dropbear/config.h
+ifeq ($(TCONFIG_FTAX),y)
+	$(call unpatch_files,dropbear)
+endif
 
 wtfast-configure:
 	@true

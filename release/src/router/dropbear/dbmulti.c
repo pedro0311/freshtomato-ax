@@ -55,13 +55,11 @@ static int runprog(const char *progname, int argc, char ** argv, int *match) {
 			return dropbearconvert_main(argc, argv);
 		}
 #endif
-#ifdef HAVE_TOMATO
-#ifdef DBMULTI_scp
+#if 0//def DBMULTI_scp
 		if (strcmp(progname, "scp") == 0) {
 			return scp_main(argc, argv);
 		}
 #endif
-#endif /* HAVE_TOMATO */
 	*match = DROPBEAR_FAILURE;
 	return 1;
 }
@@ -96,11 +94,9 @@ int main(int argc, char ** argv) {
 #ifdef DBMULTI_dropbearconvert
 			"'dropbearconvert' - the key converter\n"
 #endif
-#ifdef HAVE_TOMATO
-#ifdef DBMULTI_scp
+#if 0//def DBMULTI_scp
 			"'scp' - secure copy\n"
 #endif
-#endif /* HAVE_TOMATO */
 			,
 			DROPBEAR_VERSION);
 	exit(1);
