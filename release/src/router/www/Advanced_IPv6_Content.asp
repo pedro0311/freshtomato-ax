@@ -128,6 +128,10 @@ function showInputfield(v){
 		inputCtrl(document.form.ipv6_relay, 0);
 		inputCtrl(document.form.ipv6_6rd_dhcp[0], 0);
 		inputCtrl(document.form.ipv6_6rd_dhcp[1], 0);
+/* FTAX-BEGIN */
+		inputCtrl(document.form.ipv6_pd_norelease[0], 1);
+		inputCtrl(document.form.ipv6_pd_norelease[1], 1);
+/* FTAX-END */
 		inputCtrl(document.form.ipv6_6rd_prefix, 0);
 		inputCtrl(document.form.ipv6_6rd_prefixlen, 0);
 		inputCtrl(document.form.ipv6_6rd_router, 0);
@@ -220,6 +224,10 @@ function showInputfield(v){
 		inputCtrl(document.form.ipv6_relay, 0);
 		inputCtrl(document.form.ipv6_6rd_dhcp[0], 0);
 		inputCtrl(document.form.ipv6_6rd_dhcp[1], 0);
+/* FTAX-BEGIN */
+		inputCtrl(document.form.ipv6_pd_norelease[0], 1);
+		inputCtrl(document.form.ipv6_pd_norelease[1], 1);
+/* FTAX-END */
 		inputCtrl(document.form.ipv6_6rd_prefix, 0);
 		inputCtrl(document.form.ipv6_6rd_prefixlen, 0);
 		inputCtrl(document.form.ipv6_6rd_router, 0);
@@ -278,6 +286,10 @@ function showInputfield(v){
 		inputCtrl(document.form.ipv6_relay, 1);
 		inputCtrl(document.form.ipv6_6rd_dhcp[0], 0);
 		inputCtrl(document.form.ipv6_6rd_dhcp[1], 0);
+/* FTAX-BEGIN */
+		inputCtrl(document.form.ipv6_pd_norelease[0], 0);
+		inputCtrl(document.form.ipv6_pd_norelease[1], 0);
+/* FTAX-END */
 		inputCtrl(document.form.ipv6_6rd_prefix, 0);
 		inputCtrl(document.form.ipv6_6rd_prefixlen, 0);
 		inputCtrl(document.form.ipv6_6rd_router, 0);
@@ -340,6 +352,10 @@ function showInputfield(v){
 		inputCtrl(document.form.ipv6_relay, 0);
 		inputCtrl(document.form.ipv6_6rd_dhcp[0], 0);
 		inputCtrl(document.form.ipv6_6rd_dhcp[1], 0);
+/* FTAX-BEGIN */
+		inputCtrl(document.form.ipv6_pd_norelease[0], 0);
+		inputCtrl(document.form.ipv6_pd_norelease[1], 0);
+/* FTAX-END */
 		inputCtrl(document.form.ipv6_6rd_prefix, 0);
 		inputCtrl(document.form.ipv6_6rd_prefixlen, 0);
 		inputCtrl(document.form.ipv6_6rd_router, 0);
@@ -401,6 +417,10 @@ function showInputfield(v){
 		inputCtrl(document.form.ipv6_relay, 0);
 		inputCtrl(document.form.ipv6_6rd_dhcp[0], 1);
 		inputCtrl(document.form.ipv6_6rd_dhcp[1], 1);
+/* FTAX-BEGIN */
+		inputCtrl(document.form.ipv6_pd_norelease[0], 0);
+		inputCtrl(document.form.ipv6_pd_norelease[1], 0);
+/* FTAX-END */
 		var enable = (document.form.ipv6_6rd_dhcp[1].checked) ? 1 : 0;
 		inputCtrl(document.form.ipv6_6rd_prefix, enable);
 		inputCtrl(document.form.ipv6_6rd_prefixlen, enable);
@@ -536,6 +556,10 @@ function showInputfield(v){
 		inputCtrl(document.form.ipv6_relay, 0);
 		inputCtrl(document.form.ipv6_6rd_dhcp[0], 0);
 		inputCtrl(document.form.ipv6_6rd_dhcp[1], 0);
+/* FTAX-BEGIN */
+		inputCtrl(document.form.ipv6_pd_norelease[0], 0);
+		inputCtrl(document.form.ipv6_pd_norelease[1], 0);
+/* FTAX-END */
 		inputCtrl(document.form.ipv6_6rd_prefix, 0);
 		inputCtrl(document.form.ipv6_6rd_prefixlen, 0);
 		inputCtrl(document.form.ipv6_6rd_router, 0);
@@ -896,8 +920,8 @@ function validForm(){
 					!validator.isLegal_ipv6(document.form.ipv6_prefix)){
 					return false;
 			}
-	}		
-	
+	}
+
 	if(document.form.ipv6_service.value=="6rd" && document.form.ipv6_6rd_dhcp[1].checked){
 			if(!validator.ipRange(document.form.ipv6_6rd_router, "")) return false;  //6rd ip4 router
 			if(!validator.range(document.form.ipv6_6rd_ip4size, 0, 32)) return false;  //6rd ip4 router mask length
@@ -907,7 +931,7 @@ function validForm(){
 					return false;
 			}
 	}
-	
+
 	return true;
 }
 
@@ -1201,7 +1225,16 @@ function genWANSoption(){
 						<input type="radio" name="_ipv6_accept_defrtr" class="input" value="1" <% nvram_match("ipv6_accept_defrtr", "1","checked"); %>><#WLANConfig11b_WirelessCtrl_button1name#>
 						<input type="radio" name="_ipv6_accept_defrtr" class="input" value="0" <% nvram_match("ipv6_accept_defrtr", "0","checked"); %>><#btn_disable#>
 					</td>
-				</tr>
+			</tr>
+<!-- FTAX-BEGIN -->
+			<tr style="display:none;">
+					<th>Do not allow PD/Address release</th>
+					<td>
+						<input type="radio" name="ipv6_pd_norelease" class="input" value="1" <% nvram_match("ipv6_pd_norelease", "1","checked"); %>><#WLANConfig11b_WirelessCtrl_button1name#>
+						<input type="radio" name="ipv6_pd_norelease" class="input" value="0" <% nvram_match("ipv6_pd_norelease", "0","checked"); %>><#btn_disable#>
+					</td>
+			</tr>
+<!-- FTAX-END -->
 
 				<tr style="display:none;">
 						<th><#IPv6_tun_v4end#></th>
