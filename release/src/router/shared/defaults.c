@@ -3745,6 +3745,9 @@ struct nvram_tuple router_defaults[] = {
 	{ "ipv6_prefix", "", CKN_STR39, CKN_TYPE_DEFAULT, CKN_ACC_LEVEL_DEFAULT, CKN_ENC_DEFAULT, 0 },	/* The global-scope IPv6 prefix to route/advertise */
 	{ "ipv6_prefix_length", "64", CKN_STR3, CKN_TYPE_DEFAULT, CKN_ACC_LEVEL_DEFAULT, CKN_ENC_DEFAULT, 0 },	/* The bit length of the prefix. Used by dhcp6c. For radvd */
 	{ "ipv6_dhcp_pd", "1", CKN_STR1, CKN_TYPE_DEFAULT, CKN_ACC_LEVEL_DEFAULT, CKN_ENC_DEFAULT, 0 },	/* Enable DHCP-PD (DHCP Prefix Delegation) by default */
+#ifdef TCONFIG_FTAX
+	{ "ipv6_pd_norelease", "0", CKN_STR1, CKN_TYPE_DEFAULT, CKN_ACC_LEVEL_DEFAULT, CKN_ENC_DEFAULT, 0 },	/* odhcp6c - option to not send RELEASE when stopping */
+#endif /* TCONFIG_FTAX */
 	{ "ipv6_rtr_addr", "", CKN_STR39, CKN_TYPE_DEFAULT, CKN_ACC_LEVEL_DEFAULT, CKN_ENC_DEFAULT, 0 },	/* defaults to $ipv6_prefix::1 */
 	{ "ipv6_prefix_len_wan", "64", CKN_STR3, CKN_TYPE_DEFAULT, CKN_ACC_LEVEL_DEFAULT, CKN_ENC_DEFAULT, 0 },	/* used in ipv6_service other */
 	{ "ipv6_ipaddr", "", CKN_STR39, CKN_TYPE_DEFAULT, CKN_ACC_LEVEL_DEFAULT, CKN_ENC_DEFAULT, 0 },	/* used in ipv6_service other */
@@ -3815,6 +3818,9 @@ struct nvram_tuple router_defaults[] = {
 	{ "ipv61_prefix", "", CKN_STR39, CKN_TYPE_DEFAULT, CKN_ACC_LEVEL_DEFAULT, CKN_ENC_DEFAULT, 0 },	/* The global-scope IPv6 prefix to route/advertise */
 	{ "ipv61_prefix_length", "64", CKN_STR3, CKN_TYPE_DEFAULT, CKN_ACC_LEVEL_DEFAULT, CKN_ENC_DEFAULT, 0 },	/* The bit length of the prefix. Used by dhcp6c. For radvd */
 	{ "ipv61_dhcp_pd", "1", CKN_STR1, CKN_TYPE_DEFAULT, CKN_ACC_LEVEL_DEFAULT, CKN_ENC_DEFAULT, 0 },	/* Enable DHCP-PD (DHCP Prefix Delegation) by default */
+#ifdef TCONFIG_FTAX
+	{ "ipv61_pd_norelease", "0", CKN_STR1, CKN_TYPE_DEFAULT, CKN_ACC_LEVEL_DEFAULT, CKN_ENC_DEFAULT, 0 },	/* odhcp6c - option to not send RELEASE when stopping */
+#endif /* TCONFIG_FTAX */
 	{ "ipv61_rtr_addr", "", CKN_STR39, CKN_TYPE_DEFAULT, CKN_ACC_LEVEL_DEFAULT, CKN_ENC_DEFAULT, 0 },	/* defaults to $ipv6_prefix::1 */
 	{ "ipv61_prefix_len_wan", "64", CKN_STR3, CKN_TYPE_DEFAULT, CKN_ACC_LEVEL_DEFAULT, CKN_ENC_DEFAULT, 0 },	/* used in ipv6_service other */
 	{ "ipv61_ipaddr", "", CKN_STR39, CKN_TYPE_DEFAULT, CKN_ACC_LEVEL_DEFAULT, CKN_ENC_DEFAULT, 0 },	/* used in ipv6_service other */

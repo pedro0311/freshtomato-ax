@@ -2058,6 +2058,9 @@ start_dhcp6c(void)
 		NULL,		/* -rS46_CONT_LW / -rS46_CONT_MAPE */
 #endif
 		NULL,		/* -v */
+#ifdef TCONFIG_FTAX
+		NULL,		/* -k */
+#endif
 		NULL,		/* interface */
 		NULL };
 	int index = 7;
@@ -2135,6 +2138,11 @@ start_dhcp6c(void)
 
 	if (nvram_get_int("ipv6_debug"))
 		dhcp6c_argv[index++] = "-v";
+
+#ifdef TCONFIG_FTAX
+	if (nvram_get_int(ipv6_nvname("ipv6_pd_norelease")) == 1) /* option to not send RELEASE when stopping */
+		dhcp6c_argv[index++] = "-k";
+#endif /* TCONFIG_FTAX */
 
 	dhcp6c_argv[index++] = wan_ifname;
 
