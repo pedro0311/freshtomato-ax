@@ -1,0 +1,29 @@
+===========================
+FreshTomato-AX Changelog
+===========================
+(for full changelog, see: https://bitbucket.org/pedro311/freshtomato-ax/src/master/CHANGELOG)
+
+
+
+2023.X          2023.mm.dd
+---------------------------
+
+- ...
+- ...
+- ...
+- Makefile: add V2 (version note/date ... optional info) to FreshTomato image name
+- IPv6: add GUI option (Advanced_IPv6_Content.asp) for DHCP6 client to prevent prefix/address release
+- www: Makefile - Only include FT AX options if configured in
+- router: Makefile: add macro for applying/unapplaying the patches
+- Makefile: adjust to FreshTomato version logic (Example: 2023.2 ...)
+- Makefile: rename image to FreshTomato logic
+- router: Makefile - disable not needed things (comment it out)
+- router: dropbear: re-add scp applet (removed/disabled by Asus)
+- build: add option to enable FreshTomato AX features
+- Add README.md
+- GUI: Add (small) FreshTomato Logo
+- HND 5.04 - Fix missing gpy211 driver for BCM4912 and BCM6756 (Fix 2/2)
+- HND 5.04 - add missing folder (Fix 1/2)
+- Initial commit (GPL_TUF_AX3000_V2_3004_388_22525)
+
+
