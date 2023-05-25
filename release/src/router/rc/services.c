@@ -6247,12 +6247,24 @@ start_httpd(void)
 	}
 
 	cur_dir = getcwd(NULL, 0);
+#ifdef TCONFIG_FTAX
+	/* set www dir */
+	if (nvram_match("web_dir", "jffs"))
+		chdir("/jffs/www");
+	else if (nvram_match("web_dir", "opt"))
+		chdir("/opt/www");
+	else if (nvram_match("web_dir", "tmp"))
+		chdir("/tmp/www");
+	else
+		chdir("/www");
+#else	
 #ifdef DEBUG_RCTEST // Left for UI debug
 	httpd_dir = nvram_safe_get("httpd_dir");
 	if(strlen(httpd_dir)) chdir(httpd_dir);
 	else
 #endif
 	chdir("/www");
+#endif /* TCONFIG_FTAX */
 
 	if (is_routing_enabled()) {
 		httpd_argv[httpd_index++] = "-i";
