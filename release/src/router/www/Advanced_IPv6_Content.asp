@@ -636,7 +636,10 @@ function showInputfield2(s, v){
 	}else if(s=='ipv6_dhcp_pd'){
 		inputCtrl(document.form.ipv6_rtr_addr, enable);
 		inputCtrl(document.form.ipv6_prefix_length, enable);
-
+/* FTAX-BEGIN */
+		inputCtrl(document.form.ipv6_prefix_len_wan, 1);
+		document.getElementById("ipv6_wan_setting").style.display = (v=='1') ? "" : "none";
+/* FTAX-END */
 		if(enable){
 			document.getElementById("ipv6_ipaddr_r").style.display = "none";
 			document.getElementById("ipv6_prefix_length_r").style.display = "none";
