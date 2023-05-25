@@ -1779,11 +1779,16 @@ bound6(char *wan_ifname, int bound)
 
 		prefix_changed = (!nvram_match(ipv6_nvname_by_unit("ipv6_prefix", wan_unit), addr) ||
 					nvram_get_int(ipv6_nvname_by_unit("ipv6_prefix_length", wan_unit)) != size);
+
 		if (prefix_changed) {
 			eval("ip", "-6", "addr", "flush", "scope", "global", "dev", lan_ifname);
 			nvram_set(ipv6_nvname_by_unit("ipv6_rtr_addr", wan_unit), "");
 			nvram_set(ipv6_nvname_by_unit("ipv6_prefix", wan_unit), addr);
 			nvram_set_int(ipv6_nvname_by_unit("ipv6_prefix_length", wan_unit), size);
+#ifdef TCONFIG_FTAX
+			/* Inform the FTAX user AND keep value of nvram ipv6_prefix_len_wan (user requested/wanted value) - received value will be saved to nvram ipv6_prefix_length */
+			logmessage("dhcp6 client", "WAN IPv6 Prefix/Size changed - Requested:/%d, Received:/%d", nvram_get_int(ipv6_nvname("ipv6_prefix_len_wan")), size);
+#endif
 		}
 		if (*addr)
 			add_ip6_lanaddr();
@@ -2068,6 +2073,9 @@ start_dhcp6c(void)
 	char duid_arg[sizeof(duid)*2+1];
 	char prefix_arg[sizeof("128:xxxxxxxx")];
 	int service;
+#ifdef TCONFIG_FTAX
+	int i;
+#endif
 #ifdef RTCONFIG_SOFTWIRE46
 	int wan_proto;
 #endif
@@ -2113,7 +2121,15 @@ start_dhcp6c(void)
 			((unsigned long)(duid.ea[3] & 0x0f) << 16) |
 			((unsigned long)(duid.ea[4]) << 8) |
 			((unsigned long)(duid.ea[5])) : 1;
+#ifdef TCONFIG_FTAX
+		i = (nvram_get_int(ipv6_nvname("ipv6_prefix_len_wan")) ? : 0); /* allow (try) to request bigger IPv6 subnets (/48 to /64) --> use nvram ipv6_prefix_len_wan usually used by IPv6 manual setup! */
+		if ((i < 48) || (i > 64))
+			i = 0;
+
+		snprintf(prefix_arg, sizeof(prefix_arg), "%d:%lx", i, iaid);
+#else
 		snprintf(prefix_arg, sizeof(prefix_arg), "%d:%lx", 0, iaid);
+#endif
 		dhcp6c_argv[index++] = "-P";
 		dhcp6c_argv[index++] = prefix_arg;
 	}
