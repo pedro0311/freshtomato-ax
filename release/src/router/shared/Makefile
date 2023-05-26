@@ -146,7 +146,9 @@ OBJS += bwdpi_utils.o
 OBJS += bwdpi_utils.o
 OBJS += mac_name_tbl.o
 OBJS += stun.o
-ifeq ($(RTCONFIG_TOR),y)
+#ifeq ($(RTCONFIG_TOR),y)
+#FreshTomato AX (include scripts.o)
+ifeq ($(or $(RTCONFIG_TOR),$(TCONFIG_FTAX)),y)
 OBJS += scripts.o
 endif
 ifeq ($(RTCONFIG_AHS),y)
