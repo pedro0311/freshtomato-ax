@@ -131,6 +131,8 @@ function showInputfield(v){
 /* FTAX-BEGIN */
 		inputCtrl(document.form.ipv6_pd_norelease[0], 1);
 		inputCtrl(document.form.ipv6_pd_norelease[1], 1);
+		inputCtrl(document.form.ipv6_debug[0], 1);
+		inputCtrl(document.form.ipv6_debug[1], 1);
 /* FTAX-END */
 		inputCtrl(document.form.ipv6_6rd_prefix, 0);
 		inputCtrl(document.form.ipv6_6rd_prefixlen, 0);
@@ -227,6 +229,8 @@ function showInputfield(v){
 /* FTAX-BEGIN */
 		inputCtrl(document.form.ipv6_pd_norelease[0], 1);
 		inputCtrl(document.form.ipv6_pd_norelease[1], 1);
+		inputCtrl(document.form.ipv6_debug[0], 0);
+		inputCtrl(document.form.ipv6_debug[1], 0);
 /* FTAX-END */
 		inputCtrl(document.form.ipv6_6rd_prefix, 0);
 		inputCtrl(document.form.ipv6_6rd_prefixlen, 0);
@@ -289,6 +293,8 @@ function showInputfield(v){
 /* FTAX-BEGIN */
 		inputCtrl(document.form.ipv6_pd_norelease[0], 0);
 		inputCtrl(document.form.ipv6_pd_norelease[1], 0);
+		inputCtrl(document.form.ipv6_debug[0], 0);
+		inputCtrl(document.form.ipv6_debug[1], 0);
 /* FTAX-END */
 		inputCtrl(document.form.ipv6_6rd_prefix, 0);
 		inputCtrl(document.form.ipv6_6rd_prefixlen, 0);
@@ -355,6 +361,8 @@ function showInputfield(v){
 /* FTAX-BEGIN */
 		inputCtrl(document.form.ipv6_pd_norelease[0], 0);
 		inputCtrl(document.form.ipv6_pd_norelease[1], 0);
+		inputCtrl(document.form.ipv6_debug[0], 0);
+		inputCtrl(document.form.ipv6_debug[1], 0);
 /* FTAX-END */
 		inputCtrl(document.form.ipv6_6rd_prefix, 0);
 		inputCtrl(document.form.ipv6_6rd_prefixlen, 0);
@@ -420,6 +428,8 @@ function showInputfield(v){
 /* FTAX-BEGIN */
 		inputCtrl(document.form.ipv6_pd_norelease[0], 0);
 		inputCtrl(document.form.ipv6_pd_norelease[1], 0);
+		inputCtrl(document.form.ipv6_debug[0], 0);
+		inputCtrl(document.form.ipv6_debug[1], 0);
 /* FTAX-END */
 		var enable = (document.form.ipv6_6rd_dhcp[1].checked) ? 1 : 0;
 		inputCtrl(document.form.ipv6_6rd_prefix, enable);
@@ -559,6 +569,8 @@ function showInputfield(v){
 /* FTAX-BEGIN */
 		inputCtrl(document.form.ipv6_pd_norelease[0], 0);
 		inputCtrl(document.form.ipv6_pd_norelease[1], 0);
+		inputCtrl(document.form.ipv6_debug[0], 0);
+		inputCtrl(document.form.ipv6_debug[1], 0);
 /* FTAX-END */
 		inputCtrl(document.form.ipv6_6rd_prefix, 0);
 		inputCtrl(document.form.ipv6_6rd_prefixlen, 0);
@@ -1235,6 +1247,13 @@ function genWANSoption(){
 					<td>
 						<input type="radio" name="ipv6_pd_norelease" class="input" value="1" <% nvram_match("ipv6_pd_norelease", "1","checked"); %>><#WLANConfig11b_WirelessCtrl_button1name#>
 						<input type="radio" name="ipv6_pd_norelease" class="input" value="0" <% nvram_match("ipv6_pd_norelease", "0","checked"); %>><#btn_disable#>
+					</td>
+			</tr>
+			<tr style="display:none;">
+					<th>Start DHCP6 client in debug mode</th>
+					<td>
+						<input type="radio" name="ipv6_debug" class="input" value="1" <% nvram_match("ipv6_debug", "1","checked"); %>><#WLANConfig11b_WirelessCtrl_button1name#>
+						<input type="radio" name="ipv6_debug" class="input" value="0" <% nvram_match("ipv6_debug", "0","checked"); %>><#btn_disable#>
 					</td>
 			</tr>
 <!-- FTAX-END -->
