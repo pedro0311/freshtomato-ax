@@ -2152,8 +2152,13 @@ start_dhcp6c(void)
 	}
 #endif
 
+#ifdef TCONFIG_FTAX
+	if (nvram_get_int(ipv6_nvname("ipv6_debug")))
+		dhcp6c_argv[index++] = "-v";
+#else
 	if (nvram_get_int("ipv6_debug"))
 		dhcp6c_argv[index++] = "-v";
+#endif /* TCONFIG_FTAX */
 
 #ifdef TCONFIG_FTAX
 	if (nvram_get_int(ipv6_nvname("ipv6_pd_norelease")) == 1) /* option to not send RELEASE when stopping */
