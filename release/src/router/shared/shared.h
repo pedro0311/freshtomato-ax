@@ -3115,6 +3115,14 @@ extern void use_custom_config(char *config, char *target);
 extern void append_custom_config(char *config, FILE *fp);
 #endif
 
+#if defined(TCONFIG_FTAX) && !defined(RTCONFIG_TOR)
+/* FreshTomato AX (include scripts.c) */
+extern void run_custom_script(char *name, int timeout, char *arg1, char *arg2);
+extern void run_postconf(char *name, char *config);
+extern void use_custom_config(char *config, char *target);
+extern void append_custom_config(char *config, FILE *fp);
+#endif
+
 /* mt7620.c */
 #if defined(RTCONFIG_RALINK_MT7620)
 extern void ATE_mt7620_esw_port_status(void);
