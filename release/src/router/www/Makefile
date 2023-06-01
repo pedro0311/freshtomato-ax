@@ -102,6 +102,12 @@ ifneq ($(TCONFIG_FTAX),y)
 	for F in $(wildcard *.asp *.js *.jsx *.jsz *.dict); do \
 		sed -i $$F -e "/FTAX-BEGIN/,/FTAX-END/d"; \
 	done
+# Or remove AsusWRT options
+else
+	cd $(INSTALLDIR)/www && \
+	for F in $(wildcard *.asp *.js *.jsx *.jsz *.dict); do \
+		sed -i $$F -e "/NOFTAX-BEGIN/,/NOFTAX-END/d"; \
+	done
 endif
 
 # FreshTomato AX options - clean up
@@ -109,6 +115,7 @@ endif
 	for F in $(wildcard *.asp *.js *.jsx *.jsz *.dict *.html); do \
 		[ -f $(INSTALLDIR)/www/$$F ] && sed -i $$F \
 		-e "/FTAX-BEGIN/d"	-e "/FTAX-END/d" \
+		-e "/NOFTAX-BEGIN/d"	-e "/NOFTAX-END/d" \
 		|| true; \
 	done
 
