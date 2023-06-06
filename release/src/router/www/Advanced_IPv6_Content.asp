@@ -155,6 +155,9 @@ function showInputfield(v){
 		
 		inputCtrl(document.form.ipv6_autoconf_type[0], 1);
 		inputCtrl(document.form.ipv6_autoconf_type[1], 1);
+/* FTAX-BEGIN */
+		inputCtrl(document.form.ipv6_autoconf_type[2], 1);
+/* FTAX-END */
 		
 		if(v != ipv6_proto_orig){
 
@@ -171,6 +174,10 @@ function showInputfield(v){
 
 				if("<% nvram_get("ipv6_autoconf_type"); %>" == 0)
 					document.form.ipv6_autoconf_type[0].checked = true;
+/* FTAX-BEGIN */
+				else if("<% nvram_get("ipv6_autoconf_type"); %>" == 2)
+					document.form.ipv6_autoconf_type[2].checked = true;
+/* FTAX-END */
 				else
 					document.form.ipv6_autoconf_type[1].checked = true;
 				showInputfield2('ipv6_autoconf_type', "<% nvram_get("ipv6_autoconf_type"); %>");
@@ -252,6 +259,9 @@ function showInputfield(v){
 		document.getElementById("ipv6_prefix_length_r").style.display="none";
 		inputCtrl(document.form.ipv6_autoconf_type[0], 0);
 		inputCtrl(document.form.ipv6_autoconf_type[1], 0);
+/* FTAX-BEGIN */
+		inputCtrl(document.form.ipv6_autoconf_type[2], 0);
+/* FTAX-END */
 		inputCtrl(document.form.ipv6_dhcp_start_start, 0);
 		inputCtrl(document.form.ipv6_dhcp_end_end, 0);
 		inputCtrl(document.form.ipv6_dhcp_lifetime, 0);
@@ -320,6 +330,9 @@ function showInputfield(v){
 		inputCtrl(document.form.ipv6_rtr_addr, 0);
 		inputCtrl(document.form.ipv6_autoconf_type[0], 0);
 		inputCtrl(document.form.ipv6_autoconf_type[1], 0);
+/* FTAX-BEGIN */
+		inputCtrl(document.form.ipv6_autoconf_type[2], 0);
+/* FTAX-END */
 		inputCtrl(document.form.ipv6_dhcp_start_start, 0);
 		inputCtrl(document.form.ipv6_dhcp_end_end, 0);
 		inputCtrl(document.form.ipv6_dhcp_lifetime, 0);
@@ -385,6 +398,9 @@ function showInputfield(v){
 		inputCtrl(document.form.ipv6_rtr_addr, 0);
 		inputCtrl(document.form.ipv6_autoconf_type[0], 0);
 		inputCtrl(document.form.ipv6_autoconf_type[1], 0);
+/* FTAX-BEGIN */
+		inputCtrl(document.form.ipv6_autoconf_type[2], 0);
+/* FTAX-END */
 		inputCtrl(document.form.ipv6_dhcp_start_start, 0);
 		inputCtrl(document.form.ipv6_dhcp_end_end, 0);
 		inputCtrl(document.form.ipv6_dhcp_lifetime, 0);
@@ -453,6 +469,9 @@ function showInputfield(v){
 		inputCtrl(document.form.ipv6_rtr_addr, 0);
 		inputCtrl(document.form.ipv6_autoconf_type[0], 0);
 		inputCtrl(document.form.ipv6_autoconf_type[1], 0);
+/* FTAX-BEGIN */
+		inputCtrl(document.form.ipv6_autoconf_type[2], 0);
+/* FTAX-END */
 		inputCtrl(document.form.ipv6_dhcp_start_start, 0);
 		inputCtrl(document.form.ipv6_dhcp_end_end, 0);
 		inputCtrl(document.form.ipv6_dhcp_lifetime, 0);
@@ -517,6 +536,9 @@ function showInputfield(v){
 		inputCtrl(document.form.ipv6_rtr_addr, 1);
 		inputCtrl(document.form.ipv6_autoconf_type[0], 1);
 		inputCtrl(document.form.ipv6_autoconf_type[1], 1);
+/* FTAX-BEGIN */
+		inputCtrl(document.form.ipv6_autoconf_type[2], 1);
+/* FTAX-END */
 		
 		if(v != ipv6_proto_orig){
 				
@@ -529,6 +551,10 @@ function showInputfield(v){
 		else{
 				if("<% nvram_get("ipv6_autoconf_type"); %>" == 0)
 					document.form.ipv6_autoconf_type[0].checked = true;
+/* FTAX-BEGIN */
+				else if("<% nvram_get("ipv6_autoconf_type"); %>" == 2)
+					document.form.ipv6_autoconf_type[2].checked = true;
+/* FTAX-END */
 				else
 					document.form.ipv6_autoconf_type[1].checked = true;
 				showInputfield2('ipv6_autoconf_type', "<% nvram_get("ipv6_autoconf_type"); %>");
@@ -593,6 +619,9 @@ function showInputfield(v){
 		inputCtrl(document.form.ipv6_rtr_addr, 0);
 		inputCtrl(document.form.ipv6_autoconf_type[0], 0);
 		inputCtrl(document.form.ipv6_autoconf_type[1], 0);
+/* FTAX-BEGIN */
+		inputCtrl(document.form.ipv6_autoconf_type[2], 0);
+/* FTAX-END */
 		inputCtrl(document.form.ipv6_dhcp_start_start, 0);
 		inputCtrl(document.form.ipv6_dhcp_end_end, 0);
 		inputCtrl(document.form.ipv6_dhcp_lifetime, 0);
@@ -848,13 +877,23 @@ function validForm(){
 
 		// stateful autconf eats 16 bits of 128
 		if(!validator.range(document.form.ipv6_prefix_length, 3,
-				document.form.ipv6_autoconf_type[1].checked ? 112 : 126) ||
+/* FTAX-BEGIN */
+				(
+/* FTAX-END */
+				document.form.ipv6_autoconf_type[1].checked
+/* FTAX-BEGIN */
+				|| document.form.ipv6_autoconf_type[2].checked)
+/* FTAX-END */
+				? 112 : 126) ||
 				!validator.isLegal_ipv6(document.form.ipv6_rtr_addr)){
 				return false;
 		}
 
-		if(document.form.ipv6_autoconf_type[1].checked){
-							
+		if(document.form.ipv6_autoconf_type[1].checked
+/* FTAX-BEGIN */
+		|| document.form.ipv6_autoconf_type[2].checked
+/* FTAX-END */
+		){
 			if(!validIPv6_dhcp(document.form.ipv6_dhcp_start_start))
 				return false;
 			if(!validIPv6_dhcp(document.form.ipv6_dhcp_end_end))
@@ -877,14 +916,24 @@ function validForm(){
 		if(document.form.ipv6_dhcp_pd[1].checked){
 			// stateful autconf eats 16 bits of 128
 			if(!validator.range(document.form.ipv6_prefix_length, 3,
-				document.form.ipv6_autoconf_type[1].checked ? 112 : 126) ||
+/* FTAX-BEGIN */
+				(
+/* FTAX-END */
+				document.form.ipv6_autoconf_type[1].checked
+/* FTAX-BEGIN */
+				|| document.form.ipv6_autoconf_type[2].checked)
+/* FTAX-END */
+				? 112 : 126) ||
 				!validator.isLegal_ipv6(document.form.ipv6_rtr_addr)){
 				return false;	
 			}
 		}
 
-		if(document.form.ipv6_autoconf_type[1].checked){
-								
+		if(document.form.ipv6_autoconf_type[1].checked
+/* FTAX-BEGIN */
+		|| document.form.ipv6_autoconf_type[2].checked
+/* FTAX-END */
+		){
 			if(!validIPv6_dhcp(document.form.ipv6_dhcp_start_start))
 				return false;
 			if(!validIPv6_dhcp(document.form.ipv6_dhcp_end_end))
@@ -964,7 +1013,11 @@ function applyRule(){
 			document.form.ipv6_accept_defrtr.disabled = false;
 			document.form.ipv6_accept_defrtr.value = document.form._ipv6_accept_defrtr[0].checked?1:0;
 
-			if(document.form.ipv6_autoconf_type[1].checked){
+			if(document.form.ipv6_autoconf_type[1].checked
+/* FTAX-BEGIN */
+			   || document.form.ipv6_autoconf_type[2].checked
+/* FTAX-END */
+			  ){
 				document.form.ipv6_dhcp_start.disabled = false;
 				document.form.ipv6_dhcp_start.value = document.form.ipv6_prefix_span_for_start.value +"::"+document.form.ipv6_dhcp_start_start.value;
 				document.form.ipv6_dhcp_end.disabled = false;
@@ -990,7 +1043,11 @@ function applyRule(){
 			document.form.ipv6_prefix_length_s.value = document.form.ipv6_prefix_length.value;
 			document.form.ipv6_rtr_addr_s.value = document.form.ipv6_rtr_addr.value;
 
-			if(document.form.ipv6_autoconf_type[1].checked){
+			if(document.form.ipv6_autoconf_type[1].checked
+/* FTAX-BEGIN */
+			   || document.form.ipv6_autoconf_type[2].checked
+/* FTAX-END */
+			  ){
 				document.form.ipv6_dhcp_start.disabled = false;
 				document.form.ipv6_dhcp_start.value = document.form.ipv6_prefix_span_for_start.value +"::"+document.form.ipv6_dhcp_start_start.value;
 				document.form.ipv6_dhcp_end.disabled = false;
@@ -1414,8 +1471,15 @@ function genWANSoption(){
 					<tr>
 		     		<th><#ipv6_auto_config#></th>	
 		     		<td>
+<!-- NOFTAX-BEGIN -->
 							<input type="radio" name="ipv6_autoconf_type" class="input" value="0" onclick="showInputfield2('ipv6_autoconf_type', '0');" <% nvram_match("ipv6_autoconf_type", "0","checked"); %>>Stateless
 							<input type="radio" name="ipv6_autoconf_type" class="input" value="1" onclick="showInputfield2('ipv6_autoconf_type', '1');" <% nvram_match("ipv6_autoconf_type", "1","checked"); %>>Stateful
+<!-- NOFTAX-END -->
+<!-- FTAX-BEGIN -->
+							<input type="radio" name="ipv6_autoconf_type" class="input" value="0" onclick="showInputfield2('ipv6_autoconf_type', '0');" <% nvram_match("ipv6_autoconf_type", "0","checked"); %>>only SLAAC
+							<input type="radio" name="ipv6_autoconf_type" class="input" value="1" onclick="showInputfield2('ipv6_autoconf_type', '1');" <% nvram_match("ipv6_autoconf_type", "1","checked"); %>>only DHCPv6
+							<input type="radio" name="ipv6_autoconf_type" class="input" value="2" onclick="showInputfield2('ipv6_autoconf_type', '2');" <% nvram_match("ipv6_autoconf_type", "2","checked"); %>>SLAAC and DHCPv6
+<!-- FTAX-END -->
 						</td>	
 		    	</tr>
 					<tr>
