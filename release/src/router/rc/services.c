@@ -1839,6 +1839,62 @@ void start_dnsmasq(void)
 		int ra_lifetime, dhcp_lifetime;
 		int service, stateful, announce, dhcp_start, dhcp_end;
 
+#ifdef TCONFIG_FTAX
+		service = get_ipv6_service();
+		stateful = (service == IPV6_NATIVE_DHCP || service == IPV6_MANUAL) ?
+			nvram_get_int(ipv6_nvname("ipv6_autoconf_type")) : 0;
+		announce =
+#ifdef RTCONFIG_6RELAYD
+			service != IPV6_PASSTHROUGH &&
+#endif
+			nvram_get_int(ipv6_nvname("ipv6_radvd"));
+		ra_lifetime = nvram_get_int("ra_lifetime") ? : 600; /* 10 minutes for now */
+		dhcp_lifetime = nvram_get_int(ipv6_nvname("ipv6_dhcp_lifetime"));
+		if (dhcp_lifetime <= 0)
+			dhcp_lifetime = 86400;
+
+		if (announce) {
+			fprintf(fp, "ra-param=%s,%d,%d\n"
+				    "enable-ra\n"
+				    "quiet-ra\n",
+				lan_ifname, 10, ra_lifetime);
+		}
+
+		/* SLAAC and DHCPv6 (2 IPv6 IPs) (SLAAC enabled, stateful DHCPv6) */
+		if (stateful == 2) {
+			/* TODO: rework WEB UI to specify ranges without prefix
+			 * TODO: add size checking, now range takes all of 16 bit */
+			dhcp_start = (inet_pton(AF_INET6, nvram_safe_get(ipv6_nvname("ipv6_dhcp_start")), &addr) > 0) ?
+			    ntohs(addr.s6_addr16[7]) : 0x1000;
+			dhcp_end = (inet_pton(AF_INET6, nvram_safe_get(ipv6_nvname("ipv6_dhcp_end")), &addr) > 0) ?
+			    ntohs(addr.s6_addr16[7]) : 0x2000;
+			fprintf(fp, "dhcp-range=lan,::%04x,::%04x,constructor:%s,ra-names,%d\n",
+				(dhcp_start < dhcp_end) ? dhcp_start : dhcp_end,
+				(dhcp_start < dhcp_end) ? dhcp_end : dhcp_start,
+				lan_ifname, dhcp_lifetime);
+			have_dhcp |= 2; /* DHCPv6 */
+		}
+		/* only DHCPv6 and NO SLAAC (SLAAC disabled, stateful DHCPv6) */
+		else if (stateful == 1) {
+			/* TODO: rework WEB UI to specify ranges without prefix
+			 * TODO: add size checking, now range takes all of 16 bit */
+			dhcp_start = (inet_pton(AF_INET6, nvram_safe_get(ipv6_nvname("ipv6_dhcp_start")), &addr) > 0) ?
+			    ntohs(addr.s6_addr16[7]) : 0x1000;
+			dhcp_end = (inet_pton(AF_INET6, nvram_safe_get(ipv6_nvname("ipv6_dhcp_end")), &addr) > 0) ?
+			    ntohs(addr.s6_addr16[7]) : 0x2000;
+			fprintf(fp, "dhcp-range=lan,::%04x,::%04x,constructor:%s,%d\n",
+				(dhcp_start < dhcp_end) ? dhcp_start : dhcp_end,
+				(dhcp_start < dhcp_end) ? dhcp_end : dhcp_start,
+				lan_ifname, dhcp_lifetime);
+			have_dhcp |= 2; /* DHCPv6 */
+		}
+		/* only SLAAC and NO DHCPv6 (SLAAC enabled, stateless DHCPv6) */
+		else if ((stateful == 0) && announce) {
+			fprintf(fp, "dhcp-range=lan,::,constructor:%s,ra-stateless,%d,%d\n",
+				lan_ifname, 64, ra_lifetime);
+			have_dhcp |= 2; /* DHCPv6 */
+		}
+#else /* AsusWRT */
 		service = get_ipv6_service();
 		stateful = (service == IPV6_NATIVE_DHCP || service == IPV6_MANUAL) ?
 			nvram_get_int(ipv6_nvname("ipv6_autoconf_type")) : 0;
@@ -1877,6 +1933,7 @@ void start_dnsmasq(void)
 				lan_ifname, 64, ra_lifetime);
 			have_dhcp |= 2; /* DHCPv6 */
 		}
+#endif /* TCONFIG_FTAX */
 
 #ifdef RTCONFIG_YANDEXDNS
 		if (nvram_get_int("yadns_enable_x")) {
