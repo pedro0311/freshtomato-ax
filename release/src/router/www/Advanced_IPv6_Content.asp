@@ -508,7 +508,13 @@ function showInputfield(v){
 		inputCtrl(document.form.ipv6_tun_v4end, 0);
 		inputCtrl(document.form.ipv6_relay, 0);
 		inputCtrl(document.form.ipv6_6rd_dhcp[0], 0);
-		inputCtrl(document.form.ipv6_6rd_dhcp[1], 0);		
+		inputCtrl(document.form.ipv6_6rd_dhcp[1], 0);
+/* FTAX-BEGIN */
+		inputCtrl(document.form.ipv6_pd_norelease[0], 0);
+		inputCtrl(document.form.ipv6_pd_norelease[1], 0);
+		inputCtrl(document.form.ipv6_debug[0], 0);
+		inputCtrl(document.form.ipv6_debug[1], 0);
+/* FTAX-END */
 		inputCtrl(document.form.ipv6_6rd_prefix, 0);
 		inputCtrl(document.form.ipv6_6rd_prefixlen, 0);
 		inputCtrl(document.form.ipv6_6rd_router, 0);
