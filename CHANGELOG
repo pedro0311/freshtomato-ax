@@ -5,12 +5,16 @@ FreshTomato-AX Changelog
 
 
 
-2023.X          2023.mm.dd
+2023.3          2023.06.25
 ---------------------------
 
-- ...
-- ...
-- ...
+- GUI (Advanced_IPv6_Content.asp) - fix option visibility for static IPv6 (manual setup)
+- DHCPv6: align to FreshTomato ARM options (SLAAC and DHCPv6, only DHCPv6 and NO SLAAC, only SLAAC and NO DHCPv6)
+- www: Makefile - Only include FT AX options if configured in AND remove AsusWRT options (if needed)
+- rc: udhcpc.c - run/add dhcpc-event user scripts (deconfig, bound, unbound, updated, etc...)
+- IPv6: add GUI option (Advanced_IPv6_Content.asp) for DHCP6 client to start in debug mode
+- GUI: Allow to change directory with the GUI files
+- IPv6: DHCPv6-PD - allow (try) to request bigger IPv6 subnets (/48 to /64)
 - Makefile: add V2 (version note/date ... optional info) to FreshTomato image name
 - IPv6: add GUI option (Advanced_IPv6_Content.asp) for DHCP6 client to prevent prefix/address release
 - www: Makefile - Only include FT AX options if configured in
@@ -25,5 +29,3 @@ FreshTomato-AX Changelog
 - HND 5.04 - Fix missing gpy211 driver for BCM4912 and BCM6756 (Fix 2/2)
 - HND 5.04 - add missing folder (Fix 1/2)
 - Initial commit (GPL_TUF_AX3000_V2_3004_388_22525)
-
-
