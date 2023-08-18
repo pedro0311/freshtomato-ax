@@ -1,0 +1,4 @@
+SWITCH=DEVICE_0
+CURL=curl -A "asusrouter-test-DUTUtil-111" http://192.168.50.1/login.cgi?login_authorization=YWRtaW46YWRtaW5BZG1pbjEyM0A= -D savecookie.txt
+CURL=curl -A "asusrouter-test-DUTUtil-111" -e "192.168.50.1" -b savecookie.txt -d "{\"re_mac\":\"04:D9:F5:B5:8E:70\",\"action_mode\":\"config_changed\",\"config\":{\"channel_plan\":\"2\",\"wl0_set_channel\":\"6\",\"wl0_set_bw\":\"20\",\"wl0_set_nctrlsb\":\"0\",\"wl1_set_channel\":\"40\",\"wl1_set_bw\":\"80\",\"wl1_set_nctrlsb\":\"1\"}}" http://192.168.50.1/applyapp.cgi
+SLEEP=60

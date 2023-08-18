@@ -1,0 +1,11 @@
+SWITCH=DEVICE_1
+rm /tmp/home/root/check_swctl*.*
+rm /tmp/home/root/tc-check-swctl.sh
+SWITCH=DEVICE_0
+rm /tmp/home/root/check_swctl*.*
+rm /tmp/home/root/tc-check-swctl.sh
+nvram set sdn_rl="<0>DEFAULT>1>0>0>0>0>0>0>0>0>0>0>0>0>0>0>0"
+nvram set subnet_rl=""
+CURL=curl -A "asusrouter-test-DUTUtil-111" http://192.168.50.1/login.cgi?login_authorization=YWRtaW46YWRtaW5BZG1pbjEyM0A= -D savecookie.txt
+CURL=curl -A "asusrouter-test-DUTUtil-111" -e "192.168.50.1" -b savecookie.txt -d "{\"vlan_rl\":\"\",\"apg1_enable\":\"0\",\"apg1_ssid\":\"\",\"apg1_security\":\"\",\"apg1_dut_list\":\"\",\"apg2_enable\":\"0\",\"apg2_ssid\":\"\",\"apg2_security\":\"\",\"apg2_dut_list\":\"\",\"apg3_enable\":\"0\",\"apg3_ssid\":\"\",\"apg3_security\":\"\",\"apg3_dut_list\":\"\",\"vlan_trunklist\":\"\",\"action_mode\":\"apply\",\"rc_service\":\"restart_net_and_phy;restart_dnsmasq\"}" http://192.168.50.1/applyapp.cgi
+SLEEP=10

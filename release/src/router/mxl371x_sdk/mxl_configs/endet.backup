@@ -1,0 +1,161 @@
+#------------------------------------------------------------------------------
+# Example file format of endet.conf
+#------------------------------------------------------------------------------
+# Band E/F define for atsc and catv
+atscfreq e2
+atsclowerbandstart 38
+atscupperbandstart 284
+atsclowerGap 36 67 97 128 158 189 220 251
+atscupperGap 282 312 343 374 404 435 466 497
+atscvalidChBitMask 0x7f7f
+
+atscfreq ee3
+atsclowerbandstart 18
+atscupperbandstart 264
+atsclowerGap 15 46 77 108 138 169 200 230
+atscupperGap 261 292 323 353 384 415 445 476
+atscvalidChBitMask 0x7f5f
+
+atscfreq f3
+atsclowerbandstart 28
+atscupperbandstart 274
+atsclowerGap 26 56 87 118 148 179 210 241
+atscupperGap 271 302 333 364 394 425 456 486
+atscvalidChBitMask 0x7
+
+atscfreq f7
+atsclowerbandstart 38
+atscupperbandstart 284
+atsclowerGap 36 67 97 128 158 189 220 251
+atscupperGap 282 312 343 374 404 435 466 497
+atscvalidChBitMask 0x0
+
+catvfreq e2
+catvlowerbandstart 28
+catvupperbandstart 274
+catvlowerGap 26 56 87 118 148 179 210 241
+catvupperGap 271 302 333 364 494 425 456 486
+catvvalidChBitMask 0x7f7f
+
+catvfreq ee3
+catvlowerbandstart 38
+catvupperbandstart 284
+catvlowerGap 36 67 97 128 158 189 220 251
+catvupperGap 282 312 343 374 404 435 466 497
+catvvalidChBitMask 0x7f7f
+
+catvfreq f3
+catvlowerbandstart 18
+catvupperbandstart 264
+catvlowerGap 15 46 77 108 138 169 200 230
+catvupperGap 261 292 323 353 384 415 445 476
+catvvalidChBitMask 0x7f7f
+
+catvfreq f7
+catvlowerbandstart 28
+catvupperbandstart 274
+catvlowerGap 26 56 87 118 148 179 210 241
+catvupperGap 271 302 333 364 394 425 456 486
+catvvalidChBitMask 0x7f7f
+
+# CATV and ATSC weight related constant
+atscwtHit 0
+atscwtMiss 0
+atscloPenalty 0
+atschiPenalty 0
+atscminCnt 0
+atscmaxCnt 0
+atscrxLvlMin 0
+atscrxLvlScale 0
+atscchwt 0 0 0 0
+atscthreshold 0
+
+catvwtHit 0
+catvwtMiss 0
+catvloPenalty 0
+catvhiPenalty 0
+catvminCnt 0
+catvmaxCnt 0
+catvrxLvlMin 0
+catvrxLvlScale 0
+catvchwt 0 0 0 0
+catvthreshold 0
+# -------------------------------------------------------
+# BTS CSS related define
+btscssfreq d2
+btscsscvalue 336 411 38 112 374
+btscssnvalue 360 435 62 136 259
+
+btscssfreq d4
+btscsscvalue 347 422 48 123 384
+btscssnvalue 371 446 72 147 270
+
+btscssfreq d6
+btscsscvalue 358 432 59 134 395
+btscssnvalue 382 456 83 158 280
+
+btscssfreq d8
+btscsscvalue 368 443 69 144 405
+btscssnvalue 392 467 93 168 291
+
+btscssfreq d10
+btscsscvalue 379 453 80 155 416
+btscssnvalue 403 477 104 179 301
+
+btscssfreq 1100
+btscsscvalue 326 401 27 102 363
+btscssnvalue 350 425 51 126 249
+
+# BTS and CSS RX LVL constant, Bts_Css_Lv_Tbl_t
+btsRxLvlMin 0
+btsRxLvlScale 0
+btseChWt 0 0 0 0
+btsoChWt 0 0 0 0
+btseWtHt 0
+btsoWtHt 0
+btseWtMiss 0
+btsoWtMiss 0
+btseMinCnt 0
+btsoMinCnt 0
+btseMaxCnt 0
+btsoMaxCnt 0
+btseLoPenalty 0
+btsoLoPenalty 0
+btseHiPenalty 0
+btsoHiPenalty 0
+btse1ValidChnList 0x0f
+btse2ValidChnList 0x0f
+btso1ValidChnList 0x07
+btso2ValidChnList 0x07
+btsThreshold 0
+
+cssRxLvlMin 0
+cssRxLvlScale 0
+acssChWt 0 0 0 0
+dcssChWt 0 0 0 0
+acssWtHt 0
+dcssWtHt 0
+acssWtMiss 0
+dcssWtMiss 0
+acssMinCnt 0
+dcssMinCnt 0
+acssMaxCnt 0
+dcssMaxCnt 0
+acssLoPenalty 0
+dcssLoPenalty 0
+acssHiPenalty 0
+dcssHiPenalty 0
+acssValidChnList 0x3f
+dcss1ValidChnList 0x3f
+dcss2ValidChnList 0x3f
+cssThreshold 0
+
+
+# Energy and usability related threshold, part of the value in Pcl_EngDetCfg_t
+bandEUsabilityThreshold 0
+bandFUsabilityThreshold 0
+bandDUsabilityThreshold 0
+bandEEnergyThreshold 0
+bandFEnergyThreshold 0
+bandDEnergyThreshold 0
+

@@ -1,0 +1,11 @@
+SWITCH=DEVICE_1
+nvram set wl1_chanspec=149/80
+nvram set dwb_mode=3
+nvram commit
+rc rc_service restart_cfgsync
+SWITCH=DEVICE_0
+rc rc_service restart_cfgsync
+SLEEP=60
+SWITCH=DEVICE_1
+rc rc_service restart_wireless
+SLEEP=60

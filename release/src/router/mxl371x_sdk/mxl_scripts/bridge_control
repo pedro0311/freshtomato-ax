@@ -1,0 +1,101 @@
+#!/bin/bash
+
+##########################################################################################
+#  FILE NAME          : bridge_control
+# 
+#
+#  DATE CREATED       : 
+#  LAST MODIFIED      :
+# 
+#  DESCRIPTION        : set up bridge 
+# 
+#  MaxLinear, Inc. retains all right, title and interest (including all intellectual
+#  property rights) in and to this computer program, which is protected by applicable
+#  intellectual property laws.  Unless you have obtained a separate written license from
+#  MaxLinear, Inc. or an authorized licensee of MaxLinear, Inc., you are not authorized
+#  to utilize all or a part of this computer program for any purpose (including
+#  reproduction, distribution, modification, and compilation into object code), and you
+#  must immediately destroy or return all copies of this computer program.  If you are
+#  licensed by MaxLinear, Inc. or an authorized licensee of MaxLinear, Inc., your rights
+#  to utilize this computer program are limited by the terms of that license.
+# 
+#  This computer program contains trade secrets owned by MaxLinear, Inc. and, unless
+#  authorized by MaxLinear, Inc. in writing, you agree to maintain the confidentiality
+#  of this computer program and related information and to not disclose this computer
+#  program and related information to any other person or entity.
+# 
+#  Misuse of this computer program or any information contained in it may results in
+#  violations of applicable law.  MaxLinear, Inc. vigorously enforces its copyright,
+#  trade secret, patent, contractual, and other legal rights.
+# 
+#  THIS COMPUTER PROGRAM IS PROVIDED "AS IS" WITHOUT ANY WARRANTIES, AND
+#  MAXLINEAR, INC.EXPRESSLY DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING THE
+#  WARRANTIES OF MERCHANTIBILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE, AND
+#  NONINFRINGEMENT.
+# 
+##########################################################################################
+#  Copyright (c) 2016, MaxLinear, Inc.
+##########################################################################################
+
+function usage()
+{
+    echo "Usage: $0 <setup/remove> [interface]"
+    echo "           setup  -- to set up the bridge for specific interface (default is eth1)"
+    echo "           remove -- to remove the bridge for specific interface (default is eth1)"
+}
+
+function setup_bridge()
+{
+    echo =====================
+    echo Setting up the bridge
+    echo =====================
+
+    sudo ifconfig en0 up
+
+    sudo brctl addbr br0
+    sudo brctl addif br0 $1
+    sudo brctl addif br0 en0
+
+    sudo ifconfig br0 10.1.1.27 netmask 255.255.255.0
+
+    sudo ifconfig br0
+
+    echo Setup bridge done.
+}
+
+function remove_bridge()
+{
+    echo =====================
+    echo Removing the bridge
+    echo =====================
+
+    sudo brctl delif br0 $1
+    sudo brctl delif br0 en0
+    sudo ifconfig br0 down
+    sudo brctl delbr br0
+
+    sudo ifconfig
+
+    echo Remove bridge done.
+}
+
+if [ $# -eq 2 ]; then
+	eth=$2
+elif [ $# -eq 1 ]; then
+	eth=eth1
+else
+    usage
+    exit -1
+fi
+
+op=$1
+
+if [ $op == "setup" ]; then
+    setup_bridge $eth
+elif [ $op == "remove" ]; then
+    remove_bridge $eth
+else
+    usage
+    exit -1
+fi
+

@@ -1,0 +1,9 @@
+SWITCH=DEVICE_0
+CHECKFILE=/tmp/check_wifi_band_cap.txt 
+OK
+CHECKFILE=/tmp/check_lan_port_cap.txt 
+OK
+SWITCH=DEVICE_1
+CHECKFILE=/tmp/check_wifi_band_cap.txt 
+OK
+CHECKFILE=/tmp/check_lan_port_cap.txt

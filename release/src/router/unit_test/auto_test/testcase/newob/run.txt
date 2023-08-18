@@ -1,0 +1,30 @@
+TIMEOUT=480
+SWITCH=DEVICE_1
+nvram set asuslog_path=/jffs/newob/
+nvram set cfg_syslog=1
+nvram commit
+iptables -nvL INPUT > /jffs/re_default_iptable_input.txt
+ps|grep cfg > /jffs/newob_Process.txt
+SWITCH=DEVICE_0
+nvram set asuslog_path=/jffs/newob/
+nvram set cfg_syslog=1
+nvram commit
+IFGO=60=cat /tmp/newob_onboarding.json=FC:34:97:09:0F:00
+CURL=curl -A "asusrouter-test-DUTUtil-111" http://192.168.160.1/login.cgi?login_authorization=YWRtaW46MTIzNDU2Nzg5 -D savecookie.txt
+CURL=curl -A "asusrouter-test-DUTUtil-111" -e "192.168.160.1" -b savecookie.txt  http://192.168.160.1/appGet.cgi?hook=send_httpd_event()
+TIMEOUT=480
+SLEEP=3
+TELNETEXIT
+SLEEP=240
+RELOADCONFIG=config2
+TELNETENABLE
+TELNETCONNECT
+SWITCH=DEVICE_0
+nvram set cfg_syslog=0
+SWITCH=DEVICE_1
+nvram set cfg_syslog=0
+echo "-----------------obd end-----------------" >> /jffs/newob_test_status
+nvram get re_mode >> /jffs/newob_test_status
+nvram get sw_mode >> /jffs/newob_test_status
+nvram get cfg_group >> /jffs/newob_test_status
+nvram get amas_newob_status >> /jffs/newob_test_status

@@ -1,0 +1,12 @@
+SWITCH=DEVICE_1
+rm -rf /jffs/.sys/cfg_mnt/file_upload.status
+cp /tmp/run_lldpd.sh /tmp/upload_file/test_file
+SLEEP=20
+SWITCH=DEVICE_0
+re_mac=`nvram get cfg_relist | awk '{print substr($0, 2, 17)}'`
+upload_file=/jffs/.sys/cfg_mnt/$re_mac/test_file
+if test -f "$upload_file"; then 
+    nvram set upload_file_success=1
+fi
+unset re_mac
+unset upload_file

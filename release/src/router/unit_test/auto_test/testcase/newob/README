@@ -1,0 +1,12 @@
+項目: newob test
+環境:
+    1. 一台CAP及一台DUT 
+    	DUT可為以下模式：
+    	    i. 未設定過的router透過eth/PLC
+	    ii. 設定過的router透過eth/PLC，沒有加入過RE
+	    iii. 設定過的repeater透過wifi
+	    iv. 設定過的ap透過eth，沒有加入過RE
+	    v. 設定過的media bridge透過wifi
+    2. CAP帳號密碼請設定為admin/adminAdmin123@ (YWRtaW46YWRtaW5BZG1pbjEyM0A=)
+    3. CAP在DHCP服務器頁面，手動指定DUT的IP，用於後續控制連線後的DUT
+    4. 檢查 DUT是否主動上報信息給CAP , CAP是否存儲到可做RE設備信息，CAP是否可以觸發DUT進行onboarding動作。

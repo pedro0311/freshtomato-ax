@@ -1,0 +1,2 @@
+SWITCH=DEVICE_0
+CHECKFILE=/jffs/amas_bhopt.log

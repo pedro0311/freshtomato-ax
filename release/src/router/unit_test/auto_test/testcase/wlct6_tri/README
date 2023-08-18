@@ -1,0 +1,4 @@
+項目: 測試  Ttr band RE RESTART_CONNECTING 若掃不到任何AP是否正常
+環境: 將對上2.4G/5G1 設為active，5G設為unuse。並確保CAP對下AP皆無法down。
+並設定5G1 Priority高於2.4 Priority。
+結果: 5G1掃不到任何AP。使用SSID連線且失敗。2.4G同5G1結果。

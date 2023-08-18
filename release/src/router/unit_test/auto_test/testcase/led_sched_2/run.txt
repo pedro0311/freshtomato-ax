@@ -1,0 +1,6 @@
+SWITCH=DEVICE_0
+CURL=curl -A "asusrouter-test-DUTUtil-111" http://192.168.50.1/login.cgi?login_authorization=YWRtaW46YWRtaW5BZG1pbjEyM0A= -D savecookie.txt
+CURL=curl -A "asusrouter-test-DUTUtil-111" -e "192.168.50.1" -b savecookie.txt -d "{\"led_timesched\":\"0\",\"led_sched\":\"\",\"action_mode\":\"apply_sync\"}" http://192.168.50.1/applyapp.cgi
+SLEEP=10
+nvram get led_timesched | grep -c $led_timesched >$HOME/chk_led_timesched.txt
+nvram get led_sched | grep -c "" >$HOME/chk_led_sched.txt

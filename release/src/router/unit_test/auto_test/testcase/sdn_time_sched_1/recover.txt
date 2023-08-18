@@ -1,0 +1,16 @@
+#SWITCH=DEVICE_0
+#nvram set svc_ready=0
+#nvram set ntp_ready=0
+#nvram commit
+#SWITCH=DEVICE_1
+#nvram set svc_ready=0
+#nvram set ntp_ready=0
+#nvram commit
+#SWITCH=DEVICE_0
+#export sdn_rl="<0>DEFAULT>1>0>0>0>0>0>0>0>0>0>0>0>0>0<1>"
+#export sdn_rl=$sdn_rl"<1>Guest>0>1>1>1>0>0>0>0>0>0>0>0>0>0<2>Guest>0>2>2>2>0>0>0>0>0>0>0>0>0>0<3>Guest>0>3>3>3>0>0>0>0>0>0>0>0>0>0<4>Guest>0>4>4>4>0>0>0>0>0>0>0>0>0>0<5>Guest>0>5>5>5>0>0>0>0>0>0>0>0>0>0<6>Guest>0>6>6>6>0>0>0>0>0>0>0>0>0>0<7>Guest>0>7>7>7>0>0>0>0>0>0>0>0>0>0<8>Guest>0>8>8>8>0>0>0>0>0>0>0>0>0>0"
+#export sdn_rl=$sdn_rl"<9>Guest>0>9>9>9>0>0>0>0>0>0>0>0>0>0<10>Guest>0>10>10>10>0>0>0>0>0>0>0>0>0>0<11>Guest>0>11>11>11>0>0>0>0>0>0>0>0>0>0<12>Guest>0>12>12>12>0>0>0>0>0>0>0>0>0>0<13>Guest>0>13>13>13>0>0>0>0>0>0>0>0>0>0<14>Guest>0>14>14>14>0>0>0>0>0>0>0>0>0>0<15>Guest>0>15>15>15>0>0>0>0>0>0>0>0>0>0<16>Guest>0>16>16>16>0>0>0>0>0>0>0>0>0>0"
+#nvram set sdn_rl=$sdn_rl
+#nvram commit
+#CURL=curl -A "asusrouter-test-DUTUtil-111" http://192.168.50.1/login.cgi?login_authorization=YWRtaW46YWRtaW5BZG1pbjEyM0A= -D savecookie.txt 
+#CURL=curl -A "asusrouter-test-DUTUtil-111" -e "192.168.50.1" -b savecookie.txt -d "{\"action_mode\":\"apply\",\"vlan_rl\":\"\",\"apg1_enable\":\"0\",\"apg1_timesched\":\"0\",\"apg1_sched\":\"\",\"apg2_enable\":\"0\",\"apg2_timesched\":\"0\",\"apg2_sched\":\"\",\"apg3_enable\":\"0\",\"apg3_timesched\":\"0\",\"apg3_sched\":\"\",\"apg4_enable\":\"0\",\"apg4_timesched\":\"0\",\"apg4_sched\":\"\",\"apg5_enable\":\"0\",\"apg5_timesched\":\"0\",\"apg5_sched\":\"\",\"apg6_enable\":\"0\",\"apg6_timesched\":\"0\",\"apg6_sched\":\"\",\"apg7_enable\":\"0\",\"apg7_timesched\":\"0\",\"apg7_sched\":\"\",\"apg8_enable\":\"0\",\"apg8_timesched\":\"0\",\"apg8_sched\":\"\",\"apg9_enable\":\"0\",\"apg9_timesched\":\"0\",\"apg9_sched\":\"\",\"apg10_enable\":\"0\",\"apg10_timesched\":\"0\",\"apg10_sched\":\"\",\"apg11_enable\":\"0\",\"apg11_timesched\":\"0\",\"apg11_sched\":\"\",\"apg12_enable\":\"0\",\"apg12_timesched\":\"0\",\"apg12_sched\":\"\",\"apg13_enable\":\"0\",\"apg13_timesched\":\"0\",\"apg13_sched\":\"\",\"apg14_enable\":\"0\",\"apg14_timesched\":\"0\",\"apg14_sched\":\"\",\"apg15_enable\":\"0\",\"apg15_timesched\":\"0\",\"apg15_sched\":\"\",\"apg16_enable\":\"0\",\"apg16_timesched\":\"0\",\"apg16_sched\":\"\",\"rc_service\":\"restart_wireless\"}" http://192.168.50.1/applyapp.cgi

@@ -77,6 +77,25 @@ OPTIONS
               Makes mkfatfs emit certain status messages related to the
               formatting process.
 
+       --sda-strict
+              Forces the formatted volume to adhere to SD Association
+              recommendations.
+
+       --sda-whole
+              Performs a whole device formatting, including partition table,
+              according to the SD Association recommendations. This option
+              should only be used with whole devices (e.g. /dev/mmcblk0) and
+              never partitions (e.g. /dev/mmcblk0p1).
+
+       --sda-relax
+              Relaxes sanity checks for --sda-strict and --sda-whole to allow
+              formatting devices that don't comply to the size specifications
+              of SD cards to be formatted according to the SD Association
+              guidelines.
+
+              NOTE: This option is only a modifier to --sda-strict and
+              --sda-whole and does not do anything on its own.
+
        --discard
               This option sends a 'discard' command, like TRIM, to the device
               which will zero all data on it.
@@ -105,4 +124,4 @@ AVAILABILITY
 
 
 
-Tuxera TFATprogs 3017.7.17.3      March 2014                        MKFATFS(8)
+Tuxera TFATprogs 3021.4.15.7      March 2014                        MKFATFS(8)

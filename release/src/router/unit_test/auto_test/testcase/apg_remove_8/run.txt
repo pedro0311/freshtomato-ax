@@ -1,0 +1,12 @@
+SWITCH=DEVICE_0
+CURL=curl -A "asusrouter-test-DUTUtil-111" http://192.168.50.1/login.cgi?login_authorization=YWRtaW46YWRtaW5BZG1pbjEyM0A= -D savecookie.txt 
+CURL=curl -A "asusrouter-test-DUTUtil-111" -e "192.168.50.1" -b savecookie.txt -d "{\"action_mode\":\"apply\",\"apg1_enable\":\"0\"}" http://192.168.50.1/applyapp.cgi
+CURL=curl -A "asusrouter-test-DUTUtil-111" -e "192.168.50.1" -b savecookie.txt -d "{\"action_mode\":\"apply\",\"apg2_enable\":\"0\"}" http://192.168.50.1/applyapp.cgi
+CURL=curl -A "asusrouter-test-DUTUtil-111" -e "192.168.50.1" -b savecookie.txt -d "{\"action_mode\":\"apply\",\"apg3_enable\":\"0\"}" http://192.168.50.1/applyapp.cgi
+CURL=curl -A "asusrouter-test-DUTUtil-111" -e "192.168.50.1" -b savecookie.txt -d "{\"action_mode\":\"apply\",\"apg4_enable\":\"0\"}" http://192.168.50.1/applyapp.cgi
+CURL=curl -A "asusrouter-test-DUTUtil-111" -e "192.168.50.1" -b savecookie.txt -d "{\"action_mode\":\"apply\",\"apg5_enable\":\"0\"}" http://192.168.50.1/applyapp.cgi
+CURL=curl -A "asusrouter-test-DUTUtil-111" -e "192.168.50.1" -b savecookie.txt -d "{\"action_mode\":\"apply\",\"apg6_enable\":\"0\"}" http://192.168.50.1/applyapp.cgi
+CURL=curl -A "asusrouter-test-DUTUtil-111" -e "192.168.50.1" -b savecookie.txt -d "{\"action_mode\":\"apply\",\"apg7_enable\":\"0\"}" http://192.168.50.1/applyapp.cgi
+CURL=curl -A "asusrouter-test-DUTUtil-111" -e "192.168.50.1" -b savecookie.txt -d "{\"action_mode\":\"apply\",\"apg8_enable\":\"0\"}" http://192.168.50.1/applyapp.cgi
+CURL=curl -A "asusrouter-test-DUTUtil-111" -e "192.168.50.1" -b savecookie.txt -d "{\"action_mode\":\"apply\",\"rc_service\":\"restart_wireless\"}" http://192.168.50.1/applyapp.cgi
+SLEEP=10

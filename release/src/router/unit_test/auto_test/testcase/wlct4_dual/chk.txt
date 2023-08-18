@@ -1,0 +1,4 @@
+COMPARE=DEVICE_0,nvram get amas_wlc0_state,=,,2
+SWITCH=DEVICE_0
+CHECKFILE=/jffs/amas_wlcconnect.log
+BandIndex\(0\) Unit\(0\) Action mode: AMAS_WLCCONNECT_ACTION_MODE_ACTION_START. Connected and skip re-connecting.

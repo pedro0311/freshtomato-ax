@@ -1,0 +1,7 @@
+SWITCH=DEVICE_0
+IF=DEVICE_0,nvram get wl0_ssid,!=,DEVICE_0,nvram get wl1_ssid
+SLEEP=1
+ELSE
+SLEEP=2
+ENDIF
+SLEEP=3

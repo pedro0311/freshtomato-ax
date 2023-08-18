@@ -1,0 +1,11 @@
+SWITCH=DEVICE_0
+rm -rf /tmp/home/root/chk_led*.txt
+rm -rf /tmp/home/root/chk_allled*.txt
+nvram set svc_ready=0
+nvram set ntp_ready=0
+nvram commit
+SWITCH=DEVICE_1
+rm -rf /tmp/home/root/chk_allled*.txt
+nvram set svc_ready=0
+nvram set ntp_ready=0
+nvram commit

@@ -1,0 +1,8 @@
+SWITCH=DEVICE_0
+re_mac=`nvram get cfg_relist | awk '{print substr($0, 2, 17)}'`
+rm -rf /jffs/.sys/cfg_mnt/$re_mac/test_file
+unset re_mac
+nvram unset upload_file_success
+SWITCH=DEVICE_1
+rm -rf /tmp/upload_file/test_file
+rm -rf /jffs/.sys/cfg_mnt/file_upload.status

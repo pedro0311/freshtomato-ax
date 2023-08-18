@@ -1,0 +1,5 @@
+項目: 測試  Ttr band RE START_SELF_OPTIMIZATION 流程是否正常
+環境: 將對上2.4G/5G1 設為active，5G設為unuse。並確保待測RE 2.4G/5G1 目前連上CAP/RE
+並設定5G1 Priority高於2.4 Priority。注意，請只留一台CAP供待測RE連線即可。
+結果: 5G1掃到AP相等目前連上的所以不有更換。2.4G則根據5G1 last byte連同一台CAP/RE，但發現
+跟目前已連上線的CAP/RE同一台，故也沒有重連。

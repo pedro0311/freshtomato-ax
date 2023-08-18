@@ -1,0 +1,2 @@
+SWITCH=DEVICE_0
+$HOME/apg_check_status.sh >$HOME/apg_check_status.txt

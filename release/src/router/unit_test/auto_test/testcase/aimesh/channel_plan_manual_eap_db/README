@@ -1,0 +1,8 @@
+項目: Channel Plan by manual驗證 for ethernet backhaul mode
+環境:
+    - 一台CAP及一台RE(支援2G & 5G).
+    - CAP帳號密碼請設定為admin/adminAdmin123@
+    - RE使用ethernet backhaul
+    - 將RE的channel plan的private設定為manual(2), 2G的channel為6, 2G的bandwidth為20Mhz, 5G的channel為40, 5G的bandwidth為40Mhz (side band is upper)
+    - run.txt & recover.txt中的re_mac需先換成測試的mac
+結果: RE的2G & 5G對上會是被中止, 對下2G的channel為6, 2G的bandwidth為20Mhz, 5G的channel為40, 5G的bandwidth為40Mhz (side band is upper)

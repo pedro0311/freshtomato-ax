@@ -1,0 +1,10 @@
+auto_test.py的使用方式：
+執行testcase的路徑 -de 詳細log的文件名 -br 簡略log的文件名
+執行testcase的路徑 -de 詳細log的文件名 -n :意爲被保留簡略log
+其中，（-de 詳細log的文件名）部分可以不寫，不寫則代表不保留詳細log，（-br 簡略log文件名）部分可以不寫，簡略log文件默認開啓，將該部分換爲-n,則意味著不保留簡略log
+例如：執行amas_wgn_test保留詳細log且文件名爲log.txt，保留簡略log且文件名爲log_br.txt
+        amas_wgn_test -de log.txt -br log_br.txt
+     執行amas_wgn_test保留詳細log且文件名爲log.txt，不保留簡略log
+        amas_wgn_test -de log.txt -n
+     執行amas_wgn_test不保留，不保留簡略log
+	amas_wgn_test -n

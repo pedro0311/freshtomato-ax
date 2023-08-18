@@ -1,0 +1,17 @@
+SWITCH=DEVICE_0
+CURL=curl -A "asusrouter-test-DUTUtil-111" http://192.168.50.1/login.cgi?login_authorization=YWRtaW46MTIzNDU2Nzg= -D savecookie.txt
+CURL=curl -A "asusrouter-test-DUTUtil-111" -e "192.168.50.1" -b savecookie.txt -d "{\"vlan_rl\":\"<1>51>0><2>52>0><3>53>0>\",\"sdn_rl\":\"<0>DEFAULT>1>0>0>0>0>0>0>0>0>0>0>0>0>0<0><0>0>0>0>0>0<1>Guest>1>1>1>1>0>0>0>0>0>0>0>0>0>0>0>0>0>0>0>0>0<2>Guest>1>2>2>2>0>0>0>0>0>0>0>0>0>0>0>0>0>0>0>0>0<3>Guest>1>3>3>3>0>0>0>0>0>0>0>0>0>0>0>0>0>0>0>0>0\",\"subnet_rl\":\"<1>br51>192.168.51.1>255.255.255.0>1>192.168.51.2>192.168.51.254>86400>>,>>0>><2>br52>192.168.52.1>255.255.255.0>1>192.168.52.2>192.168.52.254>86400>>,>>0>><3>br53>192.168.53.1>255.255.255.0>1>192.168.53.2>192.168.53.254>86400>>,>>0>>\",\"apg1_enable\":\"1\",\"apg1_ssid\":\"SDN-1\",\"apg1_security\":\"<16>psk2>aes>12345678>1\",\"apg1_dut_list\":\"<04:42:1A:52:79:80>5><04:42:1A:52:79:70>5>\",\"apg1_bw_limit\":\"<1>30720>51200\",\"apg2_enable\":\"1\",\"apg2_ssid\":\"SDN-2\",\"apg2_security\":\"<16>psk2>aes>12345678>1\",\"apg2_dut_list\":\"<04:42:1A:52:79:80>5><04:42:1A:52:79:70>5>\",\"apg2_bw_limit\":\"<1>51200>30720\",\"apg3_enable\":\"1\",\"apg3_ssid\":\"SDN-3\",\"apg3_security\":\"<16>psk2>aes>12345678>1\",\"apg3_dut_list\":\"<04:42:1A:52:79:80>5><04:42:1A:52:79:70>5>\",\"apg3_bw_limit\":\"<1>30720>51200\",\"action_mode\":\"apply\",\"rc_service\":\"restart_wireless;restart_qos\"}" http://192.168.50.1/applyapp.cgi
+SLEEP=120
+$HOME/tc-check-sdn_bwlimit.sh 1
+echo $? > $HOME/tc-1.txt
+$HOME/tc-check-sdn_bwlimit.sh 2
+echo $? > $HOME/tc-2.txt
+$HOME/tc-check-sdn_bwlimit.sh 3
+echo $? > $HOME/tc-3.txt
+SWITCH=DEVICE_1
+$HOME/tc-check-sdn_bwlimit.sh 1
+echo $? > $HOME/tc-1.txt
+$HOME/tc-check-sdn_bwlimit.sh 2
+echo $? > $HOME/tc-2.txt
+$HOME/tc-check-sdn_bwlimit.sh 3
+echo $? > $HOME/tc-3.txt

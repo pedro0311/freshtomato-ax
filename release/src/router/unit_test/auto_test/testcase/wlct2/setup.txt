@@ -1,0 +1,6 @@
+SWITCH=DEVICE_0
+killall watchdog
+killall amas_bhctrl
+nvram set amas_wlc_active=60
+nvram commit
+rm -rf /jffs/amas_wlcconnect.log

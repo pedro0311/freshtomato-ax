@@ -1,0 +1,20 @@
+SWITCH=DEVICE_0
+CURL=curl -A "asusrouter-test-DUTUtil-111" http://192.168.50.1/login.cgi?login_authorization=YWRtaW46YWRtaW5BZG1pbjEyM0A= -D savecookie.txt
+CURL=curl -A "asusrouter-test-DUTUtil-111" -e "192.168.50.1" -b savecookie.txt -d "{\"action_mode\":\"apply\",\"wl0.1_bss_enabled\":\"1\",\"wl0.1_sync_node\":\"1\",\"wl0.1_ssid\":\"Guest-1\",\"wl1.1_bss_enabled\":\"1\",\"wl1.1_sync_node\":\"1\",\"wl1.1_ssid\":\"Guest-2\",\"wl2.1_bss_enabled\":\"1\",\"wl2.1_sync_node\":\"1\",\"wl2.1_ssid\":\"Guest-3\",\"action_mode\":\"apply\",\"rc_service\":\"restart_wireless\"}" http://192.168.50.1/applyapp.cgi
+SLEEP=30
+$HOME/tc-check-amas_wgn.sh
+echo $? > $HOME/wgn_get_status-on.txt
+SWITCH=DEVICE_1
+apg_get_status 501 | grep -c "OK" >$HOME/apg_get_status_501-on.txt
+apg_get_status 502 | grep -c "OK" >$HOME/apg_get_status_502-on.txt
+apg_get_status 503 | grep -c "OK" >$HOME/apg_get_status_503-on.txt
+SWITCH=DEVICE_0
+CURL=curl -A "asusrouter-test-DUTUtil-111" -e "192.168.50.1" -b savecookie.txt -d "{\"action_mode\":\"apply\",\"wl0.1_bss_enabled\":\"0\",\"wl0.1_sync_node\":\"0\",\"wl0.1_ssid\":\"\",\"wl1.1_bss_enabled\":\"0\",\"wl1.1_sync_node\":\"0\",\"wl1.1_ssid\":\"\",\"wl2.1_bss_enabled\":\"0\",\"wl2.1_sync_node\":\"0\",\"wl2.1_ssid\":\"\",\"action_mode\":\"apply\",\"rc_service\":\"restart_wireless\"}" http://192.168.50.1/applyapp.cgi
+SLEEP=30
+$HOME/tc-check-amas_wgn.sh
+echo $? > $HOME/wgn_get_status-off.txt
+SWITCH=DEVICE_1
+apg_get_status 501 | grep -c "NG" >$HOME/apg_get_status_501-off.txt
+apg_get_status 502 | grep -c "NG" >$HOME/apg_get_status_502-off.txt
+apg_get_status 503 | grep -c "NG" >$HOME/apg_get_status_503-off.txt
+SLEEP=10

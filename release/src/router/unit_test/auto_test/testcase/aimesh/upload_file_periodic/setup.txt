@@ -1,0 +1,6 @@
+SWITCH=DEVICE_0
+re_mac=`nvram get cfg_relist | awk '{print substr($0, 2, 17)}'`
+rm -rf /jffs/.sys/cfg_mnt/$re_mac/test_file
+unset re_mac
+SWITCH=DEVICE_1
+rm -rf /tmp/upload_file/test_file

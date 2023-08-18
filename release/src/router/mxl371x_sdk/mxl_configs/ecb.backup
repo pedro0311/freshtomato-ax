@@ -1,0 +1,11 @@
+hostid 1 0
+ipaddr 14 192.168.144.20
+netmask 13 255.255.255.0
+netcfgmode 1 0
+gateway 7 0.0.0.0
+admpassword 9 maxlinear
+mfrvendorid 1 0
+mfrhwver 1 0
+mfrswver 1 0
+personality 1 0
+testmode  1 0

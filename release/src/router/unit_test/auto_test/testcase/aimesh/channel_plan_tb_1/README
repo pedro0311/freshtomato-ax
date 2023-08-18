@@ -1,0 +1,7 @@
+項目: Channel Plan驗證 for wifi/ethernet backahul
+環境:
+    - 一台CAP及一台RE(支援2G & 5G Low & 5G High).
+    - CAP帳號密碼請設定為admin/adminAdmin123@
+    - RE使用wifi/ethernet backhaul
+    - 將channel plan設定為開啟(1)
+結果: RE的2G & 5G Low對上連線是被中止, 對下2G & 5G Low進行auto channel selection

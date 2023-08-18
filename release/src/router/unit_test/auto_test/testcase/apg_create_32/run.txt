@@ -1,0 +1,103 @@
+SWITCH=DEVICE_0
+CURL=curl -A "asusrouter-test-DUTUtil-111" http://192.168.50.1/login.cgi?login_authorization=YWRtaW46YWRtaW5BZG1pbjEyM0A= -D savecookie.txt
+CURL=curl -A "asusrouter-test-DUTUtil-111" -e "192.168.50.1" -b savecookie.txt -d "{\"action_mode\":\"apply\",\"vlan_rl\":\"<1>51>0><2>52>0><3>53>0><4>54>0><5>55>0><6>56>0><7>57>0><8>58>0><9>59>0><10>60>0><11>61>0><12>62>0><13>63>0><14>64>0><15>65>0><16>66>0><17>67>0><18>68>0><19>69>0><20>70>0><21>71>0><22>72>0><23>73>0><24>74>0><25>75>0><26>76>0><27>77>0><28>78>0><29>79>0><30>80>0><31>81>0><32>82>0>\"}" http://192.168.50.1/applyapp.cgi
+CURL=curl -A "asusrouter-test-DUTUtil-111" -e "192.168.50.1" -b savecookie.txt -d "{\"action_mode\":\"apply\",\"apg1_enable\":\"1\",\"apg1_ssid\":\"SDN-1\",\"apg1_ap_isolate\":\"1\",\"apg1_security\":\"<3>psk2>aes>adminAdmin123@>1<13>psk2>aes>adminAdmin123@>1<16>sae>aes>adminAdmin123@>1\",\"apg1_dut_list\":\"<04:42:1A:52:79:80>13>><04:42:1A:52:79:70>13>>\"}" http://192.168.50.1/applyapp.cgi
+CURL=curl -A "asusrouter-test-DUTUtil-111" -e "192.168.50.1" -b savecookie.txt -d "{\"action_mode\":\"apply\",\"apg2_enable\":\"1\",\"apg2_ssid\":\"SDN-2\",\"apg2_ap_isolate\":\"1\",\"apg2_security\":\"<3>psk2>aes>adminAdmin123@>1<13>psk2>aes>adminAdmin123@>1<16>sae>aes>adminAdmin123@>1\",\"apg2_dut_list\":\"<04:42:1A:52:79:80>13>><04:42:1A:52:79:70>13>>\"}" http://192.168.50.1/applyapp.cgi
+CURL=curl -A "asusrouter-test-DUTUtil-111" -e "192.168.50.1" -b savecookie.txt -d "{\"action_mode\":\"apply\",\"apg3_enable\":\"1\",\"apg3_ssid\":\"SDN-3\",\"apg3_ap_isolate\":\"1\",\"apg3_security\":\"<3>psk2>aes>adminAdmin123@>1<13>psk2>aes>adminAdmin123@>1<16>sae>aes>adminAdmin123@>1\",\"apg3_dut_list\":\"<04:42:1A:52:79:80>13>><04:42:1A:52:79:70>13>>\"}" http://192.168.50.1/applyapp.cgi
+CURL=curl -A "asusrouter-test-DUTUtil-111" -e "192.168.50.1" -b savecookie.txt -d "{\"action_mode\":\"apply\",\"apg4_enable\":\"1\",\"apg4_ssid\":\"SDN-4\",\"apg4_ap_isolate\":\"1\",\"apg4_security\":\"<3>psk2>aes>adminAdmin123@>1<13>psk2>aes>adminAdmin123@>1<16>sae>aes>adminAdmin123@>1\",\"apg4_dut_list\":\"<04:42:1A:52:79:80>13>><04:42:1A:52:79:70>13>>\"}" http://192.168.50.1/applyapp.cgi
+CURL=curl -A "asusrouter-test-DUTUtil-111" -e "192.168.50.1" -b savecookie.txt -d "{\"action_mode\":\"apply\",\"apg5_enable\":\"1\",\"apg5_ssid\":\"SDN-5\",\"apg5_ap_isolate\":\"1\",\"apg5_security\":\"<3>psk2>aes>adminAdmin123@>1<13>psk2>aes>adminAdmin123@>1<16>sae>aes>adminAdmin123@>1\",\"apg5_dut_list\":\"<04:42:1A:52:79:80>13>><04:42:1A:52:79:70>13>>\"}" http://192.168.50.1/applyapp.cgi
+CURL=curl -A "asusrouter-test-DUTUtil-111" -e "192.168.50.1" -b savecookie.txt -d "{\"action_mode\":\"apply\",\"apg6_enable\":\"1\",\"apg6_ssid\":\"SDN-6\",\"apg6_ap_isolate\":\"1\",\"apg6_security\":\"<3>psk2>aes>adminAdmin123@>1<13>psk2>aes>adminAdmin123@>1<16>sae>aes>adminAdmin123@>1\",\"apg6_dut_list\":\"<04:42:1A:52:79:80>13>><04:42:1A:52:79:70>13>>\"}" http://192.168.50.1/applyapp.cgi
+CURL=curl -A "asusrouter-test-DUTUtil-111" -e "192.168.50.1" -b savecookie.txt -d "{\"action_mode\":\"apply\",\"apg7_enable\":\"1\",\"apg7_ssid\":\"SDN-7\",\"apg7_ap_isolate\":\"1\",\"apg7_security\":\"<3>psk2>aes>adminAdmin123@>1<13>psk2>aes>adminAdmin123@>1<16>sae>aes>adminAdmin123@>1\",\"apg7_dut_list\":\"<04:42:1A:52:79:80>13>><04:42:1A:52:79:70>13>>\"}" http://192.168.50.1/applyapp.cgi
+CURL=curl -A "asusrouter-test-DUTUtil-111" -e "192.168.50.1" -b savecookie.txt -d "{\"action_mode\":\"apply\",\"apg8_enable\":\"1\",\"apg8_ssid\":\"SDN-8\",\"apg8_ap_isolate\":\"1\",\"apg8_security\":\"<3>psk2>aes>adminAdmin123@>1<13>psk2>aes>adminAdmin123@>1<16>sae>aes>adminAdmin123@>1\",\"apg8_dut_list\":\"<04:42:1A:52:79:80>13>><04:42:1A:52:79:70>13>>\"}" http://192.168.50.1/applyapp.cgi
+CURL=curl -A "asusrouter-test-DUTUtil-111" -e "192.168.50.1" -b savecookie.txt -d "{\"action_mode\":\"apply\",\"apg9_enable\":\"1\",\"apg9_ssid\":\"SDN-9\",\"apg9_ap_isolate\":\"1\",\"apg9_security\":\"<3>psk2>aes>adminAdmin123@>1<13>psk2>aes>adminAdmin123@>1<16>sae>aes>adminAdmin123@>1\",\"apg9_dut_list\":\"<04:42:1A:52:79:80>13>><04:42:1A:52:79:70>13>>\"}" http://192.168.50.1/applyapp.cgi
+CURL=curl -A "asusrouter-test-DUTUtil-111" -e "192.168.50.1" -b savecookie.txt -d "{\"action_mode\":\"apply\",\"apg10_enable\":\"1\",\"apg10_ssid\":\"SDN-10\",\"apg10_ap_isolate\":\"1\",\"apg10_security\":\"<3>psk2>aes>adminAdmin123@>1<13>psk2>aes>adminAdmin123@>1<16>sae>aes>adminAdmin123@>1\",\"apg10_dut_list\":\"<04:42:1A:52:79:80>13>><04:42:1A:52:79:70>13>>\"}" http://192.168.50.1/applyapp.cgi
+CURL=curl -A "asusrouter-test-DUTUtil-111" -e "192.168.50.1" -b savecookie.txt -d "{\"action_mode\":\"apply\",\"apg11_enable\":\"1\",\"apg11_ssid\":\"SDN-11\",\"apg11_ap_isolate\":\"1\",\"apg11_security\":\"<3>psk2>aes>adminAdmin123@>1<13>psk2>aes>adminAdmin123@>1<16>sae>aes>adminAdmin123@>1\",\"apg11_dut_list\":\"<04:42:1A:52:79:80>13>><04:42:1A:52:79:70>13>>\"}" http://192.168.50.1/applyapp.cgi
+CURL=curl -A "asusrouter-test-DUTUtil-111" -e "192.168.50.1" -b savecookie.txt -d "{\"action_mode\":\"apply\",\"apg12_enable\":\"1\",\"apg12_ssid\":\"SDN-12\",\"apg12_ap_isolate\":\"1\",\"apg12_security\":\"<3>psk2>aes>adminAdmin123@>1<13>psk2>aes>adminAdmin123@>1<16>sae>aes>adminAdmin123@>1\",\"apg12_dut_list\":\"<04:42:1A:52:79:80>13>><04:42:1A:52:79:70>13>>\"}" http://192.168.50.1/applyapp.cgi
+CURL=curl -A "asusrouter-test-DUTUtil-111" -e "192.168.50.1" -b savecookie.txt -d "{\"action_mode\":\"apply\",\"apg13_enable\":\"1\",\"apg13_ssid\":\"SDN-13\",\"apg13_ap_isolate\":\"1\",\"apg13_security\":\"<3>psk2>aes>adminAdmin123@>1<13>psk2>aes>adminAdmin123@>1<16>sae>aes>adminAdmin123@>1\",\"apg13_dut_list\":\"<04:42:1A:52:79:80>13>><04:42:1A:52:79:70>13>>\"}" http://192.168.50.1/applyapp.cgi
+CURL=curl -A "asusrouter-test-DUTUtil-111" -e "192.168.50.1" -b savecookie.txt -d "{\"action_mode\":\"apply\",\"apg14_enable\":\"1\",\"apg14_ssid\":\"SDN-14\",\"apg14_ap_isolate\":\"1\",\"apg14_security\":\"<3>psk2>aes>adminAdmin123@>1<13>psk2>aes>adminAdmin123@>1<16>sae>aes>adminAdmin123@>1\",\"apg14_dut_list\":\"<04:42:1A:52:79:80>13>><04:42:1A:52:79:70>13>>\"}" http://192.168.50.1/applyapp.cgi
+CURL=curl -A "asusrouter-test-DUTUtil-111" -e "192.168.50.1" -b savecookie.txt -d "{\"action_mode\":\"apply\",\"apg15_enable\":\"1\",\"apg15_ssid\":\"SDN-15\",\"apg15_ap_isolate\":\"1\",\"apg15_security\":\"<3>psk2>aes>adminAdmin123@>1<13>psk2>aes>adminAdmin123@>1<16>sae>aes>adminAdmin123@>1\",\"apg15_dut_list\":\"<04:42:1A:52:79:80>13>><04:42:1A:52:79:70>13>>\"}" http://192.168.50.1/applyapp.cgi
+CURL=curl -A "asusrouter-test-DUTUtil-111" -e "192.168.50.1" -b savecookie.txt -d "{\"action_mode\":\"apply\",\"apg16_enable\":\"1\",\"apg16_ssid\":\"SDN-16\",\"apg16_ap_isolate\":\"1\",\"apg16_security\":\"<3>psk2>aes>adminAdmin123@>1<13>psk2>aes>adminAdmin123@>1<16>sae>aes>adminAdmin123@>1\",\"apg16_dut_list\":\"<04:42:1A:52:79:80>13>><04:42:1A:52:79:70>13>>\"}" http://192.168.50.1/applyapp.cgi
+CURL=curl -A "asusrouter-test-DUTUtil-111" -e "192.168.50.1" -b savecookie.txt -d "{\"action_mode\":\"apply\",\"apg17_enable\":\"1\",\"apg17_ssid\":\"SDN-17\",\"apg17_ap_isolate\":\"1\",\"apg17_security\":\"<3>psk2>aes>adminAdmin123@>1<13>psk2>aes>adminAdmin123@>1<16>sae>aes>adminAdmin123@>1\",\"apg17_dut_list\":\"<04:42:1A:52:79:80>13>><04:42:1A:52:79:70>13>>\"}" http://192.168.50.1/applyapp.cgi
+CURL=curl -A "asusrouter-test-DUTUtil-111" -e "192.168.50.1" -b savecookie.txt -d "{\"action_mode\":\"apply\",\"apg18_enable\":\"1\",\"apg18_ssid\":\"SDN-18\",\"apg18_ap_isolate\":\"1\",\"apg18_security\":\"<3>psk2>aes>adminAdmin123@>1<13>psk2>aes>adminAdmin123@>1<16>sae>aes>adminAdmin123@>1\",\"apg18_dut_list\":\"<04:42:1A:52:79:80>13>><04:42:1A:52:79:70>13>>\"}" http://192.168.50.1/applyapp.cgi
+CURL=curl -A "asusrouter-test-DUTUtil-111" -e "192.168.50.1" -b savecookie.txt -d "{\"action_mode\":\"apply\",\"apg19_enable\":\"1\",\"apg19_ssid\":\"SDN-19\",\"apg19_ap_isolate\":\"1\",\"apg19_security\":\"<3>psk2>aes>adminAdmin123@>1<13>psk2>aes>adminAdmin123@>1<16>sae>aes>adminAdmin123@>1\",\"apg19_dut_list\":\"<04:42:1A:52:79:80>13>><04:42:1A:52:79:70>13>>\"}" http://192.168.50.1/applyapp.cgi
+CURL=curl -A "asusrouter-test-DUTUtil-111" -e "192.168.50.1" -b savecookie.txt -d "{\"action_mode\":\"apply\",\"apg20_enable\":\"1\",\"apg20_ssid\":\"SDN-20\",\"apg20_ap_isolate\":\"1\",\"apg20_security\":\"<3>psk2>aes>adminAdmin123@>1<13>psk2>aes>adminAdmin123@>1<16>sae>aes>adminAdmin123@>1\",\"apg20_dut_list\":\"<04:42:1A:52:79:80>13>><04:42:1A:52:79:70>13>>\"}" http://192.168.50.1/applyapp.cgi
+CURL=curl -A "asusrouter-test-DUTUtil-111" -e "192.168.50.1" -b savecookie.txt -d "{\"action_mode\":\"apply\",\"apg21_enable\":\"1\",\"apg21_ssid\":\"SDN-21\",\"apg21_ap_isolate\":\"1\",\"apg21_security\":\"<3>psk2>aes>adminAdmin123@>1<13>psk2>aes>adminAdmin123@>1<16>sae>aes>adminAdmin123@>1\",\"apg21_dut_list\":\"<04:42:1A:52:79:80>13>><04:42:1A:52:79:70>13>>\"}" http://192.168.50.1/applyapp.cgi
+CURL=curl -A "asusrouter-test-DUTUtil-111" -e "192.168.50.1" -b savecookie.txt -d "{\"action_mode\":\"apply\",\"apg22_enable\":\"1\",\"apg22_ssid\":\"SDN-22\",\"apg22_ap_isolate\":\"1\",\"apg22_security\":\"<3>psk2>aes>adminAdmin123@>1<13>psk2>aes>adminAdmin123@>1<16>sae>aes>adminAdmin123@>1\",\"apg22_dut_list\":\"<04:42:1A:52:79:80>13>><04:42:1A:52:79:70>13>>\"}" http://192.168.50.1/applyapp.cgi
+CURL=curl -A "asusrouter-test-DUTUtil-111" -e "192.168.50.1" -b savecookie.txt -d "{\"action_mode\":\"apply\",\"apg23_enable\":\"1\",\"apg23_ssid\":\"SDN-23\",\"apg23_ap_isolate\":\"1\",\"apg23_security\":\"<3>psk2>aes>adminAdmin123@>1<13>psk2>aes>adminAdmin123@>1<16>sae>aes>adminAdmin123@>1\",\"apg23_dut_list\":\"<04:42:1A:52:79:80>13>><04:42:1A:52:79:70>13>>\"}" http://192.168.50.1/applyapp.cgi
+CURL=curl -A "asusrouter-test-DUTUtil-111" -e "192.168.50.1" -b savecookie.txt -d "{\"action_mode\":\"apply\",\"apg24_enable\":\"1\",\"apg24_ssid\":\"SDN-24\",\"apg24_ap_isolate\":\"1\",\"apg24_security\":\"<3>psk2>aes>adminAdmin123@>1<13>psk2>aes>adminAdmin123@>1<16>sae>aes>adminAdmin123@>1\",\"apg24_dut_list\":\"<04:42:1A:52:79:80>13>><04:42:1A:52:79:70>13>>\"}" http://192.168.50.1/applyapp.cgi
+CURL=curl -A "asusrouter-test-DUTUtil-111" -e "192.168.50.1" -b savecookie.txt -d "{\"action_mode\":\"apply\",\"apg25_enable\":\"1\",\"apg25_ssid\":\"SDN-25\",\"apg25_ap_isolate\":\"1\",\"apg25_security\":\"<3>psk2>aes>adminAdmin123@>1<13>psk2>aes>adminAdmin123@>1<16>sae>aes>adminAdmin123@>1\",\"apg25_dut_list\":\"<04:42:1A:52:79:80>13>><04:42:1A:52:79:70>13>>\"}" http://192.168.50.1/applyapp.cgi
+CURL=curl -A "asusrouter-test-DUTUtil-111" -e "192.168.50.1" -b savecookie.txt -d "{\"action_mode\":\"apply\",\"apg26_enable\":\"1\",\"apg26_ssid\":\"SDN-26\",\"apg26_ap_isolate\":\"1\",\"apg26_security\":\"<3>psk2>aes>adminAdmin123@>1<13>psk2>aes>adminAdmin123@>1<16>sae>aes>adminAdmin123@>1\",\"apg26_dut_list\":\"<04:42:1A:52:79:80>13>><04:42:1A:52:79:70>13>>\"}" http://192.168.50.1/applyapp.cgi
+CURL=curl -A "asusrouter-test-DUTUtil-111" -e "192.168.50.1" -b savecookie.txt -d "{\"action_mode\":\"apply\",\"apg27_enable\":\"1\",\"apg27_ssid\":\"SDN-27\",\"apg27_ap_isolate\":\"1\",\"apg27_security\":\"<3>psk2>aes>adminAdmin123@>1<13>psk2>aes>adminAdmin123@>1<16>sae>aes>adminAdmin123@>1\",\"apg27_dut_list\":\"<04:42:1A:52:79:80>13>><04:42:1A:52:79:70>13>>\"}" http://192.168.50.1/applyapp.cgi
+CURL=curl -A "asusrouter-test-DUTUtil-111" -e "192.168.50.1" -b savecookie.txt -d "{\"action_mode\":\"apply\",\"apg28_enable\":\"1\",\"apg28_ssid\":\"SDN-28\",\"apg28_ap_isolate\":\"1\",\"apg28_security\":\"<3>psk2>aes>adminAdmin123@>1<13>psk2>aes>adminAdmin123@>1<16>sae>aes>adminAdmin123@>1\",\"apg28_dut_list\":\"<04:42:1A:52:79:80>13>><04:42:1A:52:79:70>13>>\"}" http://192.168.50.1/applyapp.cgi
+CURL=curl -A "asusrouter-test-DUTUtil-111" -e "192.168.50.1" -b savecookie.txt -d "{\"action_mode\":\"apply\",\"apg29_enable\":\"1\",\"apg29_ssid\":\"SDN-29\",\"apg29_ap_isolate\":\"1\",\"apg29_security\":\"<3>psk2>aes>adminAdmin123@>1<13>psk2>aes>adminAdmin123@>1<16>sae>aes>adminAdmin123@>1\",\"apg29_dut_list\":\"<04:42:1A:52:79:80>13>><04:42:1A:52:79:70>13>>\"}" http://192.168.50.1/applyapp.cgi
+CURL=curl -A "asusrouter-test-DUTUtil-111" -e "192.168.50.1" -b savecookie.txt -d "{\"action_mode\":\"apply\",\"apg30_enable\":\"1\",\"apg30_ssid\":\"SDN-30\",\"apg30_ap_isolate\":\"1\",\"apg30_security\":\"<3>psk2>aes>adminAdmin123@>1<13>psk2>aes>adminAdmin123@>1<16>sae>aes>adminAdmin123@>1\",\"apg30_dut_list\":\"<04:42:1A:52:79:80>13>><04:42:1A:52:79:70>13>>\"}" http://192.168.50.1/applyapp.cgi
+CURL=curl -A "asusrouter-test-DUTUtil-111" -e "192.168.50.1" -b savecookie.txt -d "{\"action_mode\":\"apply\",\"apg31_enable\":\"1\",\"apg31_ssid\":\"SDN-31\",\"apg31_ap_isolate\":\"1\",\"apg31_security\":\"<3>psk2>aes>adminAdmin123@>1<13>psk2>aes>adminAdmin123@>1<16>sae>aes>adminAdmin123@>1\",\"apg31_dut_list\":\"<04:42:1A:52:79:80>13>><04:42:1A:52:79:70>13>>\"}" http://192.168.50.1/applyapp.cgi
+CURL=curl -A "asusrouter-test-DUTUtil-111" -e "192.168.50.1" -b savecookie.txt -d "{\"action_mode\":\"apply\",\"apg32_enable\":\"1\",\"apg32_ssid\":\"SDN-32\",\"apg32_ap_isolate\":\"1\",\"apg32_security\":\"<3>psk2>aes>adminAdmin123@>1<13>psk2>aes>adminAdmin123@>1<16>sae>aes>adminAdmin123@>1\",\"apg32_dut_list\":\"<04:42:1A:52:79:80>13>><04:42:1A:52:79:70>13>>\"}" http://192.168.50.1/applyapp.cgi
+CURL=curl -A "asusrouter-test-DUTUtil-111" -e "192.168.50.1" -b savecookie.txt -d "{\"action_mode\":\"apply\",\"rc_service\":\"restart_wireless\"}" http://192.168.50.1/applyapp.cgi
+SLEEP=180
+apg_get_status 51 >/tmp/apg_get_status_51.txt
+apg_get_status 52 >/tmp/apg_get_status_52.txt
+apg_get_status 53 >/tmp/apg_get_status_53.txt
+apg_get_status 54 >/tmp/apg_get_status_54.txt
+apg_get_status 55 >/tmp/apg_get_status_55.txt
+apg_get_status 56 >/tmp/apg_get_status_56.txt
+apg_get_status 57 >/tmp/apg_get_status_57.txt
+apg_get_status 58 >/tmp/apg_get_status_58.txt
+apg_get_status 59 >/tmp/apg_get_status_59.txt
+apg_get_status 60 >/tmp/apg_get_status_60.txt
+apg_get_status 61 >/tmp/apg_get_status_61.txt
+apg_get_status 62 >/tmp/apg_get_status_62.txt
+apg_get_status 63 >/tmp/apg_get_status_63.txt
+apg_get_status 64 >/tmp/apg_get_status_64.txt
+apg_get_status 65 >/tmp/apg_get_status_65.txt
+apg_get_status 66 >/tmp/apg_get_status_66.txt
+apg_get_status 67 >/tmp/apg_get_status_67.txt
+apg_get_status 68 >/tmp/apg_get_status_68.txt
+apg_get_status 69 >/tmp/apg_get_status_69.txt
+apg_get_status 70 >/tmp/apg_get_status_70.txt
+apg_get_status 71 >/tmp/apg_get_status_71.txt
+apg_get_status 72 >/tmp/apg_get_status_72.txt
+apg_get_status 73 >/tmp/apg_get_status_73.txt
+apg_get_status 74 >/tmp/apg_get_status_74.txt
+apg_get_status 75 >/tmp/apg_get_status_75.txt
+apg_get_status 76 >/tmp/apg_get_status_76.txt
+apg_get_status 77 >/tmp/apg_get_status_77.txt
+apg_get_status 78 >/tmp/apg_get_status_78.txt
+apg_get_status 79 >/tmp/apg_get_status_79.txt
+apg_get_status 80 >/tmp/apg_get_status_80.txt
+apg_get_status 81 >/tmp/apg_get_status_81.txt
+apg_get_status 82 >/tmp/apg_get_status_82.txt
+SLEEP=20
+SWITCH=DEVICE_1
+apg_get_status 51 >/tmp/apg_get_status_51.txt
+apg_get_status 52 >/tmp/apg_get_status_52.txt
+apg_get_status 53 >/tmp/apg_get_status_53.txt
+apg_get_status 54 >/tmp/apg_get_status_54.txt
+apg_get_status 55 >/tmp/apg_get_status_55.txt
+apg_get_status 56 >/tmp/apg_get_status_56.txt
+apg_get_status 57 >/tmp/apg_get_status_57.txt
+apg_get_status 58 >/tmp/apg_get_status_58.txt
+apg_get_status 59 >/tmp/apg_get_status_59.txt
+apg_get_status 60 >/tmp/apg_get_status_60.txt
+apg_get_status 61 >/tmp/apg_get_status_61.txt
+apg_get_status 62 >/tmp/apg_get_status_62.txt
+apg_get_status 63 >/tmp/apg_get_status_63.txt
+apg_get_status 64 >/tmp/apg_get_status_64.txt
+apg_get_status 65 >/tmp/apg_get_status_65.txt
+apg_get_status 66 >/tmp/apg_get_status_66.txt
+apg_get_status 67 >/tmp/apg_get_status_67.txt
+apg_get_status 68 >/tmp/apg_get_status_68.txt
+apg_get_status 69 >/tmp/apg_get_status_69.txt
+apg_get_status 70 >/tmp/apg_get_status_70.txt
+apg_get_status 71 >/tmp/apg_get_status_71.txt
+apg_get_status 72 >/tmp/apg_get_status_72.txt
+apg_get_status 73 >/tmp/apg_get_status_73.txt
+apg_get_status 74 >/tmp/apg_get_status_74.txt
+apg_get_status 75 >/tmp/apg_get_status_75.txt
+apg_get_status 76 >/tmp/apg_get_status_76.txt
+apg_get_status 77 >/tmp/apg_get_status_77.txt
+apg_get_status 78 >/tmp/apg_get_status_78.txt
+apg_get_status 79 >/tmp/apg_get_status_79.txt
+apg_get_status 80 >/tmp/apg_get_status_80.txt
+apg_get_status 81 >/tmp/apg_get_status_81.txt
+apg_get_status 82 >/tmp/apg_get_status_82.txt

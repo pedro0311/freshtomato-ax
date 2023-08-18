@@ -1,0 +1,5 @@
+項目: Ethernet Onboarding 驗證
+環境: 一台CAP及一台Default狀態的RE.
+CAP帳號密碼請設定為admin/adminAdmin123@
+除re_mac爲CAP MAC外，其余皆是RE MAC
+結果: CAP可以正常加入指定的新RE

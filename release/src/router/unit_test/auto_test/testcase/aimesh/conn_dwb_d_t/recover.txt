@@ -1,0 +1,6 @@
+SWICH=DEVICE_1
+nvram set dwb_mode=0
+nvram commit
+rm -rf /tmp/ping_result
+rc rc_service restart_cfgsync
+SLEEP=60

@@ -1,0 +1,7 @@
+SWITCH=DEVICE_0
+CHECKFILE=/tmp/home/root/chk_led_timesched.txt
+1
+CHECKFILE=/tmp/home/root/chk_led_sched.txt
+1
+COMPARE=DEVICE_0,nvram get led_timesched,=,DEVICE_1,nvram get led_timesched
+COMPARE=DEVICE_0,nvram get led_sched,=,DEVICE_1,nvram get led_sched

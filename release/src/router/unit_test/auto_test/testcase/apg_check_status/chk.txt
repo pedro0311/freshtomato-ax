@@ -1,0 +1,3 @@
+SWITCH=DEVICE_0
+CHECKFILE=/tmp/home/root/apg_check_status.txt
+OK

@@ -1,0 +1,8 @@
+項目: sdn swctl test - 產生 check file
+環境:
+    1. 一台CAP及一台RE.
+    2. CAP帳號密碼請設定為admin/adminAdmin123@ (YWRtaW46YWRtaW5BZG1pbjEyM0A=)
+    3. 建立 SDN並且開啟 2G/5G/5G1 Guest network 
+驗證: 
+    透過 shell script 檢查 LAN port 是否符合設定的模式 
+    

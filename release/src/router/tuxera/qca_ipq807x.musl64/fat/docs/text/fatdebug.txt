@@ -36,9 +36,6 @@ EXAMPLES
               fatdebug /dev/sda1 | ssh host 'cat > sda1.img'
 
 
-PLEASE NOTE
-       fatdebug currently does not support FAT12 volumes.
-
 KNOWN ISSUES
        There are no known problems with fatdebug.  If you think you have found
        a problem then please send an email describing it to fat-
@@ -57,4 +54,4 @@ SEE ALSO
 
 
 
-Tuxera TFATprogs 3017.7.17.3       June 2013                       FATDEBUG(8)
+Tuxera TFATprogs 3021.4.15.7       June 2013                       FATDEBUG(8)

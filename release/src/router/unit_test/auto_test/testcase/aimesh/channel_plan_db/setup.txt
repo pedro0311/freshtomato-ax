@@ -1,0 +1,4 @@
+SWITCH=DEVICE_0
+rm -rf /tmp/*.sci
+SWITCH=DEVICE_1
+rm -rf /tmp/sel_channel_info.json

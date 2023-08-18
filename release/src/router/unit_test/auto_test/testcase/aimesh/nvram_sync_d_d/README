@@ -1,0 +1,4 @@
+項目: 確認Sync nvram是否正確
+環境: 一台Dual band CAP以及一台
+已加入的Dual band RE。
+結果: nvram值符合定義的規則

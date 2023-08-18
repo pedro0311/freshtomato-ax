@@ -1,0 +1,2 @@
+COMPARE=DEVICE_0,nvram get wlc1_state,!=,,1
+COMPARE=DEVICE_0,nvram get wlc1_state,!=,,2

@@ -1,0 +1,4 @@
+SWUTCH=DEVICE_0
+rc rc_service restart_wireless
+SLEEP=180
+ping 8.8.8.8 -c 1 > /tmp/ping_result

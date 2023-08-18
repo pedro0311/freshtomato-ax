@@ -1,0 +1,6 @@
+項目: 驗證 LED sched disable 的狀態
+環境:
+    1. 一台CAP及一台RE.
+    2. CAP帳號密碼請設定為admin/adminAdmin123@ (YWRtaW46YWRtaW5BZG1pbjEyM0A=)
+驗證: 
+    LED sched disable 狀態是否正確

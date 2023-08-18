@@ -1,0 +1,19 @@
+COMPARE=DEVICE_0,nvram get channel_plan,=,,1
+SWITCH=DEVICE_0
+CHECKFILE=/tmp/*.sci
+2G
+CHECKFILE=/tmp/*.sci
+5GL
+CHECKFILE=/tmp/*.sci
+5GH
+COMPARE=DEVICE_1,nvram get channel_plan,=,,1
+COMPARE=DEVICE_1,nvram get wlc0_status,=,,-1
+COMPARE=DEVICE_1,nvram get wlc1_status,=,,-1
+COMPARE=DEVICE_1,nvram get wlc2_status,=,,-1
+SWITCH=DEVICE_1
+CHECKFILE=/tmp/sel_channel_info.json
+wl0_sel_channel
+CHECKFILE=/tmp/sel_channel_info.json
+wl1_sel_channel
+CHECKFILE=/tmp/sel_channel_info.json
+wl2_sel_channel

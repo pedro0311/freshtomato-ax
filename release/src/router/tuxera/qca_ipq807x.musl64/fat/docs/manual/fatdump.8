@@ -1,7 +1,8 @@
+.\" Copyright (c) 2019-2020 Ari Sundholm / Tuxera Inc.
 .\" Copyright (c) 2013-2014 Sougata Santra / Tuxera Inc.
-.\" Copyright (c) 2011 Erik Larsson / Tuxera Inc.
+.\" Copyright (c) 2011-2020 Erik Larsson / Tuxera Inc.
 .\"
-.TH FATDUMP 8 "June 2013" "Tuxera TFATprogs 3017.7.17.3"
+.TH FATDUMP 8 "June 2013" "Tuxera TFATprogs 3021.4.15.7"
 .SH NAME
 fatdump \- Efficiently dump the contents of a FAT volume.
 .SH SYNOPSIS
@@ -27,13 +28,13 @@ preceded by
 and the long name is preceded by
 .B \-\- .
 .TP
-\fB\-d\fR, \fB\-\-dirmetadata\fR
+\fB\-r\fR, \fB\-\-no\-orphans\fR
 Clone
 .B ONLY METADATA
 (for FAT experts). This command is similar to the \fB\-m\fR/\fB\-\-metadata\fR
 option but uses an exclusive rather than inclusive algorithm, which may reduce
-image size on corrupted volumes with a lot of unreachable data, but will then
-omit data that could possibly be useful for debugging.
+image size on corrupted volumes with a lot of unreachable data (orphan
+clusters), but will then omit data that could possibly be useful for debugging.
 .TP
 \fB\-m\fR, \fB\-\-metadata\fR
 Clone
@@ -76,9 +77,6 @@ for a password!
 .B fatdump /dev/sda1 | bzip2 | ssh host 'cat > sda1.img.bzip2'
 .sp
 .RE
-.SH PLEASE NOTE
-.B fatdump
-currently does not support FAT12 volumes.
 .SH KNOWN ISSUES
 There are no known problems with
 .BR fatdump .

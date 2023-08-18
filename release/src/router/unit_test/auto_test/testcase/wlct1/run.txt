@@ -1,0 +1,5 @@
+SWITCH=DEVICE_0
+TIMEOUT=120
+DONE=nvram get amas_wlc_action_state=2
+nvram set amas_wlc_action_state=0
+amas_ipc -m 2 -e DISCONNECT_BAND

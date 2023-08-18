@@ -1,0 +1,7 @@
+SLEEP=10
+SWITCH=DEVICE_0
+check_wifi_band_cap  >/tmp/check_wifi_band_cap.txt
+check_lan_port_cap >/tmp/check_lan_port_cap.txt
+SWITCH=DEVICE_1
+check_wifi_band_cap >/tmp/check_wifi_band_cap.txt
+check_lan_port_cap >/tmp/check_lan_port_cap.txt

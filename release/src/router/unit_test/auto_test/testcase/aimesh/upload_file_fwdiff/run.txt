@@ -1,0 +1,18 @@
+SWITCH=DEVICE_1
+rc rc_service stop_cfgsync
+extend_no=`nvram get extendno`
+nvram set extendno_bp=$extend_no
+nvram set extendno=0-uploadtest
+cp /tmp/run_lldpd.sh /tmp/upload_file/test_file
+rm -rf /jffs/.sys/cfg_mnt/file_upload.status
+rc rc_service restart_cfgsync
+SLEEP=20
+nvram set extendno=$extend_no
+SWITCH=DEVICE_0
+re_mac=`nvram get cfg_relist | awk '{print substr($0, 2, 17)}'`
+upload_file=/jffs/.sys/cfg_mnt/$re_mac/test_file
+if test -f "$upload_file"; then 
+    nvram set upload_file_success=1
+fi
+unset re_mac
+unset upload_file                                                                                           

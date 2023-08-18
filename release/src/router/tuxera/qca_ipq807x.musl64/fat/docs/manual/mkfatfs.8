@@ -1,7 +1,7 @@
 .\" Copyright (c) 2014 Sougata Santra / Tuxera Inc.
 .\" Copyright (c) 2011 Erik Larsson / Tuxera Inc.
 .\"
-.TH MKFATFS 8 "March 2014" "Tuxera TFATprogs 3017.7.17.3"
+.TH MKFATFS 8 "March 2014" "Tuxera TFATprogs 3021.4.15.7"
 .SH NAME
 mkfatfs \- create a FAT file system
 .SH SYNOPSIS
@@ -80,6 +80,22 @@ Tuxera. The default alignment is usually the appropriate one.
 Makes
 .B mkfatfs
 emit certain status messages related to the formatting process.
+.TP
+\fB\-\-sda\-strict\fR
+Forces the formatted volume to adhere to SD Association recommendations.
+.TP
+\fB\-\-sda\-whole\fR
+Performs a whole device formatting, including partition table, according to the
+SD Association recommendations. This option should only be used with whole
+devices (e.g. \fI/dev/mmcblk0\fR) and never partitions (e.g. \fI/dev/mmcblk0p1\fR).
+.TP
+\fB\-\-sda\-relax\fR
+Relaxes sanity checks for \fB\-\-sda\-strict\fR and \fB\-\-sda\-whole\fR to
+allow formatting devices that don't comply to the size specifications of SD
+cards to be formatted according to the SD Association guidelines.
+
+NOTE: This option is only a modifier to \fB\-\-sda\-strict\fR and
+\fB\-\-sda\-whole\fR and does not do anything on its own.
 .TP
 \fB\-\-discard\fR
 This option sends a 'discard' command, like TRIM, to the device

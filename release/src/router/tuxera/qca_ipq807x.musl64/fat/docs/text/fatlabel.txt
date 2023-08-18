@@ -34,9 +34,6 @@ OPTIONS
               up to 11 bytes long when encoded with code page specified by
               --cp option.
 
-PLEASE NOTE
-       fatlabel currently does not support FAT12 volumes.
-
 BUGS
        There are no known problems with fatlabel.  If you find a bug please
        send an email describing the problem to fat-support@tuxera.com.
@@ -51,4 +48,4 @@ AVAILABILITY
 
 
 
-Tuxera TFATprogs 3017.7.17.3      March 2014                       FATLABEL(8)
+Tuxera TFATprogs 3021.4.15.7      March 2014                       FATLABEL(8)

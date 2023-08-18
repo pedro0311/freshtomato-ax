@@ -1,0 +1,4 @@
+項目: 測試  Tri band RE RESTART_CONNECTING 流程是否正常
+環境: 將對上2.4G/5G1 設為active，5G為 unuse。並確保待測RE 2.4G/5G1可正常連上CAP/RE
+並設定5G1 Priority高於2.4G Priority
+結果: 2.4G/5G1先被斷線，2.4G/5G正常連上CAP/RE

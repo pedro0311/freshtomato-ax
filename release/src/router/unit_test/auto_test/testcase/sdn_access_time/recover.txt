@@ -1,0 +1,17 @@
+SWITCH=DEVICE_0
+nvram set svc_ready=0
+nvram set ntp_ready=0
+nvram commit
+SWITCH=DEVICE_1
+nvram set svc_ready=0
+nvram set ntp_ready=0
+nvram commit
+SWITCH=DEVICE_0
+export sdn_rl="<0>DEFAULT>1>0>0>0>0>0>0>0>0>0>0>0>0>0<1>"
+nvram set sdn_rl=$sdn_rl
+nvram commit
+CURL=curl -A "asusrouter-test-DUTUtil-111" http://192.168.50.1/login.cgi?login_authorization=YWRtaW46YWRtaW5BZG1pbjEyM0A= -D savecookie.txt 
+CURL=curl -A "asusrouter-test-DUTUtil-111" -e "192.168.50.1" -b savecookie.txt -d "{\"action_mode\":\"apply\",\"vlan_rl\":\"\",\"apg1_enable\":\"0\",\"apg1_ssid\":\"\",\"apg1_security\":\"\",\"apg1_timesched\":\"0\",\"apg1_dut_list\":\"\",\"apg2_enable\":\"0\",\"apg2_ssid\":\"\",\"apg2_security\":\"\",\"apg2_timesched\":\"0\",\"apg2_dut_list\":\"\",\"apg3_enable\":\"0\",\"apg3_ssid\":\"\",\"apg3_security\":\"\",\"apg3_timesched\":\"0\",\"apg3_dut_list\":\"\",\"apg4_enable\":\"0\",\"apg4_ssid\":\"\",\"apg4_security\":\"\",\"apg4_timesched\":\"0\",\"apg4_dut_list\":\"\",\"action_mode\":\"apply\",\"rc_service\":\"restart_wireless\"}" http://192.168.50.1/applyapp.cgi
+rm -rf /tmp/home/root/chk*.txt
+rm -rf /tmp/home/root/wl*.txt
+rm -rf /tmp/home/root/wl_bss.sh
