@@ -1,0 +1,269 @@
+SWITCH=DEVICE_0
+COMPARE=DEVICE_0,nvram get wl0.1_timesched,=,,1
+COMPARE=DEVICE_0,nvram get wl0.2_timesched,=,,1
+COMPARE=DEVICE_0,nvram get wl1.1_timesched,=,,1
+COMPARE=DEVICE_0,nvram get wl1.2_timesched,=,,1
+COMPARE=DEVICE_0,nvram get wl2.1_timesched,=,,1
+COMPARE=DEVICE_0,nvram get wl2.2_timesched,=,,1
+COMPARE=DEVICE_0,nvram get wl2.3_timesched,=,,1
+COMPARE=DEVICE_0,nvram get wl0.1_sched_v2,=,,<M10217002100
+COMPARE=DEVICE_0,nvram get wl0.2_sched_v2,=,,<M10417002100
+COMPARE=DEVICE_0,nvram get wl1.1_sched_v2,=,,<M10817002100
+COMPARE=DEVICE_0,nvram get wl1.2_sched_v2,=,,<M11017002100
+COMPARE=DEVICE_0,nvram get wl2.1_sched_v2,=,,<M12017002100
+COMPARE=DEVICE_0,nvram get wl2.2_sched_v2,=,,<M14017002100
+COMPARE=DEVICE_0,nvram get wl2.3_sched_v2,=,,<M10117002100
+CHECKFILE=/tmp/home/root/wl0.1_bss-down.txt
+down
+CHECKFILE=/tmp/home/root/wl0.2_bss-down.txt
+down
+CHECKFILE=/tmp/home/root/wl1.1_bss-down.txt
+down
+CHECKFILE=/tmp/home/root/wl1.2_bss-down.txt
+down
+CHECKFILE=/tmp/home/root/wl2.1_bss-down.txt
+down
+CHECKFILE=/tmp/home/root/wl2.2_bss-down.txt
+down
+CHECKFILE=/tmp/home/root/wl2.3_bss-down.txt
+down
+
+CHECKFILE=/tmp/home/root/wl0.1_bss-1.txt
+up
+CHECKFILE=/tmp/home/root/wl0.2_bss-1.txt
+down
+CHECKFILE=/tmp/home/root/wl1.1_bss-1.txt
+down
+CHECKFILE=/tmp/home/root/wl1.2_bss-1.txt
+down
+CHECKFILE=/tmp/home/root/wl2.1_bss-1.txt
+down
+CHECKFILE=/tmp/home/root/wl2.2_bss-1.txt
+down
+CHECKFILE=/tmp/home/root/wl2.3_bss-1.txt
+down
+
+CHECKFILE=/tmp/home/root/wl0.1_bss-2.txt
+down
+CHECKFILE=/tmp/home/root/wl0.2_bss-2.txt
+up
+CHECKFILE=/tmp/home/root/wl1.1_bss-2.txt
+down
+CHECKFILE=/tmp/home/root/wl1.2_bss-2.txt
+down
+CHECKFILE=/tmp/home/root/wl2.1_bss-2.txt
+down
+CHECKFILE=/tmp/home/root/wl2.2_bss-2.txt
+down
+CHECKFILE=/tmp/home/root/wl2.3_bss-2.txt
+down
+
+CHECKFILE=/tmp/home/root/wl0.1_bss-3.txt
+down
+CHECKFILE=/tmp/home/root/wl0.2_bss-3.txt
+down
+CHECKFILE=/tmp/home/root/wl1.1_bss-3.txt
+up
+CHECKFILE=/tmp/home/root/wl1.2_bss-3.txt
+down
+CHECKFILE=/tmp/home/root/wl2.1_bss-3.txt
+down
+CHECKFILE=/tmp/home/root/wl2.2_bss-3.txt
+down
+CHECKFILE=/tmp/home/root/wl2.3_bss-3.txt
+down
+
+CHECKFILE=/tmp/home/root/wl0.1_bss-4.txt
+down
+CHECKFILE=/tmp/home/root/wl0.2_bss-4.txt
+down
+CHECKFILE=/tmp/home/root/wl1.1_bss-4.txt
+down
+CHECKFILE=/tmp/home/root/wl1.2_bss-4.txt
+up
+CHECKFILE=/tmp/home/root/wl2.1_bss-4.txt
+down
+CHECKFILE=/tmp/home/root/wl2.2_bss-4.txt
+down
+CHECKFILE=/tmp/home/root/wl2.3_bss-4.txt
+down
+
+CHECKFILE=/tmp/home/root/wl0.1_bss-5.txt
+down
+CHECKFILE=/tmp/home/root/wl0.2_bss-5.txt
+down
+CHECKFILE=/tmp/home/root/wl1.1_bss-5.txt
+down
+CHECKFILE=/tmp/home/root/wl1.2_bss-5.txt
+down
+CHECKFILE=/tmp/home/root/wl2.1_bss-5.txt
+up
+CHECKFILE=/tmp/home/root/wl2.2_bss-5.txt
+down
+CHECKFILE=/tmp/home/root/wl2.3_bss-5.txt
+down
+
+CHECKFILE=/tmp/home/root/wl0.1_bss-6.txt
+down
+CHECKFILE=/tmp/home/root/wl0.2_bss-6.txt
+down
+CHECKFILE=/tmp/home/root/wl1.1_bss-6.txt
+down
+CHECKFILE=/tmp/home/root/wl1.2_bss-6.txt
+down
+CHECKFILE=/tmp/home/root/wl2.1_bss-6.txt
+down
+CHECKFILE=/tmp/home/root/wl2.2_bss-6.txt
+up
+CHECKFILE=/tmp/home/root/wl2.3_bss-6.txt
+down
+
+CHECKFILE=/tmp/home/root/wl0.1_bss-7.txt
+down
+CHECKFILE=/tmp/home/root/wl0.2_bss-7.txt
+down
+CHECKFILE=/tmp/home/root/wl1.1_bss-7.txt
+down
+CHECKFILE=/tmp/home/root/wl1.2_bss-7.txt
+down
+CHECKFILE=/tmp/home/root/wl2.1_bss-7.txt
+down
+CHECKFILE=/tmp/home/root/wl2.2_bss-7.txt
+down
+CHECKFILE=/tmp/home/root/wl2.3_bss-7.txt
+up
+
+SWITCH=DEVICE_1
+COMPARE=DEVICE_1,nvram get wl0.2_timesched,=,,1
+COMPARE=DEVICE_1,nvram get wl0.3_timesched,=,,1
+COMPARE=DEVICE_1,nvram get wl1.2_timesched,=,,1
+COMPARE=DEVICE_1,nvram get wl1.3_timesched,=,,1
+COMPARE=DEVICE_1,nvram get wl2.2_timesched,=,,1
+COMPARE=DEVICE_1,nvram get wl2.3_timesched,=,,1
+COMPARE=DEVICE_1,nvram get wl2.4_timesched,=,,1
+COMPARE=DEVICE_1,nvram get wl0.2_sched_v2,=,,<M10217002100
+COMPARE=DEVICE_1,nvram get wl0.3_sched_v2,=,,<M10417002100
+COMPARE=DEVICE_1,nvram get wl1.2_sched_v2,=,,<M10817002100
+COMPARE=DEVICE_1,nvram get wl1.3_sched_v2,=,,<M11017002100
+COMPARE=DEVICE_1,nvram get wl2.2_sched_v2,=,,<M12017002100
+COMPARE=DEVICE_1,nvram get wl2.3_sched_v2,=,,<M14017002100
+COMPARE=DEVICE_1,nvram get wl2.4_sched_v2,=,,<M10117002100
+CHECKFILE=/tmp/home/root/wl0.2_bss-down.txt
+down
+CHECKFILE=/tmp/home/root/wl0.3_bss-down.txt
+down
+CHECKFILE=/tmp/home/root/wl1.2_bss-down.txt
+down
+CHECKFILE=/tmp/home/root/wl1.3_bss-down.txt
+down
+CHECKFILE=/tmp/home/root/wl2.2_bss-down.txt
+down
+CHECKFILE=/tmp/home/root/wl2.3_bss-down.txt
+down
+CHECKFILE=/tmp/home/root/wl2.4_bss-down.txt
+down
+
+CHECKFILE=/tmp/home/root/wl0.2_bss-1.txt
+up
+CHECKFILE=/tmp/home/root/wl0.3_bss-1.txt
+down
+CHECKFILE=/tmp/home/root/wl1.2_bss-1.txt
+down
+CHECKFILE=/tmp/home/root/wl1.3_bss-1.txt
+down
+CHECKFILE=/tmp/home/root/wl2.2_bss-1.txt
+down
+CHECKFILE=/tmp/home/root/wl2.3_bss-1.txt
+down
+CHECKFILE=/tmp/home/root/wl2.4_bss-1.txt
+down
+
+CHECKFILE=/tmp/home/root/wl0.2_bss-2.txt
+down
+CHECKFILE=/tmp/home/root/wl0.3_bss-2.txt
+up
+CHECKFILE=/tmp/home/root/wl1.2_bss-2.txt
+down
+CHECKFILE=/tmp/home/root/wl1.3_bss-2.txt
+down
+CHECKFILE=/tmp/home/root/wl2.2_bss-2.txt
+down
+CHECKFILE=/tmp/home/root/wl2.3_bss-2.txt
+down
+CHECKFILE=/tmp/home/root/wl2.4_bss-2.txt
+down
+
+CHECKFILE=/tmp/home/root/wl0.2_bss-3.txt
+down
+CHECKFILE=/tmp/home/root/wl0.3_bss-3.txt
+down
+CHECKFILE=/tmp/home/root/wl1.2_bss-3.txt
+up
+CHECKFILE=/tmp/home/root/wl1.3_bss-3.txt
+down
+CHECKFILE=/tmp/home/root/wl2.2_bss-3.txt
+down
+CHECKFILE=/tmp/home/root/wl2.3_bss-3.txt
+down
+CHECKFILE=/tmp/home/root/wl2.4_bss-3.txt
+down
+
+CHECKFILE=/tmp/home/root/wl0.2_bss-4.txt
+down
+CHECKFILE=/tmp/home/root/wl0.3_bss-4.txt
+down
+CHECKFILE=/tmp/home/root/wl1.2_bss-4.txt
+down
+CHECKFILE=/tmp/home/root/wl1.3_bss-4.txt
+up
+CHECKFILE=/tmp/home/root/wl2.2_bss-4.txt
+down
+CHECKFILE=/tmp/home/root/wl2.3_bss-4.txt
+down
+CHECKFILE=/tmp/home/root/wl2.4_bss-4.txt
+down
+
+CHECKFILE=/tmp/home/root/wl0.2_bss-5.txt
+down
+CHECKFILE=/tmp/home/root/wl0.3_bss-5.txt
+down
+CHECKFILE=/tmp/home/root/wl1.2_bss-5.txt
+down
+CHECKFILE=/tmp/home/root/wl1.3_bss-5.txt
+down
+CHECKFILE=/tmp/home/root/wl2.2_bss-5.txt
+up
+CHECKFILE=/tmp/home/root/wl2.3_bss-5.txt
+down
+CHECKFILE=/tmp/home/root/wl2.4_bss-5.txt
+down
+
+CHECKFILE=/tmp/home/root/wl0.2_bss-6.txt
+down
+CHECKFILE=/tmp/home/root/wl0.3_bss-6.txt
+down
+CHECKFILE=/tmp/home/root/wl1.2_bss-6.txt
+down
+CHECKFILE=/tmp/home/root/wl1.3_bss-6.txt
+down
+CHECKFILE=/tmp/home/root/wl2.2_bss-6.txt
+down
+CHECKFILE=/tmp/home/root/wl2.3_bss-6.txt
+up
+CHECKFILE=/tmp/home/root/wl2.4_bss-6.txt
+down
+
+CHECKFILE=/tmp/home/root/wl0.2_bss-7.txt
+down
+CHECKFILE=/tmp/home/root/wl0.3_bss-7.txt
+down
+CHECKFILE=/tmp/home/root/wl1.2_bss-7.txt
+down
+CHECKFILE=/tmp/home/root/wl1.3_bss-7.txt
+down
+CHECKFILE=/tmp/home/root/wl2.2_bss-7.txt
+down
+CHECKFILE=/tmp/home/root/wl2.3_bss-7.txt
+down
+CHECKFILE=/tmp/home/root/wl2.4_bss-7.txt
+up

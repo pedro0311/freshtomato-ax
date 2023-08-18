@@ -1,0 +1,14 @@
+使用舊版方式添加testcase：
+
+1.使用舊版方式建立好testcase文件夾後，即使用添加文件config,setup.txt,run.txt等文件。
+2.在TEST.robot中右擊->New Test Case,建立一個新的testcase，直接使用關鍵字testcase，後跟該文件夾的相對路徑。
+3.之後添加相關的Tag。
+
+ 
+
+使用RobotFramework框架運行舊版autotest:
+
+1.若testcase的地址臨時更改，則直接在Run頁面->Argument中輸入 -v PATH_COMMON:地址，也可以直接修改${PATH_COMMON}的值。
+2.運行名為x的testcase n遍，x可使用正:
+--prerunmodifier C:\eSupport\test\Anne_TEST\BBB\ForTese.py:x:n
+

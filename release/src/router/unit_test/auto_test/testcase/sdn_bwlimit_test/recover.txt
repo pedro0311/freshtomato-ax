@@ -1,0 +1,11 @@
+SWITCH=DEVICE_1
+rm /tmp/home/root/*
+rm /tmp/home/root/*
+SWITCH=DEVICE_0
+rm /tmp/home/root/*
+rm /tmp/home/root/*
+nvram set sdn_rl="<0>DEFAULT>1>0>0>0>0>0>0>0>0>0>0>0>0>0>0>0"
+nvram set subnet_rl=""
+CURL=curl -A "asusrouter-test-DUTUtil-111" http://192.168.50.1/login.cgi?login_authorization=YWRtaW46MTIzNDU2Nzg= -D savecookie.txt
+CURL=curl -A "asusrouter-test-DUTUtil-111" -e "192.168.50.1" -b savecookie.txt -d "{\"vlan_rl\":\"\",\"apg1_enable\":\"0\",\"apg1_ssid\":\"\",\"apg1_security\":\"\",\"apg1_dut_list\":\"\",\"apg1_bw_limit\":\"\",\"apg2_enable\":\"0\",\"apg2_ssid\":\"\",\"apg2_security\":\"\",\"apg2_dut_list\":\"\",\"apg2_bw_limit\":\"\",\"apg3_enable\":\"0\",\"apg3_ssid\":\"\",\"apg3_security\":\"\",\"apg3_dut_list\":\"\",\"apg3_tbw_limit\":\"\",\"action_mode\":\"apply\",\"rc_service\":\"restart_wireless;restart_qos\"}" http://192.168.50.1/applyapp.cgi
+SLEEP=10

@@ -1,0 +1,38 @@
+SWITCH=DEVICE_0
+CURL=curl -A "asusrouter-test-DUTUtil-111" http://192.168.50.1/login.cgi?login_authorization=YWRtaW46YWRtaW5BZG1pbjEyM0A= -D savecookie.txt 
+CURL=curl -A "asusrouter-test-DUTUtil-111" -e "192.168.50.1" -b savecookie.txt -d "{\"action_mode\":\"apply\",\"vlan_rl\":\"\",\"apg1_enable\":\"0\",\"apg2_enable\":\"0\",\"apg3_enable\":\"0\",\"apg4_enable\":\"0\",\"apg5_enable\":\"0\",\"apg6_enable\":\"0\",\"apg7_enable\":\"0\",\"apg8_enable\":\"0\",\"apg9_enable\":\"0\",\"apg10_enable\":\"0\",\"apg11_enable\":\"0\",\"apg12_enable\":\"0\",\"apg13_enable\":\"0\",\"apg14_enable\":\"0\",\"apg15_enable\":\"0\",\"apg16_enable\":\"0\",\"rc_service\":\"restart_wireless\"}" http://192.168.50.1/applyapp.cgi
+SLEEP=120
+apg_get_status 51 >/tmp/apg_get_status_51.txt
+apg_get_status 52 >/tmp/apg_get_status_52.txt
+apg_get_status 53 >/tmp/apg_get_status_53.txt
+apg_get_status 54 >/tmp/apg_get_status_54.txt
+apg_get_status 55 >/tmp/apg_get_status_55.txt
+apg_get_status 56 >/tmp/apg_get_status_56.txt
+apg_get_status 57 >/tmp/apg_get_status_57.txt
+apg_get_status 58 >/tmp/apg_get_status_58.txt
+apg_get_status 59 >/tmp/apg_get_status_59.txt
+apg_get_status 60 >/tmp/apg_get_status_60.txt
+apg_get_status 61 >/tmp/apg_get_status_61.txt
+apg_get_status 62 >/tmp/apg_get_status_62.txt
+apg_get_status 63 >/tmp/apg_get_status_63.txt
+apg_get_status 64 >/tmp/apg_get_status_64.txt
+apg_get_status 65 >/tmp/apg_get_status_65.txt
+apg_get_status 66 >/tmp/apg_get_status_66.txt
+SLEEP=10
+SWITCH=DEVICE_1
+apg_get_status 51 >/tmp/apg_get_status_51.txt
+apg_get_status 52 >/tmp/apg_get_status_52.txt
+apg_get_status 53 >/tmp/apg_get_status_53.txt
+apg_get_status 54 >/tmp/apg_get_status_54.txt
+apg_get_status 55 >/tmp/apg_get_status_55.txt
+apg_get_status 56 >/tmp/apg_get_status_56.txt
+apg_get_status 57 >/tmp/apg_get_status_57.txt
+apg_get_status 58 >/tmp/apg_get_status_58.txt
+apg_get_status 59 >/tmp/apg_get_status_59.txt
+apg_get_status 60 >/tmp/apg_get_status_60.txt
+apg_get_status 61 >/tmp/apg_get_status_61.txt
+apg_get_status 62 >/tmp/apg_get_status_62.txt
+apg_get_status 63 >/tmp/apg_get_status_63.txt
+apg_get_status 64 >/tmp/apg_get_status_64.txt
+apg_get_status 65 >/tmp/apg_get_status_65.txt
+apg_get_status 66 >/tmp/apg_get_status_66.txt

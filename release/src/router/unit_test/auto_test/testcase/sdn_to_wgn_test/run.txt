@@ -1,0 +1,24 @@
+SWITCH=DEVICE_0
+CURL=curl -A "asusrouter-test-DUTUtil-111" http://192.168.50.1/login.cgi?login_authorization=YWRtaW46YWRtaW5BZG1pbjEyM0A= -D savecookie.txt
+CURL=curl -A "asusrouter-test-DUTUtil-111" -e "192.168.50.1" -b savecookie.txt -d "{\"action_mode\":\"apply\",\"vlan_rl\":\"<1>51>0><2>52>0><3>53>0><4>54>0><5>55>0><6>56>0><7>57>0><8>58>0>\",\"apg1_enable\":\"1\",\"apg1_ssid\":\"SDN-1\",\"apg1_ap_isolate\":\"1\",\"apg1_security\":\"<3>psk2>aes>adminAdmin123@>1<13>psk2>aes>adminAdmin123@>1<16>sae>aes>adminAdmin123@>1\",\"apg1_dut_list\":\"<04:42:1A:52:79:80>13>><04:42:1A:52:79:70>13>>\",\"apg2_enable\":\"1\",\"apg2_ssid\":\"SDN-2\",\"apg2_ap_isolate\":\"1\",\"apg2_security\":\"<3>psk2>aes>adminAdmin123@>1<13>psk2>aes>adminAdmin123@>1<16>sae>aes>adminAdmin123@>1\",\"apg2_dut_list\":\"<04:42:1A:52:79:80>13>><04:42:1A:52:79:70>13>>\",\"apg3_enable\":\"1\",\"apg3_ssid\":\"SDN-3\",\"apg3_ap_isolate\":\"1\",\"apg3_security\":\"<3>psk2>aes>adminAdmin123@>1<13>psk2>aes>adminAdmin123@>1<16>sae>aes>adminAdmin123@>1\",\"apg3_dut_list\":\"<04:42:1A:52:79:80>13>><04:42:1A:52:79:70>13>>\",\"apg4_enable\":\"1\",\"apg4_ssid\":\"SDN-4\",\"apg4_ap_isolate\":\"1\",\"apg4_security\":\"<3>psk2>aes>adminAdmin123@>1<13>psk2>aes>adminAdmin123@>1<16>sae>aes>adminAdmin123@>1\",\"apg4_dut_list\":\"<04:42:1A:52:79:80>13>><04:42:1A:52:79:70>13>>\",\"rc_service\":\"restart_wireless\"}" http://192.168.50.1/applyapp.cgi
+SLEEP=60
+SWITCH=DEVICE_0
+apg_get_status 51 | grep -c "OK" >$HOME/apg_get_status_51-on.txt
+apg_get_status 52 | grep -c "OK" >$HOME/apg_get_status_52-on.txt
+apg_get_status 53 | grep -c "OK" >$HOME/apg_get_status_53-on.txt
+apg_get_status 54 | grep -c "OK" >$HOME/apg_get_status_54-on.txt
+SWITCH=DEVICE_1
+$HOME/tc-check-amas_wgn.sh
+echo $? > $HOME/wgn_get_status-on.txt
+SWITCH=DEVICE_0
+CURL=curl -A "asusrouter-test-DUTUtil-111" -e "192.168.50.1" -b savecookie.txt -d "{\"action_mode\":\"apply\",\"vlan_rl\":\"\",\"sdn_rl\":\"<0>DEFAULT>1>0>0>0>0>0>0>0>0>0>0>0>0>0<1>\",\"apg1_enable\":\"0\",\"apg1_ssid\":\"\",\"apg1_ap_isolate\":\"0\",\"apg1_security\":\"\",\"apg1_dut_list\":\"<04:42:1A:52:79:80>13>><04:42:1A:52:79:70>13>>\",\"apg2_enable\":\"0\",\"apg2_ssid\":\"\",\"apg2_ap_isolate\":\"0\",\"apg2_security\":\"\",\"apg2_dut_list\":\"<04:42:1A:52:79:80>13>><04:42:1A:52:79:70>13>>\",\"apg3_enable\":\"0\",\"apg3_ssid\":\"\",\"apg3_ap_isolate\":\"0\",\"apg3_security\":\"\",\"apg3_dut_list\":\"<04:42:1A:52:79:80>13>><04:42:1A:52:79:70>13>>\",\"apg4_enable\":\"0\",\"apg4_ssid\":\"\",\"apg4_ap_isolate\":\"0\",\"apg4_security\":\"\",\"apg4_dut_list\":\"<04:42:1A:52:79:80>13>><04:42:1A:52:79:70>13>>\",\"rc_service\":\"restart_wireless\"}" http://192.168.50.1/applyapp.cgi
+SLEEP=30
+SWITCH=DEVICE_0
+apg_get_status 51 | grep -c "NG" >$HOME/apg_get_status_51-off.txt
+apg_get_status 52 | grep -c "NG" >$HOME/apg_get_status_52-off.txt
+apg_get_status 53 | grep -c "NG" >$HOME/apg_get_status_53-off.txt
+apg_get_status 54 | grep -c "NG" >$HOME/apg_get_status_54-off.txt
+SWITCH=DEVICE_1
+$HOME/tc-check-amas_wgn.sh
+echo $? > $HOME/wgn_get_status-off.txt
+SLEEP=10

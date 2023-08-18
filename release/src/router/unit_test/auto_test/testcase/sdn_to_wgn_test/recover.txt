@@ -1,0 +1,5 @@
+SWITCH=DEVICE_0
+rm -rf /tmp/home/root/apg*.txt
+SWITCH=DEVICE_1
+rm -rf /tmp/home/root/wgn*.txt
+rm -rf /tmp/home/root/tc-check-amas_wgn.sh

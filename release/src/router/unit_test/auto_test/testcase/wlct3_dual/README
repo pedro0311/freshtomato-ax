@@ -1,0 +1,3 @@
+項目: 測試  Dual band RE RESTART_CONNECTING 流程是否正常
+環境: 將對上2.4G/5G設為active。並確保待測RE 2.4G/5G可正常連上CAP/RE
+結果: 2.4G/5G先被斷線，2.4G/5G正常連上CAP/RE

@@ -1,0 +1,4 @@
+SWITCH=DEVICE_0
+CURL=curl -A "asusrouter-test-DUTUtil-111" http://192.168.50.1/login.cgi?login_authorization=YWRtaW46YWRtaW5BZG1pbjEyM0A= -D savecookie.txt
+CURL=curl -A "asusrouter-test-DUTUtil-111" -e "192.168.50.1" -b savecookie.txt -d "{\"vlan_rl\":\"<1>51>0><2>52>0><3>53>0>\",\"apg1_enable\":\"1\",\"apg1_ssid\":\"SDN-1\",\"apg1_security\":\"<16>psk2>aes>adminAdmin123@>1\",\"apg1_dut_list\":\"<04:42:1A:52:79:80>5>2<04:42:1A:52:79:70>5>2\",\"apg2_enable\":\"1\",\"apg2_ssid\":\"SDN-2\",\"apg2_security\":\"<16>psk2>aes>adminAdmin123@>1\",\"apg2_dut_list\":\"<04:42:1A:52:79:80>5><04:42:1A:52:79:70>5>\",\"apg3_enable\":\"1\",\"apg3_ssid\":\"SDN-3\",\"apg3_security\":\"<16>psk2>aes>adminAdmin123@>1\",\"apg3_dut_list\":\"<04:42:1A:52:79:80>5><04:42:1A:52:79:70>5>\",\"vlan_trunklist\":\"<04:42:1A:52:79:80>1#52<04:42:1A:52:79:70>1#52\",\"action_mode\":\"apply\",\"rc_service\":\"restart_net_and_phy\"}" http://192.168.50.1/applyapp.cgi
+SLEEP=120

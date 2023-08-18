@@ -1,0 +1,35 @@
+SWITCH=DEVICE_0
+nvram set apg1_expiretime=$accti1_expiretime
+nvram set apg2_expiretime=$accti2_expiretime
+nvram set apg3_expiretime=$accti3_expiretime
+nvram set apg4_expiretime=$accti4_expiretime
+nvram commit
+CURL=curl -A "asusrouter-test-DUTUtil-111" http://192.168.50.1/login.cgi?login_authorization=YWRtaW46YWRtaW5BZG1pbjEyM0A= -D savecookie.txt
+CURL=curl -A "asusrouter-test-DUTUtil-111" -e "192.168.50.1" -b savecookie.txt -d "{\"action_mode\":\"apply\",\"vlan_rl\":\"<1>51>0><2>52>0><3>53>0><4>54>0><5>55>0><6>56>0><7>57>0><8>58>0><9>59>0><10>60>0><11>61>0><12>62>0><13>63>0><14>64>0><15>65>0><16>66>0><17>67>0><18>68>0><19>69>0><20>70>0><21>71>0><22>72>0><23>73>0><24>74>0><25>75>0><26>76>0><27>77>0><28>78>0><29>79>0><30>80>0><31>81>0><32>82>0>\",\"apg1_enable\":\"1\",\"apg1_ssid\":\"SDN-1\",\"apg1_security\":\"<16>psk2>aes>adminAdmin123@>1\",\"apg1_timesched\":\"2\",\"apg1_dut_list\":\"<04:42:1A:52:79:80>5><04:42:1A:52:79:70>5>\",\"apg2_enable\":\"1\",\"apg2_ssid\":\"SDN-2\",\"apg2_security\":\"<16>psk2>aes>adminAdmin123@>1\",\"apg2_timesched\":\"2\",\"apg2_dut_list\":\"<04:42:1A:52:79:80>5><04:42:1A:52:79:70>5>\",\"apg3_enable\":\"1\",\"apg3_ssid\":\"SDN-3\",\"apg3_security\":\"<16>psk2>aes>adminAdmin123@>1\",\"apg3_timesched\":\"2\",\"apg3_dut_list\":\"<04:42:1A:52:79:80>5><04:42:1A:52:79:70>5>\",\"apg4_enable\":\"1\",\"apg4_ssid\":\"SDN-4\",\"apg4_security\":\"<16>psk2>aes>adminAdmin123@>1\",\"apg4_timesched\":\"2\",\"apg4_dut_list\":\"<04:42:1A:52:79:80>5><04:42:1A:52:79:70>5>\",\"action_mode\":\"apply\",\"rc_service\":\"restart_wireless\"}" http://192.168.50.1/applyapp.cgi
+SLEEP=30
+nvram get wl0.1_expiretime | grep -c $accti1_expiretime >$HOME/chk_wl0.1_expiretime.txt
+nvram get wl1.1_expiretime | grep -c $accti1_expiretime >$HOME/chk_wl1.1_expiretime.txt
+nvram get wl0.2_expiretime | grep -c $accti2_expiretime >$HOME/chk_wl0.2_expiretime.txt
+nvram get wl1.2_expiretime | grep -c $accti2_expiretime >$HOME/chk_wl1.2_expiretime.txt
+nvram get wl0.3_expiretime | grep -c $accti3_expiretime >$HOME/chk_wl0.3_expiretime.txt
+nvram get wl1.3_expiretime | grep -c $accti3_expiretime >$HOME/chk_wl1.3_expiretime.txt
+nvram get wl0.5_expiretime | grep -c $accti4_expiretime >$HOME/chk_wl0.5_expiretime.txt
+nvram get wl1.4_expiretime | grep -c $accti4_expiretime >$HOME/chk_wl1.4_expiretime.txt
+SLEEP=330
+$HOME/wl_bss.sh wl0.1 >$HOME/wl0.1_bss.txt
+$HOME/wl_bss.sh wl1.1 >$HOME/wl1.1_bss.txt
+$HOME/wl_bss.sh wl0.2 >$HOME/wl0.2_bss.txt
+$HOME/wl_bss.sh wl1.2 >$HOME/wl1.2_bss.txt
+$HOME/wl_bss.sh wl0.3 >$HOME/wl0.3_bss.txt
+$HOME/wl_bss.sh wl1.3 >$HOME/wl1.3_bss.txt
+$HOME/wl_bss.sh wl0.5 >$HOME/wl0.5_bss.txt
+$HOME/wl_bss.sh wl1.4 >$HOME/wl1.4_bss.txt
+SWITCH=DEVICE_1
+$HOME/wl_bss.sh wl0.2 >$HOME/wl0.2_bss.txt
+$HOME/wl_bss.sh wl1.2 >$HOME/wl1.2_bss.txt
+$HOME/wl_bss.sh wl0.3 >$HOME/wl0.3_bss.txt
+$HOME/wl_bss.sh wl1.3 >$HOME/wl1.3_bss.txt
+$HOME/wl_bss.sh wl0.4 >$HOME/wl0.4_bss.txt
+$HOME/wl_bss.sh wl1.4 >$HOME/wl1.4_bss.txt
+$HOME/wl_bss.sh wl0.6 >$HOME/wl0.6_bss.txt
+$HOME/wl_bss.sh wl1.5 >$HOME/wl1.5_bss.txt

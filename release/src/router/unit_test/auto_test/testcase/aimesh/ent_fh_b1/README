@@ -1,0 +1,6 @@
+項目: WAP-Enterprise fronthaul 驗證 for band1
+環境:
+    - 一台CAP及一台RE.
+    - CAP帳號密碼請設定為admin/adminAdmin123@
+    - Band1的wifi authentication設定為WPA2-Personal
+結果: RE的band1對上連線是被中止

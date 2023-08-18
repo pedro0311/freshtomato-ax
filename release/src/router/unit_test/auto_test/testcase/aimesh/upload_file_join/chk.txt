@@ -1,0 +1,1 @@
+COMPARE=DEVICE_0,nvram get upload_file_success,=,,1

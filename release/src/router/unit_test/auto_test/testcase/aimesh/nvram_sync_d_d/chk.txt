@@ -1,0 +1,6 @@
+COMPARE=DEVICE_1,nvram get wl0_ssid,=,DEVICE_0,nvram get wl0_ssid
+COMPARE=DEVICE_1,nvram get wl0_ssid,=,DEVICE_0,nvram get wlc0_ssid
+COMPARE=DEVICE_1,nvram get wl0_ssid,=,DEVICE_0,nvram get wl0.1_ssid
+COMPARE=DEVICE_1,nvram get wl1_ssid,=,DEVICE_0,nvram get wl1_ssid
+COMPARE=DEVICE_1,nvram get wl1_ssid,=,DEVICE_0,nvram get wlc1_ssid
+COMPARE=DEVICE_1,nvram get wl1_ssid,=,DEVICE_0,nvram get wl1.1_ssid

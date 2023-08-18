@@ -1,0 +1,33 @@
+SWITCH=DEVICE_0
+CURL=curl -A "asusrouter-test-DUTUtil-111" http://192.168.50.1/login.cgi?login_authorization=YWRtaW46YWRtaW5BZG1pbjEyM0A= -D savecookie.txt
+CURL=curl -A "asusrouter-test-DUTUtil-111" -e "192.168.50.1" -b savecookie.txt -d "{\"led_timesched\":\"1\",\"led_sched\":\"<W17F01000200<W17F05000600<W17F08000900\",\"action_mode\":\"apply_sync\"}" http://192.168.50.1/applyapp.cgi
+SLEEP=10
+nvram get led_timesched | grep -c $led_timesched >$HOME/chk_led_timesched.txt
+nvram get led_sched | grep -c $led_sched >$HOME/chk_led_sched.txt
+SWITCH=DEVICE_0
+date 01:30:00
+SWITCH=DEVICE_1
+date 01:30:00
+SLEEP 30
+SWITCH=DEVICE_0
+nvram get AllLED | grep -c "0" >$HOME/chk_allled_2.txt
+SWITCH=DEVICE_1
+nvram get AllLED | grep -c "0" >$HOME/chk_allled_2.txt
+SWITCH=DEVICE_0
+date 02:30:00
+SWITCH=DEVICE_1
+date 02:30:00
+SLEEP 30
+SWITCH=DEVICE_0
+nvram get AllLED | grep -c "1" >$HOME/chk_allled_3.txt
+SWITCH=DEVICE_1
+nvram get AllLED | grep -c "1" >$HOME/chk_allled_3.txt
+SWITCH=DEVICE_0
+date 05:30:00
+SWITCH=DEVICE_1
+date 05:30:00
+SLEEP 30
+SWITCH=DEVICE_0
+nvram get AllLED | grep -c "0" >$HOME/chk_allled_4.txt
+SWITCH=DEVICE_1
+nvram get AllLED | grep -c "0" >$HOME/chk_allled_4.txt

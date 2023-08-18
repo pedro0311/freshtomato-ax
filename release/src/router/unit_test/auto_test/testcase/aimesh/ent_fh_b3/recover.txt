@@ -1,0 +1,4 @@
+SWITCH=DEVICE_0
+SLEEP=10
+CURL=curl -A "asusrouter-test-DUTUtil-111" http://192.168.50.1/login.cgi?login_authorization=YWRtaW46YWRtaW5BZG1pbjEyM0A= -D savecookie.txt
+CURL=curl -A "asusrouter-test-DUTUtil-111" -e "192.168.50.1" -b savecookie.txt -d "{\"action_mode\":\"apply\",\"wl2_auth_mode_x\":\"psk2\",\"rc_service\":\"restart_wireless\"}" http://192.168.50.1/applyapp.cgi

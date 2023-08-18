@@ -1,0 +1,8 @@
+SWITCH=DEVICE_0
+echo "#!/bin/sh" >$HOME/apg_check_status.sh 
+echo -e "checkAPGx() {\nretval=\`apg_get_status \$1\`\nif [ \$retval = "OK" ]; then\nreturn 1\nelse\nreturn 0\nfi\n}\n" >>$HOME/apg_check_status.sh
+echo -e "VLAN_RL=\`nvram get vlan_rl\`\nIFS=\"<\"\nfor word in \$VLAN_RL; do\ni=1\nIFS=\">\"\nfor word2 in \$word; do\nif [ \$i -eq 2 ]; then\nif [ \${#VID} -eq 0 ]; then\nVID=\$word2\nelse\nVID=\$VID\" \"\$word2\nfi\nfi\ni=\$((\$i+1))\ndone\ndone\n" >>$HOME/apg_check_status.sh
+echo -e "echo \"SDN VID=\"\$VID\nvid_size=\${#VID}\nif [ \$vid_size -eq 0 ]; then\necho \"NG\"\nexit 0\nfi\n" >>$HOME/apg_check_status.sh
+echo -e "IFS=\" \"\nfor word in \$VID; do\ncheckAPGx \$word\nretval=\$?\nif [ \$retval -eq 0 ]; then\necho \"NG\"\nexit 0\nfi\ndone\n" >>$HOME/apg_check_status.sh
+echo -e "echo \"OK\"\n" >>$HOME/apg_check_status.sh
+chmod 777 $HOME/apg_check_status.sh

@@ -1,0 +1,38 @@
+SWITCH=DEVICE_0
+CURL=curl -A "asusrouter-test-DUTUtil-111" http://192.168.50.1/login.cgi?login_authorization=YWRtaW46YWRtaW5BZG1pbjEyM0A= -D savecookie.txt
+CURL=curl -A "asusrouter-test-DUTUtil-111" -e "192.168.50.1" -b savecookie.txt -d "{\"action_mode\":\"apply\",\"vlan_rl\":\"<1>51>0><2>52>0><3>53>0><4>54>0><5>55>0><6>56>0><7>57>0><8>58>0><9>59>0><10>60>0><11>61>0><12>62>0><13>63>0><14>64>0><15>65>0><16>66>0><17>67>0><18>68>0><19>69>0><20>70>0><21>71>0><22>72>0><23>73>0><24>74>0><25>75>0><26>76>0><27>77>0><28>78>0><29>79>0><30>80>0><31>81>0><32>82>0>\",\"apg1_enable\":\"1\",\"apg1_ssid\":\"SDN-1\",\"apg1_ap_isolate\":\"1\",\"apg1_security\":\"<3>psk2>aes>adminAdmin123@>1<13>psk2>aes>adminAdmin123@>1<16>sae>aes>adminAdmin123@>1\",\"apg1_dut_list\":\"<04:42:1A:52:79:80>13>><04:42:1A:52:79:70>13>>\",\"apg2_enable\":\"1\",\"apg2_ssid\":\"SDN-2\",\"apg2_ap_isolate\":\"1\",\"apg2_security\":\"<3>psk2>aes>adminAdmin123@>1<13>psk2>aes>adminAdmin123@>1<16>sae>aes>adminAdmin123@>1\",\"apg2_dut_list\":\"<04:42:1A:52:79:80>13>><04:42:1A:52:79:70>13>>\",\"apg3_enable\":\"1\",\"apg3_ssid\":\"SDN-3\",\"apg3_ap_isolate\":\"1\",\"apg3_security\":\"<3>psk2>aes>adminAdmin123@>1<13>psk2>aes>adminAdmin123@>1<16>sae>aes>adminAdmin123@>1\",\"apg3_dut_list\":\"<04:42:1A:52:79:80>13>><04:42:1A:52:79:70>13>>\",\"apg4_enable\":\"1\",\"apg4_ssid\":\"SDN-4\",\"apg4_ap_isolate\":\"1\",\"apg4_security\":\"<3>psk2>aes>adminAdmin123@>1<13>psk2>aes>adminAdmin123@>1<16>sae>aes>adminAdmin123@>1\",\"apg4_dut_list\":\"<04:42:1A:52:79:80>13>><04:42:1A:52:79:70>13>>\",\"apg5_enable\":\"1\",\"apg5_ssid\":\"SDN-5\",\"apg5_ap_isolate\":\"1\",\"apg5_security\":\"<3>psk2>aes>adminAdmin123@>1<13>psk2>aes>adminAdmin123@>1<16>sae>aes>adminAdmin123@>1\",\"apg5_dut_list\":\"<04:42:1A:52:79:80>13>><04:42:1A:52:79:70>13>>\",\"apg6_enable\":\"1\",\"apg6_ssid\":\"SDN-6\",\"apg6_ap_isolate\":\"1\",\"apg6_security\":\"<3>psk2>aes>adminAdmin123@>1<13>psk2>aes>adminAdmin123@>1<16>sae>aes>adminAdmin123@>1\",\"apg6_dut_list\":\"<04:42:1A:52:79:80>13>><04:42:1A:52:79:70>13>>\",\"apg7_enable\":\"1\",\"apg7_ssid\":\"SDN-7\",\"apg7_ap_isolate\":\"1\",\"apg7_security\":\"<3>psk2>aes>adminAdmin123@>1<13>psk2>aes>adminAdmin123@>1<16>sae>aes>adminAdmin123@>1\",\"apg7_dut_list\":\"<04:42:1A:52:79:80>13>><04:42:1A:52:79:70>13>>\",\"apg8_enable\":\"1\",\"apg8_ssid\":\"SDN-8\",\"apg8_ap_isolate\":\"1\",\"apg8_security\":\"<3>psk2>aes>adminAdmin123@>1<13>psk2>aes>adminAdmin123@>1<16>sae>aes>adminAdmin123@>1\",\"apg8_dut_list\":\"<04:42:1A:52:79:80>13>><04:42:1A:52:79:70>13>>\",\"apg9_enable\":\"1\",\"apg9_ssid\":\"SDN-9\",\"apg9_ap_isolate\":\"1\",\"apg9_security\":\"<3>psk2>aes>adminAdmin123@>1<13>psk2>aes>adminAdmin123@>1<16>sae>aes>adminAdmin123@>1\",\"apg9_dut_list\":\"<04:42:1A:52:79:80>13>><04:42:1A:52:79:70>13>>\",\"apg10_enable\":\"1\",\"apg10_ssid\":\"SDN-10\",\"apg10_ap_isolate\":\"1\",\"apg10_security\":\"<3>psk2>aes>adminAdmin123@>1<13>psk2>aes>adminAdmin123@>1<16>sae>aes>adminAdmin123@>1\",\"apg10_dut_list\":\"<04:42:1A:52:79:80>13>><04:42:1A:52:79:70>13>>\",\"apg11_enable\":\"1\",\"apg11_ssid\":\"SDN-11\",\"apg11_ap_isolate\":\"1\",\"apg11_security\":\"<3>psk2>aes>adminAdmin123@>1<13>psk2>aes>adminAdmin123@>1<16>sae>aes>adminAdmin123@>1\",\"apg11_dut_list\":\"<04:42:1A:52:79:80>13>><04:42:1A:52:79:70>13>>\",\"apg12_enable\":\"1\",\"apg12_ssid\":\"SDN-12\",\"apg12_ap_isolate\":\"1\",\"apg12_security\":\"<3>psk2>aes>adminAdmin123@>1<13>psk2>aes>adminAdmin123@>1<16>sae>aes>adminAdmin123@>1\",\"apg12_dut_list\":\"<04:42:1A:52:79:80>13>><04:42:1A:52:79:70>13>>\",\"apg13_enable\":\"1\",\"apg13_ssid\":\"SDN-13\",\"apg13_ap_isolate\":\"1\",\"apg13_security\":\"<3>psk2>aes>adminAdmin123@>1<13>psk2>aes>adminAdmin123@>1<16>sae>aes>adminAdmin123@>1\",\"apg13_dut_list\":\"<04:42:1A:52:79:80>13>><04:42:1A:52:79:70>13>>\",\"apg14_enable\":\"1\",\"apg14_ssid\":\"SDN-14\",\"apg14_ap_isolate\":\"1\",\"apg14_security\":\"<3>psk2>aes>adminAdmin123@>1<13>psk2>aes>adminAdmin123@>1<16>sae>aes>adminAdmin123@>1\",\"apg14_dut_list\":\"<04:42:1A:52:79:80>13>><04:42:1A:52:79:70>13>>\",\"apg15_enable\":\"1\",\"apg15_ssid\":\"SDN-15\",\"apg15_ap_isolate\":\"1\",\"apg15_security\":\"<3>psk2>aes>adminAdmin123@>1<13>psk2>aes>adminAdmin123@>1<16>sae>aes>adminAdmin123@>1\",\"apg15_dut_list\":\"<04:42:1A:52:79:80>13>><04:42:1A:52:79:70>13>>\",\"apg16_enable\":\"1\",\"apg16_ssid\":\"SDN-16\",\"apg16_ap_isolate\":\"1\",\"apg16_security\":\"<3>psk2>aes>adminAdmin123@>1<13>psk2>aes>adminAdmin123@>1<16>sae>aes>adminAdmin123@>1\",\"apg16_dut_list\":\"<04:42:1A:52:79:80>13>><04:42:1A:52:79:70>13>>\",\"rc_service\":\"restart_wireless\"}" http://192.168.50.1/applyapp.cgi
+SLEEP=120
+apg_get_status 51 >/tmp/apg_get_status_51.txt
+apg_get_status 52 >/tmp/apg_get_status_52.txt
+apg_get_status 53 >/tmp/apg_get_status_53.txt
+apg_get_status 54 >/tmp/apg_get_status_54.txt
+apg_get_status 55 >/tmp/apg_get_status_55.txt
+apg_get_status 56 >/tmp/apg_get_status_56.txt
+apg_get_status 57 >/tmp/apg_get_status_57.txt
+apg_get_status 58 >/tmp/apg_get_status_58.txt
+apg_get_status 59 >/tmp/apg_get_status_59.txt
+apg_get_status 60 >/tmp/apg_get_status_60.txt
+apg_get_status 61 >/tmp/apg_get_status_61.txt
+apg_get_status 62 >/tmp/apg_get_status_62.txt
+apg_get_status 63 >/tmp/apg_get_status_63.txt
+apg_get_status 64 >/tmp/apg_get_status_64.txt
+apg_get_status 65 >/tmp/apg_get_status_65.txt
+apg_get_status 66 >/tmp/apg_get_status_66.txt
+SLEEP=10
+SWITCH=DEVICE_1
+apg_get_status 51 >/tmp/apg_get_status_51.txt
+apg_get_status 52 >/tmp/apg_get_status_52.txt
+apg_get_status 53 >/tmp/apg_get_status_53.txt
+apg_get_status 54 >/tmp/apg_get_status_54.txt
+apg_get_status 55 >/tmp/apg_get_status_55.txt
+apg_get_status 56 >/tmp/apg_get_status_56.txt
+apg_get_status 57 >/tmp/apg_get_status_57.txt
+apg_get_status 58 >/tmp/apg_get_status_58.txt
+apg_get_status 59 >/tmp/apg_get_status_59.txt
+apg_get_status 60 >/tmp/apg_get_status_60.txt
+apg_get_status 61 >/tmp/apg_get_status_61.txt
+apg_get_status 62 >/tmp/apg_get_status_62.txt
+apg_get_status 63 >/tmp/apg_get_status_63.txt
+apg_get_status 64 >/tmp/apg_get_status_64.txt
+apg_get_status 65 >/tmp/apg_get_status_65.txt
+apg_get_status 66 >/tmp/apg_get_status_66.txt

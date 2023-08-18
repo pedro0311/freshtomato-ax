@@ -1,0 +1,3 @@
+SWITCH=DEVICE_0
+CHECKFILE=/tmp/cfg_obresult_tmp.txt
+2

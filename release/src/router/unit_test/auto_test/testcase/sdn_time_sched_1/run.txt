@@ -1,0 +1,143 @@
+SWITCH=DEVICE_0
+CURL=curl -A "asusrouter-test-DUTUtil-111" http://192.168.50.1/login.cgi?login_authorization=YWRtaW46YWRtaW5BZG1pbjEyM0A= -D savecookie.txt
+CURL=curl -A "asusrouter-test-DUTUtil-111" -e "192.168.50.1" -b savecookie.txt -d "{\"action_mode\":\"apply\",\"vlan_rl\":\"<1>51>0><2>52>0><3>53>0><4>54>0><5>55>0><6>56>0><7>57>0><8>58>0><9>59>0><10>60>0><11>61>0><12>62>0><13>63>0><14>64>0><15>65>0><16>66>0><17>67>0><18>68>0><19>69>0><20>70>0><21>71>0><22>72>0><23>73>0><24>74>0><25>75>0><26>76>0><27>77>0><28>78>0><29>79>0><30>80>0><31>81>0><32>82>0>\",\"apg1_enable\":\"1\",\"apg1_ssid\":\"SDN-1\",\"apg1_ap_isolate\":\"1\",\"apg1_security\":\"<16>psk2>aes>adminAdmin123@>1\",\"apg1_dut_list\":\"<04:42:1A:52:79:80>1>><04:42:1A:52:79:70>1>>\",\"apg1_timesched\":\"1\",\"apg1_sched\":\"<M10217002100\",\"apg2_enable\":\"1\",\"apg2_ssid\":\"SDN-2\",\"apg2_ap_isolate\":\"1\",\"apg2_security\":\"<16>psk2>aes>adminAdmin123@>1\",\"apg2_dut_list\":\"<04:42:1A:52:79:80>1>><04:42:1A:52:79:70>1>>\",\"apg2_timesched\":\"1\",\"apg2_sched\":\"<M10417002100\",\"apg3_enable\":\"1\",\"apg3_ssid\":\"SDN-3\",\"apg3_ap_isolate\":\"1\",\"apg3_security\":\"<16>psk2>aes>adminAdmin123@>1\",\"apg3_dut_list\":\"<04:42:1A:52:79:80>4>><04:42:1A:52:79:70>4>>\",\"apg3_timesched\":\"1\",\"apg3_sched\":\"<M10817002100\",\"apg4_enable\":\"1\",\"apg4_ssid\":\"SDN-4\",\"apg4_ap_isolate\":\"1\",\"apg4_security\":\"<16>psk2>aes>adminAdmin123@>1\",\"apg4_dut_list\":\"<04:42:1A:52:79:80>4>><04:42:1A:52:79:70>4>>\",\"apg4_timesched\":\"1\",\"apg4_sched\":\"<M11017002100\",\"apg5_enable\":\"1\",\"apg5_ssid\":\"SDN-5\",\"apg5_ap_isolate\":\"1\",\"apg5_security\":\"<16>psk2>aes>adminAdmin123@>1\",\"apg5_dut_list\":\"<04:42:1A:52:79:80>8>><04:42:1A:52:79:70>8>>\",\"apg5_timesched\":\"1\",\"apg5_sched\":\"<M12017002100\",\"apg6_enable\":\"1\",\"apg6_ssid\":\"SDN-6\",\"apg6_ap_isolate\":\"1\",\"apg6_security\":\"<16>psk2>aes>adminAdmin123@>1\",\"apg6_dut_list\":\"<04:42:1A:52:79:80>8>><04:42:1A:52:79:70>8>>\",\"apg6_timesched\":\"1\",\"apg6_sched\":\"<M14017002100\",\"apg7_enable\":\"1\",\"apg7_ssid\":\"SDN-7\",\"apg7_ap_isolate\":\"1\",\"apg7_security\":\"<16>psk2>aes>adminAdmin123@>1\",\"apg7_dut_list\":\"<04:42:1A:52:79:80>8>><04:42:1A:52:79:70>8>>\",\"apg7_timesched\":\"1\",\"apg7_sched\":\"<M10117002100\",\"action_mode\":\"apply\",\"rc_service\":\"restart_wireless\"}" http://192.168.50.1/applyapp.cgi
+SLEEP=30
+nvram get wl0.1_timesched | grep -c "1" >$HOME/wl0.1_timesched-1.txt
+nvram get wl0.2_timesched | grep -c "1" >$HOME/wl0.2_timesched-1.txt
+nvram get wl1.1_timesched | grep -c "1" >$HOME/wl1.1_timesched-1.txt
+nvram get wl1.2_timesched | grep -c "1" >$HOME/wl1.2_timesched-1.txt
+nvram get wl2.1_timesched | grep -c "1" >$HOME/wl2.1_timesched-1.txt
+nvram get wl2.2_timesched | grep -c "1" >$HOME/wl2.2_timesched-1.txt
+nvram get wl2.3_timesched | grep -c "1" >$HOME/wl2.3_timesched-1.txt
+
+nvram get wl0.1_sched_v2 | grep -c "M10217002100" >$HOME/wl0.1_sched_v2-1.txt
+nvram get wl0.2_sched_v2 | grep -c "M10417002100" >$HOME/wl0.2_sched_v2-1.txt
+nvram get wl1.1_sched_v2 | grep -c "M10817002100" >$HOME/wl1.1_sched_v2-1.txt
+nvram get wl1.2_sched_v2 | grep -c "M11017002100" >$HOME/wl1.2_sched_v2-1.txt
+nvram get wl2.1_sched_v2 | grep -c "M12017002100" >$HOME/wl2.1_sched_v2-1.txt
+nvram get wl2.2_sched_v2 | grep -c "M14017002100" >$HOME/wl2.2_sched_v2-1.txt
+nvram get wl2.3_sched_v2 | grep -c "M10117002100" >$HOME/wl2.3_sched_v2-1.txt
+SWITCH=DEVICE_1
+nvram get wl0.2_timesched | grep -c "1" >$HOME/wl0.2_timesched-1.txt
+nvram get wl0.3_timesched | grep -c "1" >$HOME/wl0.3_timesched-1.txt
+nvram get wl1.2_timesched | grep -c "1" >$HOME/wl1.2_timesched-1.txt
+nvram get wl1.3_timesched | grep -c "1" >$HOME/wl1.3_timesched-1.txt
+nvram get wl2.2_timesched | grep -c "1" >$HOME/wl2.2_timesched-1.txt
+nvram get wl2.3_timesched | grep -c "1" >$HOME/wl2.3_timesched-1.txt
+nvram get wl2.4_timesched | grep -c "1" >$HOME/wl2.4_timesched-1.txt
+
+nvram get wl0.2_sched_v2 | grep -c "M10217002100" >$HOME/wl0.2_sched_v2-1.txt
+nvram get wl0.3_sched_v2 | grep -c "M10417002100" >$HOME/wl0.3_sched_v2-1.txt
+nvram get wl1.2_sched_v2 | grep -c "M10817002100" >$HOME/wl1.2_sched_v2-1.txt
+nvram get wl1.3_sched_v2 | grep -c "M11017002100" >$HOME/wl1.3_sched_v2-1.txt
+nvram get wl2.2_sched_v2 | grep -c "M12017002100" >$HOME/wl2.2_sched_v2-1.txt
+nvram get wl2.3_sched_v2 | grep -c "M14017002100" >$HOME/wl2.3_sched_v2-1.txt
+nvram get wl2.4_sched_v2 | grep -c "M10117002100" >$HOME/wl2.4_sched_v2-1.txt
+
+SWITCH=DEVICE_0
+CURL=curl -A "asusrouter-test-DUTUtil-111" http://192.168.50.1/login.cgi?login_authorization=YWRtaW46YWRtaW5BZG1pbjEyM0A= -D savecookie.txt
+CURL=curl -A "asusrouter-test-DUTUtil-111" -e "192.168.50.1" -b savecookie.txt -d "{\"action_mode\":\"apply\",\"vlan_rl\":\"<1>51>0><2>52>0><3>53>0><4>54>0><5>55>0><6>56>0><7>57>0><8>58>0><9>59>0><10>60>0><11>61>0><12>62>0><13>63>0><14>64>0><15>65>0><16>66>0><17>67>0><18>68>0><19>69>0><20>70>0><21>71>0><22>72>0><23>73>0><24>74>0><25>75>0><26>76>0><27>77>0><28>78>0><29>79>0><30>80>0><31>81>0><32>82>0>\",\"apg1_enable\":\"1\",\"apg1_ssid\":\"SDN-1\",\"apg1_ap_isolate\":\"1\",\"apg1_security\":\"<16>psk2>aes>adminAdmin123@>1\",\"apg1_dut_list\":\"<04:42:1A:52:79:80>1>><04:42:1A:52:79:70>1>>\",\"apg1_timesched\":\"0\",\"apg1_sched\":\"\,\"apg2_enable\":\"1\",\"apg2_ssid\":\"SDN-2\",\"apg2_ap_isolate\":\"1\",\"apg2_security\":\"<16>psk2>aes>adminAdmin123@>1\",\"apg2_dut_list\":\"<04:42:1A:52:79:80>1>><04:42:1A:52:79:70>1>>\",\"apg2_timesched\":\"1\",\"apg2_sched\":\"<M10417002100\",\"apg3_enable\":\"1\",\"apg3_ssid\":\"SDN-3\",\"apg3_ap_isolate\":\"1\",\"apg3_security\":\"<16>psk2>aes>adminAdmin123@>1\",\"apg3_dut_list\":\"<04:42:1A:52:79:80>4>><04:42:1A:52:79:70>4>>\",\"apg3_timesched\":\"0\",\"apg3_sched\":\",\"apg4_enable\":\"1\",\"apg4_ssid\":\"SDN-4\",\"apg4_ap_isolate\":\"1\",\"apg4_security\":\"<16>psk2>aes>adminAdmin123@>1\",\"apg4_dut_list\":\"<04:42:1A:52:79:80>4>><04:42:1A:52:79:70>4>>\",\"apg4_timesched\":\"1\",\"apg4_sched\":\"<M11017002100\",\"apg5_enable\":\"1\",\"apg5_ssid\":\"SDN-5\",\"apg5_ap_isolate\":\"1\",\"apg5_security\":\"<16>psk2>aes>adminAdmin123@>1\",\"apg5_dut_list\":\"<04:42:1A:52:79:80>8>><04:42:1A:52:79:70>8>>\",\"apg5_timesched\":\"0\",\"apg5_sched\":\"\",\"apg6_enable\":\"1\",\"apg6_ssid\":\"SDN-6\",\"apg6_ap_isolate\":\"1\",\"apg6_security\":\"<16>psk2>aes>adminAdmin123@>1\",\"apg6_dut_list\":\"<04:42:1A:52:79:80>8>><04:42:1A:52:79:70>8>>\",\"apg6_timesched\":\"1\",\"apg6_sched\":\"<M14017002100\",\"apg7_enable\":\"1\",\"apg7_ssid\":\"SDN-7\",\"apg7_ap_isolate\":\"1\",\"apg7_security\":\"<16>psk2>aes>adminAdmin123@>1\",\"apg7_dut_list\":\"<04:42:1A:52:79:80>8>><04:42:1A:52:79:70>8>>\",\"apg7_timesched\":\"0\",\"apg7_sched\":\"\",\"action_mode\":\"apply\",\"rc_service\":\"restart_wireless\"}" http://192.168.50.1/applyapp.cgi
+SLEEP=30
+nvram get wl0.1_timesched | grep -c "0" >$HOME/wl0.1_timesched-2.txt
+nvram get wl0.2_timesched | grep -c "1" >$HOME/wl0.2_timesched-2.txt
+nvram get wl1.1_timesched | grep -c "0" >$HOME/wl1.1_timesched-2.txt
+nvram get wl1.2_timesched | grep -c "1" >$HOME/wl1.2_timesched-2.txt
+nvram get wl2.1_timesched | grep -c "0" >$HOME/wl2.1_timesched-2.txt
+nvram get wl2.2_timesched | grep -c "1" >$HOME/wl2.2_timesched-2.txt
+nvram get wl2.3_timesched | grep -c "0" >$HOME/wl2.3_timesched-2.txt
+
+nvram get wl0.1_sched_v2 | grep -c "" >$HOME/wl0.1_sched_v2-2.txt
+nvram get wl0.2_sched_v2 | grep -c "<M10417002100" >$HOME/wl0.2_sched_v2-2.txt
+nvram get wl1.1_sched_v2 | grep -c "" >$HOME/wl1.1_sched_v2-2.txt
+nvram get wl1.2_sched_v2 | grep -c "<M11017002100" >$HOME/wl1.2_sched_v2-2.txt
+nvram get wl2.1_sched_v2 | grep -c "" >$HOME/wl2.1_sched_v2-2.txt
+nvram get wl2.2_sched_v2 | grep -c "<M14017002100" >$HOME/wl2.2_sched_v2-2.txt
+nvram get wl2.3_sched_v2 | grep -c "" >$HOME/wl2.3_sched_v2-2.txt
+SWITCH=DEVICE_1
+nvram get wl0.2_timesched | grep -c "0" >$HOME/wl0.2_timesched-2.txt
+nvram get wl0.3_timesched | grep -c "1" >$HOME/wl0.3_timesched-2.txt
+nvram get wl1.2_timesched | grep -c "0" >$HOME/wl1.2_timesched-2.txt
+nvram get wl1.3_timesched | grep -c "1" >$HOME/wl1.3_timesched-2.txt
+nvram get wl2.2_timesched | grep -c "0" >$HOME/wl2.2_timesched-2.txt
+nvram get wl2.3_timesched | grep -c "1" >$HOME/wl2.3_timesched-2.txt
+nvram get wl2.4_timesched | grep -c "0" >$HOME/wl2.4_timesched-2.txt
+
+nvram get wl0.2_sched_v2 | grep -c "" >$HOME/wl0.2_sched_v2-2.txt
+nvram get wl0.3_sched_v2 | grep -c "<M10417002100" >$HOME/wl0.3_sched_v2-2.txt
+nvram get wl1.2_sched_v2 | grep -c "" >$HOME/wl1.2_sched_v2-2.txt
+nvram get wl1.3_sched_v2 | grep -c "<M11017002100" >$HOME/wl1.3_sched_v2-2.txt
+nvram get wl2.2_sched_v2 | grep -c "" >$HOME/wl2.2_sched_v2-2.txt
+nvram get wl2.3_sched_v2 | grep -c "<M14017002100" >$HOME/wl2.3_sched_v2-2.txt
+nvram get wl2.4_sched_v2 | grep -c "" >$HOME/wl2.4_sched_v2-2.txt
+
+SWITCH=DEVICE_0
+CURL=curl -A "asusrouter-test-DUTUtil-111" http://192.168.50.1/login.cgi?login_authorization=YWRtaW46YWRtaW5BZG1pbjEyM0A= -D savecookie.txt
+CURL=curl -A "asusrouter-test-DUTUtil-111" -e "192.168.50.1" -b savecookie.txt -d "{\"action_mode\":\"apply\",\"vlan_rl\":\"<1>51>0><2>52>0><3>53>0><4>54>0><5>55>0><6>56>0><7>57>0><8>58>0><9>59>0><10>60>0><11>61>0><12>62>0><13>63>0><14>64>0><15>65>0><16>66>0><17>67>0><18>68>0><19>69>0><20>70>0><21>71>0><22>72>0><23>73>0><24>74>0><25>75>0><26>76>0><27>77>0><28>78>0><29>79>0><30>80>0><31>81>0><32>82>0>\",\"apg1_enable\":\"1\",\"apg1_ssid\":\"SDN-1\",\"apg1_ap_isolate\":\"1\",\"apg1_security\":\"<16>psk2>aes>adminAdmin123@>1\",\"apg1_dut_list\":\"<04:42:1A:52:79:80>1>><04:42:1A:52:79:70>1>>\",\"apg1_timesched\":\"0\",\"apg1_sched\":\"\",\"apg2_enable\":\"1\",\"apg2_ssid\":\"SDN-2\",\"apg2_ap_isolate\":\"1\",\"apg2_security\":\"<16>psk2>aes>adminAdmin123@>1\",\"apg2_dut_list\":\"<04:42:1A:52:79:80>1>><04:42:1A:52:79:70>1>>\",\"apg2_timesched\":\"1\",\"apg2_sched\":\"<M10417002100\",\"apg3_enable\":\"1\",\"apg3_ssid\":\"SDN-3\",\"apg3_ap_isolate\":\"1\",\"apg3_security\":\"<16>psk2>aes>adminAdmin123@>1\",\"apg3_dut_list\":\"<04:42:1A:52:79:80>4>><04:42:1A:52:79:70>4>>\",\"apg3_timesched\":\"0\",\"apg3_sched\":\"\",\"apg4_enable\":\"1\",\"apg4_ssid\":\"SDN-4\",\"apg4_ap_isolate\":\"1\",\"apg4_security\":\"<16>psk2>aes>adminAdmin123@>1\",\"apg4_dut_list\":\"<04:42:1A:52:79:80>4>><04:42:1A:52:79:70>4>>\",\"apg4_timesched\":\"0\",\"apg4_sched\":\"\",\"apg5_enable\":\"1\",\"apg5_ssid\":\"SDN-5\",\"apg5_ap_isolate\":\"1\",\"apg5_security\":\"<16>psk2>aes>adminAdmin123@>1\",\"apg5_dut_list\":\"<04:42:1A:52:79:80>8>><04:42:1A:52:79:70>8>>\",\"apg5_timesched\":\"0\",\"apg5_sched\":\"\",\"apg6_enable\":\"1\",\"apg6_ssid\":\"SDN-6\",\"apg6_ap_isolate\":\"1\",\"apg6_security\":\"<16>psk2>aes>adminAdmin123@>1\",\"apg6_dut_list\":\"<04:42:1A:52:79:80>8>><04:42:1A:52:79:70>8>>\",\"apg6_timesched\":\"1\",\"apg6_sched\":\"<M14017002100\",\"apg7_enable\":\"1\",\"apg7_ssid\":\"SDN-7\",\"apg7_ap_isolate\":\"1\",\"apg7_security\":\"<16>psk2>aes>adminAdmin123@>1\",\"apg7_dut_list\":\"<04:42:1A:52:79:80>8>><04:42:1A:52:79:70>8>>\",\"apg7_timesched\":\"0\",\"apg7_sched\":\"\",\"action_mode\":\"apply\",\"rc_service\":\"restart_wireless\"}" http://192.168.50.1/applyapp.cgi
+SLEEP=30
+nvram get wl0.1_timesched | grep -c "0" >$HOME/wl0.1_timesched-3.txt
+nvram get wl0.2_timesched | grep -c "1" >$HOME/wl0.2_timesched-3.txt
+nvram get wl1.1_timesched | grep -c "0" >$HOME/wl1.1_timesched-3.txt
+nvram get wl1.2_timesched | grep -c "0" >$HOME/wl1.2_timesched-3.txt
+nvram get wl2.1_timesched | grep -c "0" >$HOME/wl2.1_timesched-3.txt
+nvram get wl2.2_timesched | grep -c "1" >$HOME/wl2.2_timesched-3.txt
+nvram get wl2.3_timesched | grep -c "0" >$HOME/wl2.3_timesched-3.txt
+
+nvram get wl0.1_sched_v2 | grep -c "" >$HOME/wl0.1_sched_v2-3.txt
+nvram get wl0.2_sched_v2 | grep -c "<M10417002100" >$HOME/wl0.2_sched_v2-3.txt
+nvram get wl1.1_sched_v2 | grep -c "" >$HOME/wl1.1_sched_v2-3.txt
+nvram get wl1.2_sched_v2 | grep -c "" >$HOME/wl1.2_sched_v2-3.txt
+nvram get wl2.1_sched_v2 | grep -c "" >$HOME/wl2.1_sched_v2-3.txt
+nvram get wl2.2_sched_v2 | grep -c "<M14017002100" >$HOME/wl2.2_sched_v2-3.txt
+nvram get wl2.3_sched_v2 | grep -c "" >$HOME/wl2.3_sched_v2-3.txt
+SWITCH=DEVICE_1
+nvram get wl0.2_timesched | grep -c "0" >$HOME/wl0.2_timesched-3.txt
+nvram get wl0.3_timesched | grep -c "1" >$HOME/wl0.3_timesched-3.txt
+nvram get wl1.2_timesched | grep -c "0" >$HOME/wl1.2_timesched-3.txt
+nvram get wl1.3_timesched | grep -c "0" >$HOME/wl1.3_timesched-3.txt
+nvram get wl2.2_timesched | grep -c "0" >$HOME/wl2.2_timesched-3.txt
+nvram get wl2.3_timesched | grep -c "1" >$HOME/wl2.3_timesched-3.txt
+nvram get wl2.4_timesched | grep -c "0" >$HOME/wl2.4_timesched-3.txt
+
+nvram get wl0.2_sched_v2 | grep -c "" >$HOME/wl0.2_sched_v2-3.txt
+nvram get wl0.3_sched_v2 | grep -c "<M10417002100" >$HOME/wl0.3_sched_v2-3.txt
+nvram get wl1.2_sched_v2 | grep -c "" >$HOME/wl1.2_sched_v2-3.txt
+nvram get wl1.3_sched_v2 | grep -c "" >$HOME/wl1.3_sched_v2-3.txt
+nvram get wl2.2_sched_v2 | grep -c "" >$HOME/wl2.2_sched_v2-3.txt
+nvram get wl2.3_sched_v2 | grep -c "<M14017002100" >$HOME/wl2.3_sched_v2-3.txt
+nvram get wl2.4_sched_v2 | grep -c "" >$HOME/wl2.4_sched_v2-3.txt
+
+SWITCH=DEVICE_0
+CURL=curl -A "asusrouter-test-DUTUtil-111" http://192.168.50.1/login.cgi?login_authorization=YWRtaW46YWRtaW5BZG1pbjEyM0A= -D savecookie.txt
+CURL=curl -A "asusrouter-test-DUTUtil-111" -e "192.168.50.1" -b savecookie.txt -d "{\"action_mode\":\"apply\",\"vlan_rl\":\"<1>51>0><2>52>0><3>53>0><4>54>0><5>55>0><6>56>0><7>57>0><8>58>0><9>59>0><10>60>0><11>61>0><12>62>0><13>63>0><14>64>0><15>65>0><16>66>0><17>67>0><18>68>0><19>69>0><20>70>0><21>71>0><22>72>0><23>73>0><24>74>0><25>75>0><26>76>0><27>77>0><28>78>0><29>79>0><30>80>0><31>81>0><32>82>0>\",\"apg1_enable\":\"1\",\"apg1_ssid\":\"SDN-1\",\"apg1_ap_isolate\":\"1\",\"apg1_security\":\"<16>psk2>aes>adminAdmin123@>1\",\"apg1_dut_list\":\"<04:42:1A:52:79:80>1>><04:42:1A:52:79:70>1>>\",\"apg1_timesched\":\"0\",\"apg1_sched\":\"\,\"apg2_enable\":\"1\",\"apg2_ssid\":\"SDN-2\",\"apg2_ap_isolate\":\"1\",\"apg2_security\":\"<16>psk2>aes>adminAdmin123@>1\",\"apg2_dut_list\":\"<04:42:1A:52:79:80>1>><04:42:1A:52:79:70>1>>\",\"apg2_timesched\":\"1\",\"apg2_sched\":\"<M10417002100\",\"apg3_enable\":\"1\",\"apg3_ssid\":\"SDN-3\",\"apg3_ap_isolate\":\"1\",\"apg3_security\":\"<16>psk2>aes>adminAdmin123@>1\",\"apg3_dut_list\":\"<04:42:1A:52:79:80>4>><04:42:1A:52:79:70>4>>\",\"apg3_timesched\":\"1\",\"apg3_sched\":\"<M10817002100\",\"apg4_enable\":\"1\",\"apg4_ssid\":\"SDN-4\",\"apg4_ap_isolate\":\"1\",\"apg4_security\":\"<16>psk2>aes>adminAdmin123@>1\",\"apg4_dut_list\":\"<04:42:1A:52:79:80>4>><04:42:1A:52:79:70>4>>\",\"apg4_timesched\":\"1\",\"apg4_sched\":\"<M11017002100\",\"apg5_enable\":\"1\",\"apg5_ssid\":\"SDN-5\",\"apg5_ap_isolate\":\"1\",\"apg5_security\":\"<16>psk2>aes>adminAdmin123@>1\",\"apg5_dut_list\":\"<04:42:1A:52:79:80>8>><04:42:1A:52:79:70>8>>\",\"apg5_timesched\":\"1\",\"apg5_sched\":\"<M12017002100\",\"apg6_enable\":\"1\",\"apg6_ssid\":\"SDN-6\",\"apg6_ap_isolate\":\"1\",\"apg6_security\":\"<16>psk2>aes>adminAdmin123@>1\",\"apg6_dut_list\":\"<04:42:1A:52:79:80>8>><04:42:1A:52:79:70>8>>\",\"apg6_timesched\":\"1\",\"apg6_sched\":\"<M14017002100\",\"apg7_enable\":\"1\",\"apg7_ssid\":\"SDN-7\",\"apg7_ap_isolate\":\"1\",\"apg7_security\":\"<16>psk2>aes>adminAdmin123@>1\",\"apg7_dut_list\":\"<04:42:1A:52:79:80>8>><04:42:1A:52:79:70>8>>\",\"apg7_timesched\":\"0\",\"apg7_sched\":\"\",\"action_mode\":\"apply\",\"rc_service\":\"restart_wireless\"}" http://192.168.50.1/applyapp.cgi
+SLEEP=30
+nvram get wl0.1_timesched | grep -c "0" >$HOME/wl0.1_timesched-4.txt
+nvram get wl0.2_timesched | grep -c "1" >$HOME/wl0.2_timesched-4.txt
+nvram get wl1.1_timesched | grep -c "1" >$HOME/wl1.1_timesched-4.txt
+nvram get wl1.2_timesched | grep -c "1" >$HOME/wl1.2_timesched-4.txt
+nvram get wl2.1_timesched | grep -c "1" >$HOME/wl2.1_timesched-4.txt
+nvram get wl2.2_timesched | grep -c "1" >$HOME/wl2.2_timesched-4.txt
+nvram get wl2.3_timesched | grep -c "0" >$HOME/wl2.3_timesched-4.txt
+
+nvram get wl0.1_sched_v2 | grep -c "" >$HOME/wl0.1_sched_v2-4.txt
+nvram get wl0.2_sched_v2 | grep -c "<M10417002100" >$HOME/wl0.2_sched_v2-4.txt
+nvram get wl1.1_sched_v2 | grep -c "<M10817002100" >$HOME/wl1.1_sched_v2-4.txt
+nvram get wl1.2_sched_v2 | grep -c "<M11017002100" >$HOME/wl1.2_sched_v2-4.txt
+nvram get wl2.1_sched_v2 | grep -c "<M12017002100" >$HOME/wl2.1_sched_v2-4.txt
+nvram get wl2.2_sched_v2 | grep -c "<M14017002100" >$HOME/wl2.2_sched_v2-4.txt
+nvram get wl2.3_sched_v2 | grep -c "" >$HOME/wl2.3_sched_v2-4.txt
+SWITCH=DEVICE_1
+nvram get wl0.2_timesched | grep -c "0" >$HOME/wl0.2_timesched-4.txt
+nvram get wl0.3_timesched | grep -c "1" >$HOME/wl0.3_timesched-4.txt
+nvram get wl1.2_timesched | grep -c "1" >$HOME/wl1.2_timesched-4.txt
+nvram get wl1.3_timesched | grep -c "1" >$HOME/wl1.3_timesched-4.txt
+nvram get wl2.2_timesched | grep -c "1" >$HOME/wl2.2_timesched-4.txt
+nvram get wl2.3_timesched | grep -c "1" >$HOME/wl2.3_timesched-4.txt
+nvram get wl2.4_timesched | grep -c "0" >$HOME/wl2.4_timesched-4.txt
+
+nvram get wl0.2_sched_v2 | grep -c "" >$HOME/wl0.2_sched_v2-4.txt
+nvram get wl0.3_sched_v2 | grep -c "<M10417002100" >$HOME/wl0.3_sched_v2-4.txt
+nvram get wl1.2_sched_v2 | grep -c "<M10817002100" >$HOME/wl1.2_sched_v2-4.txt
+nvram get wl1.3_sched_v2 | grep -c "<M11017002100" >$HOME/wl1.3_sched_v2-4.txt
+nvram get wl2.2_sched_v2 | grep -c "<M12017002100" >$HOME/wl2.2_sched_v2-4.txt
+nvram get wl2.3_sched_v2 | grep -c "<M14017002100" >$HOME/wl2.3_sched_v2-4.txt
+nvram get wl2.4_sched_v2 | grep -c "" >$HOME/wl2.4_sched_v2-4.txt

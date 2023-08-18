@@ -1,0 +1,6 @@
+項目: Upload file驗證 for firmware版本有差異
+環境:
+    - 一台CAP及一台RE (皆要開啟AMAS_UPLOAD_FILE功能)
+    - CAP帳號密碼請設定為admin/123456789
+    - RE連上CAP (wifi/ethernet backhaul)
+結果: RE成功上傳檔案至CAP

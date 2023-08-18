@@ -1,0 +1,8 @@
+項目: SDN swctl test - Check
+環境:
+    1. 一台CAP及一台RE.
+    2. CAP帳號密碼請設定為admin/adminAdmin123@ (YWRtaW46YWRtaW5BZG1pbjEyM0A=)
+    3. 建立 SDN並且開啟 2G/5G/5G1 Guest network 
+驗證: 
+    驗證 vlan switch control 設定是否正確
+    

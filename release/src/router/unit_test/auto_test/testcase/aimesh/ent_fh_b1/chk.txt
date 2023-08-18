@@ -1,0 +1,4 @@
+COMPARE=DEVICE_0,nvram get wl0_auth_mode_x,=,,wpawpa2
+COMPARE=DEVICE_1,nvram get wlc0_auth_mode,=,,wpawpa2
+COMPARE=DEVICE_1,nvram get wlc0_status,=,,-1
+COMPARE=DEVICE_1,nvram get wl0.1_auth_mode_x,=,,wpawpa2

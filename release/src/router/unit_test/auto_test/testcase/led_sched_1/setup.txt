@@ -1,0 +1,14 @@
+SWITCH=DEVICE_1
+nvram set svc_ready=1
+nvram set ntp_ready=1
+nvram commit
+date 00:00:00
+nvram get AllLED | grep -c "1" >$HOME/chk_allled_1.txt
+SWITCH=DEVICE_0
+nvram set svc_ready=1
+nvram set ntp_ready=1
+nvram commit
+date 00:00:00
+nvram get AllLED | grep -c "1" >$HOME/chk_allled_1.txt
+export led_timesched="1"
+export led_sched="W17F01000200<W17F05000600<W17F08000900"

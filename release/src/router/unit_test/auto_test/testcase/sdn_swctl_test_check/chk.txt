@@ -1,0 +1,14 @@
+SWITCH=DEVICE_0
+CHECKFILE=/tmp/home/root/check_swctl_test1_51.txt
+OK
+CHECKFILE=/tmp/home/root/check_swctl_test1_52.txt
+OK
+CHECKFILE=/tmp/home/root/check_swctl_test1_53.txt
+OK
+SWITCH=DEVICE_1
+CHECKFILE=/tmp/home/root/check_swctl_test1_51.txt
+OK
+CHECKFILE=/tmp/home/root/check_swctl_test1_52.txt
+OK
+CHECKFILE=/tmp/home/root/check_swctl_test1_53.txt
+OK

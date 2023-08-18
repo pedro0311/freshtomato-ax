@@ -1,0 +1,3 @@
+項目: 測試 MAINTAIN_STATUS_QUO 流程是否正常
+環境: 將對上5G/5G1設為active，將2.4G設定為unuse
+結果: 只有2.4G會被斷線。

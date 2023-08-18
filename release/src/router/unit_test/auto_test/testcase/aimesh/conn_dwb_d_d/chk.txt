@@ -1,0 +1,5 @@
+COMPARE=DEVICE_0,nvram get amas_wlc0_state,=,,2
+COMPARE=DEVICE_0,nvram get amas_wlc1_state,=,,2
+SWITCH=DEVICE_0
+CHECKFILE=/tmp/ping_result
+1 packets transmitted, 1 packets received, 0% packet loss

@@ -1,0 +1,4 @@
+項目: SDN Bandwidth limiter test
+環境:
+    1. 一台CAP及一台RE.
+    2. CAP帳號密碼請設定為admin/12345678 (YWRtaW46MTIzNDU2Nzg=)

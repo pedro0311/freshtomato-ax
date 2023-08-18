@@ -1,0 +1,7 @@
+SWITCH=DEVICE_1
+nvram set dwb_mode=3
+nvram commit
+rc rc_service restart_cfgsync
+SWITCH=DEVICE_0
+rc rc_service restart_cfgsync
+SLEEP=60

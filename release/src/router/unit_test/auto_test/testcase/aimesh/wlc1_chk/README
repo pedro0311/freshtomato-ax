@@ -1,0 +1,3 @@
+項目: 檢查Tri band RE 5G low對上連線是否啟用
+環境: 一台CAP及一台成功加入AiMesh的tri band RE
+結果: 5G low band對上是停止連線狀態

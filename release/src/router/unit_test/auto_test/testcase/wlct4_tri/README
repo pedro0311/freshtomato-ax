@@ -1,0 +1,5 @@
+項目: 測試  Ttr band RE START_CONNECTING 流程是否正常
+環境: 將對上2.4G/5G1 設為active，5G設為unuse。並確保待測RE 2.4G/5G1 目前連上CAP/RE
+並設定2.4G Priority高於5G1 Priority。
+對已連上的2.4G做斷線的動作
+結果: 5G1無任何更動，而2.4G正常連上CAP/RE

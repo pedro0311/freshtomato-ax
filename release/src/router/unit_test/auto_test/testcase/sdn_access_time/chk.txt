@@ -1,0 +1,58 @@
+SWITCH=DEVICE_0
+CHECKFILE=/tmp/home/root/chk_wl0.1_expiretime.txt
+1
+CHECKFILE=/tmp/home/root/chk_wl1.1_expiretime.txt
+1
+CHECKFILE=/tmp/home/root/chk_wl0.2_expiretime.txt
+1
+CHECKFILE=/tmp/home/root/chk_wl1.2_expiretime.txt
+1
+CHECKFILE=/tmp/home/root/chk_wl0.3_expiretime.txt
+1
+CHECKFILE=/tmp/home/root/chk_wl1.3_expiretime.txt
+1
+CHECKFILE=/tmp/home/root/chk_wl0.5_expiretime.txt
+1
+CHECKFILE=/tmp/home/root/chk_wl1.4_expiretime.txt
+1
+COMPARE=DEVICE_0,nvram get wl0.1_expiretime,=,DEVICE_1,nvram get wl0.2_expiretime
+COMPARE=DEVICE_0,nvram get wl1.1_expiretime,=,DEVICE_1,nvram get wl1.2_expiretime
+COMPARE=DEVICE_0,nvram get wl0.2_expiretime,=,DEVICE_1,nvram get wl0.3_expiretime
+COMPARE=DEVICE_0,nvram get wl1.2_expiretime,=,DEVICE_1,nvram get wl1.3_expiretime
+COMPARE=DEVICE_0,nvram get wl0.3_expiretime,=,DEVICE_1,nvram get wl0.4_expiretime
+COMPARE=DEVICE_0,nvram get wl1.3_expiretime,=,DEVICE_1,nvram get wl1.4_expiretime
+COMPARE=DEVICE_0,nvram get wl0.5_expiretime,=,DEVICE_1,nvram get wl0.6_expiretime
+COMPARE=DEVICE_0,nvram get wl1.4_expiretime,=,DEVICE_1,nvram get wl1.5_expiretime
+CHECKFILE=/tmp/home/root/wl0.1_bss.txt
+down
+CHECKFILE=/tmp/home/root/wl1.1_bss.txt
+down
+CHECKFILE=/tmp/home/root/wl0.2_bss.txt
+down
+CHECKFILE=/tmp/home/root/wl1.2_bss.txt
+down
+CHECKFILE=/tmp/home/root/wl0.3_bss.txt
+down
+CHECKFILE=/tmp/home/root/wl1.3_bss.txt
+down
+CHECKFILE=/tmp/home/root/wl0.5_bss.txt
+down
+CHECKFILE=/tmp/home/root/wl1.4_bss.txt
+down
+SWITCH=DEVICE_1
+CHECKFILE=/tmp/home/root/wl0.2_bss.txt
+down
+CHECKFILE=/tmp/home/root/wl1.2_bss.txt
+down
+CHECKFILE=/tmp/home/root/wl0.3_bss.txt
+down
+CHECKFILE=/tmp/home/root/wl1.3_bss.txt
+down
+CHECKFILE=/tmp/home/root/wl0.4_bss.txt
+down
+CHECKFILE=/tmp/home/root/wl1.4_bss.txt
+down
+CHECKFILE=/tmp/home/root/wl0.6_bss.txt
+down
+CHECKFILE=/tmp/home/root/wl1.5_bss.txt
+down

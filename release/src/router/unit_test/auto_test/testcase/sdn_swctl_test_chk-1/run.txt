@@ -1,0 +1,8 @@
+SWITCH=DEVICE_0
+$HOME/tc-check-swctl.sh 51 access 1 >$HOME/check_swctl_test1_51.txt
+$HOME/tc-check-swctl.sh 52 trunk 2 >$HOME/check_swctl_test1_52.txt
+$HOME/tc-check-swctl.sh 53 default 3 >$HOME/check_swctl_test1_53.txt
+SWITCH=DEVICE_1
+$HOME/tc-check-swctl.sh 51 access 1 >$HOME/check_swctl_test1_51.txt
+$HOME/tc-check-swctl.sh 52 trunk 2 >$HOME/check_swctl_test1_52.txt
+$HOME/tc-check-swctl.sh 53 default 3 >$HOME/check_swctl_test1_53.txt

@@ -1,0 +1,7 @@
+項目: 檢查 CAP 從舊 Guest network 升級到 SDN 的 APG 狀態 
+環境:
+    1. CAP帳號密碼請設定為admin/adminAdmin123@ (YWRtaW46YWRtaW5BZG1pbjEyM0A=)
+    2. 在舊 Guest network FW 開啟 Guest network
+    3. 升級 SDN FW
+驗證: 
+    檢查舊版 Guest network 的設定升級到 SDN 後 APGx 的設定是否正確

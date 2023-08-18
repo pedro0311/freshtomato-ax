@@ -1,0 +1,108 @@
+#------------------------------------------------------------------------------
+# Example file format of rlapm.conf
+#
+# rlapmmodeXX nn     // nn = 0 disables RLAPM, 1 enables RLAPM
+# rlapmprofileid nn  // nn = Specifies profile to use (0-15)
+# profile p          // f  = Identifier for profile (0-15)
+# freq    f          // f  = Frequency (in MHz) for receive levels
+# rxLevel l m        // l  = Receive level to add the indicated additional
+#                            PHY margin (0-80)
+#                    // m  = Amount of additional PHY margin to be added
+#                            (0-255)
+#------------------------------------------------------------------------------
+rlapmmodebandd 0
+rlapmmodebanddlo 0
+rlapmmodebanddhi 0
+rlapmmodebande 1
+rlapmmodebandfsat 1
+rlapmmodebandfcbl 0
+rlapmmodebandh 0
+rlapmmodecustom 0
+#------------------------------------------------------------------------------
+rlapmprofileid 0
+#------------------------------------------------------------------------------
+profile 0
+# CLNK fc = 500 MHz
+# Power line interference -91dBm/200KHz
+# Depends upon phyMargin = 10 (2dB)
+freq 500
+#------------------------------------------------------------------------------
+# |Parameter| RxLevel | AddedPhyMargin |
+#------------------------------------------------------------------------------
+rxLevel 26 0
+rxLevel 27 0
+rxLevel 28 0
+rxLevel 29 0
+rxLevel 30 0
+rxLevel 31 0
+rxLevel 32 0
+rxLevel 33 2
+rxLevel 34 4
+rxLevel 35 6
+rxLevel 36 8
+rxLevel 37 10
+rxLevel 38 12
+rxLevel 39 14
+rxLevel 40 16
+rxLevel 41 18
+rxLevel 42 20
+rxLevel 43 22
+rxLevel 44 24
+rxLevel 45 26
+rxLevel 46 28
+rxLevel 47 30
+rxLevel 48 32
+rxLevel 49 34
+rxLevel 50 36
+rxLevel 51 38
+rxLevel 52 40
+rxLevel 53 42
+rxLevel 54 42
+rxLevel 55 42
+rxLevel 56 42
+rxLevel 57 42
+rxLevel 58 42
+rxLevel 59 42
+#------------------------------------------------------------------------------
+# CLNK fc = 850 MHz
+# Power line interference -91dBm/200KHz
+# Depends upon phyMargin = 10 (2dB)
+freq 850
+#------------------------------------------------------------------------------
+# |Parameter| RxLevel | AddedPhyMargin |
+rxLevel 26 0
+rxLevel 27 0
+rxLevel 28 0
+rxLevel 29 0
+rxLevel 30 0
+rxLevel 31 0
+rxLevel 32 0
+rxLevel 33 2
+rxLevel 34 4
+rxLevel 35 6
+rxLevel 36 8
+rxLevel 37 10
+rxLevel 38 12
+rxLevel 39 14
+rxLevel 40 16
+rxLevel 41 18
+rxLevel 42 20
+rxLevel 43 22
+rxLevel 44 24
+rxLevel 45 26
+rxLevel 46 28
+rxLevel 47 30
+rxLevel 48 32
+rxLevel 49 34
+rxLevel 50 36
+rxLevel 51 38
+rxLevel 52 40
+rxLevel 53 42
+rxLevel 54 42
+rxLevel 55 42
+rxLevel 56 42
+rxLevel 57 42
+rxLevel 58 42
+rxLevel 59 42
+#------------------------------------------------------------------------------
+

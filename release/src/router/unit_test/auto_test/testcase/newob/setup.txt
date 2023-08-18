@@ -1,0 +1,6 @@
+SWITCH=DEVICE_1
+echo "-----------------newobd test start-----------------" > /jffs/newob_test_status
+nvram get extendno >> /jffs/newob_test_status
+nvram get re_mode >> /jffs/newob_test_status
+nvram get sw_mode >> /jffs/newob_test_status
+nvram get amas_newob_status >> /jffs/newob_test_status

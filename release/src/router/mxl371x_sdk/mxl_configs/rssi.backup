@@ -1,0 +1,25 @@
+#------------------------------------------------------------------------------
+# Example File Format of "/etc/clink/en0/rssi.conf"
+#
+# freqcomptbl fi fc     // fi  = Frequency Index (range 0-12).
+#                       // fc  = Frequency Compensation for that frequency index.
+# startfreqindex sfi    // sfi = Start Frequency Index (range 0-48).
+# channelspacing cs     // cs  = Channel Spacing (range 1-4).
+# loggainoffset lgo     // lgo = Log Gain Offset.
+#------------------------------------------------------------------------------
+freqcomptbl 0 34
+freqcomptbl 1 22
+freqcomptbl 2 14
+freqcomptbl 3 7
+freqcomptbl 4 1
+freqcomptbl 5 0
+freqcomptbl 6 0
+freqcomptbl 7 -1
+freqcomptbl 8 0
+freqcomptbl 9 -2
+freqcomptbl 10 -6
+freqcomptbl 11 -13
+freqcomptbl 12 -26
+startfreqindex 0
+channelspacing 4
+loggainoffset 9

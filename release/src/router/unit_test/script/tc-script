@@ -1,0 +1,43 @@
+#!/bin/sh
+export IFS=";"
+param=
+i=1
+
+for word in $tcs; do
+    if [ ! -z "$tcs_item" -a "$tcs_item" != "all" ]; then
+        for word2 in $tcs_item; do
+            if [ $word == $word2 ]; then
+                 param="${param} -t \"${word}\""
+            fi
+        done
+    else
+        param="${param} -t \"${word}\""
+    fi
+done
+
+if [ ! -z "$tc_stop" ]; then
+    if [[ $tc_stop -eq 1 ]]; then
+        param="${param} -o 1"
+    elif [[ $tc_stop -eq 2 ]]; then
+        param="${param} -o 2"
+    fi
+fi
+
+if [ ! -z "$tc_logfile" ]; then
+    param="${param} -f ${tc_logfile}" 
+fi    
+
+param="${tc_prog}${param}"
+while [ $i -le $tc_cycle ]; do
+    if [ ! -z "$tc_title" ]; then
+        param="${param} -m \"${tc_title} [#${i}]\""
+    else
+        param="${param} -m \"Test [#${i}]\""
+    fi 
+    eval "$param"
+    if [ $? -eq 0 ]; then
+        echo "Unit-test is terminated"
+        exit 0
+    fi
+    i=$(($i+1))
+done

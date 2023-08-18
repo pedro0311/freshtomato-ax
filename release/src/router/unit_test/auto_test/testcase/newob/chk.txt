@@ -1,0 +1,10 @@
+SWITCH=DEVICE_0
+CHECKFILE=/tmp/relist.json 
+FC:34:97:09:0F:00
+SWITCH=DEVICE_1
+COMPARE=DEVICE_1,nvram get re_mode,=,,1
+COMPARE=DEVICE_1,nvram get amas_newob_status,=,,4
+CHECKFILE=/jffs/re_default_iptable_input.txt
+Chain INPUT \(policy ACCEPT 0 packets, 0 bytes\)
+ pkts bytes target     prot opt in     out     source               destination
+    0     0 ACCEPT     tcp  \-\-  eth1   \*       0\.0\.0\.0\/0            0\.0\.0\.0\/0            tcp dpt\:7780

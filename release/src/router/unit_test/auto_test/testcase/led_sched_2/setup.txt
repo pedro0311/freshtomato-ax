@@ -1,0 +1,12 @@
+SWITCH=DEVICE_1
+nvram set svc_ready=1
+nvram set ntp_ready=1
+nvram commit
+date 10:00:00
+SWITCH=DEVICE_0
+nvram set svc_ready=1
+nvram set ntp_ready=1
+nvram commit
+date 10:00:00
+export led_timesched=0
+export led_sched=\"\"

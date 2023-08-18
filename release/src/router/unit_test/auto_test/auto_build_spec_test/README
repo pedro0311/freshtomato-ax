@@ -1,0 +1,12 @@
+全功能自動測試：
+修改配置參數：*.resource，TEST_DUT.txt
+           TEST_DUT.txt文件为*.resource文件的名称，即*，之后会根据设定的*来选择相应的*.resource参数文件，这一步也可以直接在添加参数中修改。
+	   *.resource文件为要更换FW时需要的一些参数信息。
+註意：由於在運行suite時，是按照suite文件名稱進行執行的，更換FW需要最先執行，所以目前將該suite命名為aaa.robot,以確保最先執行。
+定時啟動程序：打開window的任務計劃程序->导入robot.xml文件，并修改触发器和操作（操作中程序或脚本需要是robot.exe的地址，例C:\Python\Scripts\robot.exe）,
+            修改操作中的“起始于”的值，将值修改为要执行的robot的地址。
+添加參數：--listener PythonListener.py文件的地址 -T -d report要存放的位置 autotest的地址
+-T 為自動以時間名稱保存log
+例如：
+--listener .\PythonListener.py -T -d .\ .\
+注意：若不设定或不使用TEST_DUT.txt指定相应的参数文件，则需要在添加参数时将*.resource文件带入进去，例：--listener .\PythonListener.py:4G-AX56 -v VAR_PATH:4G-AX56 -T -d .\ .\
