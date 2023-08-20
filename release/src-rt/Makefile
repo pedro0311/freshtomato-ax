@@ -729,6 +729,7 @@ endif
 
 	@$(MAKE) image
 endif
+# FreshTomato AX (script checkjffs.py and checktmpfs.py is not required for building - just in case, comment it out!)
 	@-type -P python >/dev/null 2>&1 && python ../../buildtools/checkjffs.py
 	@-type -P python >/dev/null 2>&1 && python ../../buildtools/checktmpfs.py
 
