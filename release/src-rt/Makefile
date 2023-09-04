@@ -358,6 +358,10 @@ endif
 
 #FreshTomato AX image name
 V1 ?= "--def"
+ND = "K419ARM"
+current_BUILD_DESC = "AIO-$(NVSIZE)K"
+current_BUILD_USB  = "USB"
+beta = $(if $(filter $(TOMATO_EXPERIMENTAL),1),-beta,)
 current_TOMATO_VER = $(strip $(shell grep "TOMATO_MAJOR" router/shared/tomato_version.h | cut -d"\"" -f2)).$(strip $(shell grep "TOMATO_MINOR" router/shared/tomato_version.h | cut -d"\"" -f2))$(if $(filter $(V1),"--def"),,.$(strip $(shell grep -w "TOMATO_BUILD" router/shared/tomato_version.h | cut -d"\"" -f2)))
 ifeq ($(FAKEID),y)
 #export IMGNAME := $(BUILD_NAME)_$(KERNEL_VER).$(FS_VER)_$(FORCE_SN)_$(SWPJVER)$(FORCE_EN)$(ISPCTRL_POSTFIX)
@@ -697,8 +701,14 @@ else
 	-@echo 'KERNEL_IMAGE = $(BUILD_NAME)_$(KERNEL_VER).$(FS_VER)_$(SERIALNO)_$(EXTENDNO).trx' >> ntools/version
 endif
 
+# FreshTomato AX - update version
+tomato_ver:
+	@echo ""
+	@btools/uversion.pl --gen $(V1) $(beta)$(V2) $(ND) $(current_BUILD_USB) $(current_BUILD_DESC)
+
+# FreshTomato AX - add tomato version
 ifeq ($(HND_ROUTER),y)
-all: $(if $(NCURSES_TOOLS),pre_tools) cfe_sysdep wl_sysdep rt_ver mkenv prebuild_checks all_postcheck1
+all: $(if $(NCURSES_TOOLS),pre_tools) cfe_sysdep wl_sysdep rt_ver tomato_ver mkenv prebuild_checks all_postcheck1
 else
 all: rt_ver $(if $(CONFIG_BCMWL5),rt_ver_ntools)
 endif

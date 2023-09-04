@@ -1,6 +1,9 @@
 #include <string.h>
 #include "shared.h"
 #include "version.h"
+#ifdef TCONFIG_FTAX
+#include "tomato_version.h"
+#endif
 
 const char *rt_version = RT_VERSION;
 const char *rt_serialno = RT_SERIALNO;
@@ -9,6 +12,11 @@ const char *rt_extendno = RT_EXTENDNO;
 const char *rt_buildname = RT_BUILD_NAME;
 const char *rt_buildinfo = RT_BUILD_INFO;
 const char *rt_swpjverno = RT_SWPJVERNO;
+#ifdef TCONFIG_FTAX
+const char *tomato_version = TOMATO_VERSION;
+const char *tomato_buildtime = TOMATO_BUILDTIME;
+const char *tomato_shortver = TOMATO_SHORTVER;
+#endif
 #ifdef RTCONFIG_NVRAM_ENCRYPT
 const char *enc_sp_extendno = ENC_SP_EXTENDNO;
 #endif

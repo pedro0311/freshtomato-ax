@@ -254,6 +254,22 @@ wps_restore_defaults(void)
 }
 #endif /* RTCONFIG_WPS */
 
+#ifdef TCONFIG_FTAX
+static void
+init_ftax_syspara(void)
+{
+	char s[128];
+	const char *mfr = "Asus";
+	const char *name = get_productid();
+
+	snprintf(s, sizeof(s), "%s %s", mfr, name);
+  
+	nvram_set("os_version", tomato_version);
+	nvram_set("os_date", tomato_buildtime);
+	nvram_set("t_model_name", s);
+}
+#endif /* TCONFIG_FTAX */
+
 static void
 virtual_radio_restore_defaults(void)
 {
@@ -20170,7 +20186,9 @@ def_boot_reinit:
 	pre_syspara();
 #endif
 	init_syspara();// for system dependent part (befor first get_model())
-
+#ifdef TCONFIG_FTAX
+	init_ftax_syspara(); /* for FreshTomato AX */
+#endif /* TCONFIG_FTAX */
 #ifdef RTCONFIG_RALINK
 	model = get_model();
 	// avoid the process like fsck to devour the memory.

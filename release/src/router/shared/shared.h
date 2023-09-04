@@ -391,6 +391,11 @@ extern const char *rt_buildname;
 extern const char *rt_buildinfo;
 extern const char *rt_swpjverno;
 extern const char *rt_modeldesc;
+#ifdef TCONFIG_FTAX
+extern const char *tomato_version;
+extern const char *tomato_buildtime;
+extern const char *tomato_shortver;
+#endif
 
 extern void set_basic_fw_name(void);
 
