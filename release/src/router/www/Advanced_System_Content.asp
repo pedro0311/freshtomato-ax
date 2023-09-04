@@ -322,6 +322,13 @@ function initial(){
 		}
 		hideport(document.form.misc_http_x[0].checked);
 	}
+
+/* FTAX-BEGIN */
+	document.getElementById("tomatoanon_table").style.display = "";
+	document.getElementById("tomatoanon_enable_tr").style.display = "";
+	document.form.tomatoanon_enable[0].disabled = false;
+	document.form.tomatoanon_enable[1].disabled = false;
+/* FTAX-END */
 	
 	if(ssh_support){
 		check_sshd_enable('<% nvram_get("sshd_enable"); %>');
@@ -626,6 +633,10 @@ function applyRule(){
 			action_script_tmp += "pwrsave;";
 		if(pagecache_ratio_support)
 			action_script_tmp += "pagecache_ratio;";
+
+/* FTAX-BEGIN */
+		action_script_tmp += "restart_tomatoanon;";
+/* FTAX-END */
 
 		if(needReboot){
 
@@ -2125,6 +2136,27 @@ function check_password_length(obj){
 					</td>
 				</tr>
 			</table>
+
+<!-- FTAX-BEGIN -->
+			<table id="tomatoanon_table" width="100%" border="1" align="center" cellpadding="4" cellspacing="0" bordercolor="#6b8fa3"  class="FormTable" style="margin-top:8px;">
+				<thead>
+					<tr>
+					  <td colspan="2">TomatoAnon Settings</td>
+					</tr>
+				</thead>
+				<tr id="tomatoanon_enable_tr">
+					<th width="40%">TomatoAnon enable</th>
+					<td>
+						<select name="tomatoanon_enable" class="input_option">
+							<option value="0" <% nvram_match("tomatoanon_enable", "0", "selected"); %>><#checkbox_No#></option>
+							<option value="1" <% nvram_match("tomatoanon_enable", "1", "selected"); %>><#checkbox_Yes#></option>
+						</select>
+						<br>
+						<a href="javascript:openLink('x_TomatoAnon')"  name="x_TomatoAnon_link" style=" margin-left:5px; text-decoration: underline;"><i>[Checkout my router]</i></a>
+					</td>
+				</tr>
+			</table>
+<!-- FTAX-END -->
 
 			<table id="hdd_spindown_table" width="100%" border="1" align="center" cellpadding="4" cellspacing="0" bordercolor="#6b8fa3"  class="FormTable" style="margin-top:8px;display:none;">
 				<thead>

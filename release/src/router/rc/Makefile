@@ -341,6 +341,10 @@ ifeq ($(and $(CONFIG_BCMWL5),$(RTCONFIG_FANCTRL)),y)
 OBJS += phy_tempsense.o
 endif
 
+ifeq ($(TCONFIG_FTAX),y)
+OBJS += tomatoanon.o
+endif
+
 ifeq ($(CONFIG_BCMWL5),y)
 OBJS += init-broadcom.o wps-broadcom.o broadcom.o ate-broadcom.o
 ifeq ($(BUILD_NAME),$(filter $(BUILD_NAME),RP-AX56))
@@ -1388,6 +1392,9 @@ ifeq ($(RTCONFIG_AMAS),y)
 	@cd $(INSTALLDIR)/sbin && ln -sf rc amas_lib
 endif
 	@cd $(INSTALLDIR)/sbin && ln -sf rc hour_monitor
+ifeq ($(TCONFIG_FTAX),y)
+	@cd $(INSTALLDIR)/sbin && ln -sf rc tomatoanon
+endif
 ifeq ($(RTCONFIG_SPEEDTEST),y)
 	@cd $(INSTALLDIR)/sbin && ln -sf rc speedtest
 endif

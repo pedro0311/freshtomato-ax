@@ -1625,6 +1625,13 @@ extern int start_demand_ppp(int unit, int wait);
 extern int start_pppoe_relay(char *wan_if);
 extern void stop_pppoe_relay(void);
 
+/* tomatoanon.c */
+#ifdef TCONFIG_FTAX
+extern int tomatoanon_main(int argc, char **argv);
+extern void start_tomatoanon(void);
+extern void stop_tomatoanon(void);
+#endif /* TCONFIG_FTAX */
+
 // roamst.c
 void rast_ipc_socket_thread(void);
 

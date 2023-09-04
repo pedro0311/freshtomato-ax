@@ -16143,6 +16143,13 @@ check_ddr_done:
 		if(action & RC_SERVICE_STOP) stop_dnsmasq();
 		if(action & RC_SERVICE_START) start_dnsmasq();
 	}
+#ifdef TCONFIG_FTAX
+	else if (strcmp(script, "tomatoanon") == 0)
+	{
+		if(action & RC_SERVICE_STOP) stop_tomatoanon();
+		if(action & RC_SERVICE_START) start_tomatoanon();
+	}
+#endif /* TCONFIG_FTAX */
 #ifdef RTCONFIG_DNSPRIVACY
 	else if (strcmp(script, "stubby") == 0)
 	{

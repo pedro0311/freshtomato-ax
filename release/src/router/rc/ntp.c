@@ -84,6 +84,9 @@ static void ntp_service()
 #ifdef RTCONFIG_DISK_MONITOR
 		notify_rc("restart_diskmon");
 #endif
+#ifdef TCONFIG_FTAX
+		notify_rc("restart_tomatoanon");
+#endif /* TCONFIG_FTAX */
 #ifdef RTCONFIG_UUPLUGIN
 		exec_uu();
 #endif

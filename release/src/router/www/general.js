@@ -480,6 +480,13 @@ function openLink(s){
 		tourl = "http://support.ntp.org/bin/view/Main/WebHome";
 		link = window.open(tourl, "NTPLink","toolbar=yes,location=yes,directories=no,status=yes,menubar=yes,scrollbars=yes,resizable=yes,copyhistory=no,width=640,height=480");
 	}
+/* FTAX-BEGIN */
+	else if (s=='x_TomatoAnon'){
+		var anon_id = '<% nvram_get("tomatoanon_id"); %>';
+		tourl = "http://anon.groov.pl/index.php?search=9&routerid="+anon_id;
+		link = window.open(tourl, "TomatoAnonLink","toolbar=yes,location=yes,directories=no,status=yes,menubar=yes,scrollbars=yes,resizable=yes,copyhistory=no,width=640,height=480");
+	}
+/* FTAX-END */
 }
 
 /* input : s: service id, v: value name, o: current value */

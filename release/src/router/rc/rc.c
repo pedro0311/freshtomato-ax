@@ -2308,6 +2308,9 @@ static const applets_t applets[] = {
 	{ "rsarootca_check",		rsarootca_check_main		},
 #endif
 	{ "service",			service_main			},
+#ifdef TCONFIG_FTAX
+	{ "tomatoanon",			tomatoanon_main			},
+#endif
 #ifdef RTCONFIG_SPEEDTEST
 	{ "speedtest",			speedtest_main			},
 #endif

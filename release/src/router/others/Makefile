@@ -28,6 +28,11 @@ endif
 # chpasswd script
 	install -m 0700 chpasswd.sh $(INSTALLDIR)/usr/sbin
 
+ifeq ($(TCONFIG_FTAX),y)
+# TomatoAnon project
+	install -m 0700 tomatoanon_serv $(INSTALLDIR)/usr/sbin
+endif # TCONFIG_FTAX
+
 ifeq ($(RTN14U)$(RTAC52U)$(RTAC51U)$(RTN11P)$(RTN300)$(RTN54U)$(RTAC1200HP)$(RTN56UB1)$(RTN56UB2)$(RTAC54U)$(RTAC1200)$(RTAC1200V2)$(RTAC1200GA1)$(RTAC1200GU)$(RTN11PB1)$(RTAC85U)$(RTAC85P)$(RPAC87)$(RTN800HP)$(RTACRH26),y)
 # for read/write Ralink PHY registers
 	install -D mii_mgr $(INSTALLDIR)/bin/mii_mgr
@@ -43,4 +48,14 @@ else ifeq ($(RTAC85U)$(RTAC85P)$(RPAC87)$(RTN800HP)$(RTACRH26),y)
 endif
 endif
 endif
+
+# FreshTomato AX options - clean up
+	cd $(INSTALLDIR)/usr/sbin && \
+		for F in tomatoanon_serv; do \
+			[ -f $(INSTALLDIR)/usr/sbin/$$F ] && sed -i $$F \
+			-e "/FTAX-BEGIN/d"	-e "/FTAX-END/d" \
+			-e "/NOFTAX-BEGIN/d"	-e "/NOFTAX-END/d" \
+			|| true; \
+		done
+
 clean:
