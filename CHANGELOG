@@ -5,6 +5,15 @@ FreshTomato-AX Changelog
 
 
 
+2023.4          2023.09.10
+---------------------------
+
+- merge GPL_TUF_AX3000_V2_3004_388_23588
+- build: re-add missing checktmpfs.py (missing with GPL 388_23588) and avoid warning
+- build: Makefile: update FreshTomato version infos (prepare for TomatoAnon)
+- build: add TomatoAnon support (Note: no version update check yet, tbd)
+
+
 2023.3          2023.06.25
 ---------------------------
 
