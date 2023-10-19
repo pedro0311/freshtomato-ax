@@ -2147,10 +2147,8 @@ function check_password_length(obj){
 				<tr id="tomatoanon_enable_tr">
 					<th width="40%">TomatoAnon enable</th>
 					<td>
-						<select name="tomatoanon_enable" class="input_option">
-							<option value="0" <% nvram_match("tomatoanon_enable", "0", "selected"); %>><#checkbox_No#></option>
-							<option value="1" <% nvram_match("tomatoanon_enable", "1", "selected"); %>><#checkbox_Yes#></option>
-						</select>
+						<input type="radio" value="1" name="tomatoanon_enable" <% nvram_match("tomatoanon_enable", "1", "checked"); %>><#checkbox_Yes#>
+						<input type="radio" value="0" name="tomatoanon_enable" <% nvram_match("tomatoanon_enable", "0", "checked"); %>><#checkbox_No#>
 						<br>
 						<a href="javascript:openLink('x_TomatoAnon')"  name="x_TomatoAnon_link" style=" margin-left:5px; text-decoration: underline;"><i>[Checkout my router]</i></a>
 					</td>
