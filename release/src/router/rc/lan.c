@@ -2372,6 +2372,9 @@ gmac3_no_swbr:
 					"-i", "br0",
 					"-p", "/var/run/udhcpc_lan.pid",
 					"-s", "/tmp/udhcpc_lan",
+#ifdef TCONFIG_FTAX
+					"-H", get_lan_hostname(),
+#endif
 					NULL };
 		pid_t pid;
 
