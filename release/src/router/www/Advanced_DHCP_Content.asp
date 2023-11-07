@@ -737,7 +737,15 @@ function sortClientIP(){
 				  <input type="radio" value="0" name="dhcp_enable_x" class="content_input_fd" onClick="return change_common_radio(this, 'LANHostConfig', 'dhcp_enable_x', '0')" <% nvram_match("dhcp_enable_x", "0", "checked"); %>><#checkbox_No#>
 				</td>
 			  </tr>
-			  
+/* FTAX-BEGIN */
+			  <tr>
+				<th>Mute DHCP (IPv4 and IPv6) logging</th>
+				<td>
+				  <input type="radio" value="1" name="dnsmasq_q" class="content_input_fd" onClick="return change_common_radio(this, 'LANHostConfig', 'dnsmasq_q', '1')" <% nvram_match("dnsmasq_q", "1", "checked"); %>><#checkbox_Yes#>
+				  <input type="radio" value="0" name="dnsmasq_q" class="content_input_fd" onClick="return change_common_radio(this, 'LANHostConfig', 'dnsmasq_q', '0')" <% nvram_match("dnsmasq_q", "0", "checked"); %>><#checkbox_No#>
+				</td>
+			  </tr>
+/* FTAX-END */
 			  <tr>
 				<th><a class="hintstyle" href="javascript:void(0);" onClick="openHint(5,2);"><#LANHostConfig_DomainName_itemname#></a></th>
 				<td>

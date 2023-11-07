@@ -2044,6 +2044,15 @@ void start_dnsmasq(void)
 		write_static_leases(fp);
 	}
 
+#ifdef TCONFIG_FTAX
+	if (nvram_get_int("dnsmasq_q")) { /* process quiet flag(s) */
+		fprintf(fp, "quiet-dhcp\n");
+#ifdef RTCONFIG_IPV6
+		fprintf(fp, "quiet-dhcp6\n");
+#endif
+	}
+#endif /* TCONFIG_FTAX */
+
 #ifdef RTCONFIG_DNSSEC
 #ifdef RTCONFIG_DNSPRIVACY
 	if (nvram_get_int("dnspriv_enable") && nvram_get_int("dnssec_enable") == 2) {
