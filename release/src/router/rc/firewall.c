@@ -7447,6 +7447,10 @@ int start_firewall(int wanunit, int lanunit)
 leave:
 	file_unlock(lock);
 
+#ifdef TCONFIG_FTAX
+	run_custom_script("firewall-start", 0, wan_if, NULL);
+#endif
+
 	return 0;
 }
 
