@@ -293,6 +293,10 @@ skip_mnt:
 	run_userfile(UBIFS_MNT_DIR, ".asusrouter", UBIFS_MNT_DIR, 3);
 #endif
 
+#ifdef TCONFIG_FTAX
+	if (!check_if_dir_exist("/jffs/scripts/")) mkdir("/jffs/scripts/", 0755);
+#endif
+
 #if defined(RTCONFIG_TEST_BOARDDATA_FILE)
 	/* Copy /lib/firmware to /tmp/firmware, and
 	 * bind mount /tmp/firmware to /lib/firmware.

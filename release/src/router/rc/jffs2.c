@@ -472,6 +472,10 @@ void start_jffs2(void)
 	check_asus_jffs();
 #endif
 
+#ifdef TCONFIG_FTAX
+	if (!check_if_dir_exist("/jffs/scripts/")) mkdir("/jffs/scripts/", 0755);
+#endif
+
 	_dprintf("%s: create jffs2 successfully\n", __func__);
 	logmessage("jffs2", "create jffs2 successfully");
 	nvram_set_int("jffs2_state", JFFS2_END);
