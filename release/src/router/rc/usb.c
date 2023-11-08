@@ -1891,6 +1891,13 @@ _dprintf("%s: stop_cloudsync.\n", __func__);
 		stop_usb_swap(mnt->mnt_dir);
 #endif	
 
+#ifdef TCONFIG_FTAX
+	run_custom_script("unmount", 120, mnt->mnt_dir, NULL);
+
+	sync();
+	sleep(1);       /* Give some time for buffers to be physically written to disk */
+#endif
+
 	for (count = 0; count < 35; count++) {
 		sync();
 		ret = umount(mnt->mnt_dir);
@@ -2069,6 +2076,10 @@ int mount_partition(char *dev_name, int host_num, char *dsc_name, char *pt_name,
 	}
 	if (type == NULL)
 		type = "unknown";
+
+#ifdef TCONFIG_FTAX
+	run_custom_script("pre-mount", 120, dev_name, type);
+#endif
 
 #if !defined(RTCONFIG_HND_ROUTER_AX_6710) && !defined(RTCONFIG_BCM_502L07P2) && !defined(BCM4912) && !defined(BCM4906_504)
 	char *end;
@@ -2266,6 +2277,10 @@ _dprintf("usb_path: 4. don't set %s.\n", tmp);
 
 		// if (nvram_get_int("usb_automount"))
 			// run_nvscript("script_usbmount", mountpoint, 3);
+
+#ifdef TCONFIG_FTAX
+		run_custom_script("post-mount", 120, mountpoint, NULL);
+#endif
 
 #if defined(RTCONFIG_CLOUDSYNC)
 		char word[PATH_MAX], *next_word;
