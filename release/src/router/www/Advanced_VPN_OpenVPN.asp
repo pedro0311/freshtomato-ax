@@ -100,7 +100,7 @@ var service_state = "";
 if (openvpn_unit == '1')
 	service_state = '<% nvram_get("vpn_server1_state"); %>';
 else if (openvpn_unit == '2')
-	ervice_state = '<% nvram_get("vpn_server2_state"); %>';
+	service_state = '<% nvram_get("vpn_server2_state"); %>';
 else
 	service_state = false;	
 
