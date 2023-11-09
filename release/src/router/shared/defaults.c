@@ -3277,6 +3277,9 @@ struct nvram_tuple router_defaults[] = {
 	{ "tomatoanon_notify", "0", CKN_STR1, CKN_TYPE_DEFAULT, CKN_ACC_LEVEL_DEFAULT, CKN_ENC_DEFAULT, 0 },
 
 	/* Advanced_System_Content.asp */
+#ifdef RTCONFIG_UBIFS
+	{ "ubifs_format", "0", CKN_STR1, CKN_TYPE_DEFAULT, CKN_ACC_LEVEL_DEFAULT, CKN_ENC_DEFAULT, 0 },		/* Format JFFS partition at next boot! */
+#endif
 	{ "jffs2_scripts", "0", CKN_STR1, CKN_TYPE_DEFAULT, CKN_ACC_LEVEL_DEFAULT, CKN_ENC_DEFAULT, 0 },	/* Enable or Disable JFFS custom scripts; Default: Disabled! */
 
 	/* Advanced_DHCP_Content.asp */

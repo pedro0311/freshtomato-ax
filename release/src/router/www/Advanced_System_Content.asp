@@ -1525,6 +1525,13 @@ function change_hddSpinDown(obj_value) {
 	}
 }
 
+/* FTAX-BEGIN */
+function warn_jffs_format() {
+	var msg = "WARNING: Erasing the JFFS partition will delete various router settings and configuration elements (ex.: OpenVPN certificates)";
+	alert(msg);
+}
+/* FTAX-END */
+
 function show_network_monitoring(){
 	var orig_dns_probe = httpApi.nvramGet(["dns_probe"]).dns_probe;
 	var orig_wandog_enable = httpApi.nvramGet(["wandog_enable"]).wandog_enable;
@@ -2160,6 +2167,13 @@ function check_password_length(obj){
 					  <td colspan="2">Persistent JFFS2 partition</td>
 					</tr>
 				</thead>
+				<tr id="ubifs_format_tr">
+					<th>Format JFFS partition at next boot</th>
+					<td>
+						<input type="radio" name="ubifs_format" value="1" onclick="warn_jffs_format();" <% nvram_match("ubifs_format", "1", "checked"); %>><#checkbox_Yes#>
+						<input type="radio" name="ubifs_format" value="0" <% nvram_match("ubifs_format", "0", "checked"); %>><#checkbox_No#>
+					</td>
+				</tr>
 				<tr id="jffs2_scripts_enable_tr">
 					<th width="40%">Enable JFFS custom scripts</th>
 					<td>
