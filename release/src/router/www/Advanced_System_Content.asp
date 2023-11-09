@@ -2154,6 +2154,20 @@ function check_password_length(obj){
 					</td>
 				</tr>
 			</table>
+			<table id="jffs2_partition_table" width="100%" border="1" align="center" cellpadding="4" cellspacing="0" bordercolor="#6b8fa3"  class="FormTable" style="margin-top:8px;">
+				<thead>
+					<tr>
+					  <td colspan="2">Persistent JFFS2 partition</td>
+					</tr>
+				</thead>
+				<tr id="jffs2_scripts_enable_tr">
+					<th width="40%">Enable JFFS custom scripts</th>
+					<td>
+						<input type="radio" value="1" name="jffs2_scripts" <% nvram_match("jffs2_scripts", "1", "checked"); %>><#checkbox_Yes#>
+						<input type="radio" value="0" name="jffs2_scripts" <% nvram_match("jffs2_scripts", "0", "checked"); %>><#checkbox_No#>
+					</td>
+				</tr>
+			</table>
 <!-- FTAX-END -->
 
 			<table id="hdd_spindown_table" width="100%" border="1" align="center" cellpadding="4" cellspacing="0" bordercolor="#6b8fa3"  class="FormTable" style="margin-top:8px;display:none;">

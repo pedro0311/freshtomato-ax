@@ -3276,6 +3276,9 @@ struct nvram_tuple router_defaults[] = {
 	{ "tomatoanon_id", "", CKN_STR128, CKN_TYPE_DEFAULT, CKN_ACC_LEVEL_DEFAULT, CKN_ENC_DEFAULT, 0 },
 	{ "tomatoanon_notify", "0", CKN_STR1, CKN_TYPE_DEFAULT, CKN_ACC_LEVEL_DEFAULT, CKN_ENC_DEFAULT, 0 },
 
+	/* Advanced_System_Content.asp */
+	{ "jffs2_scripts", "0", CKN_STR1, CKN_TYPE_DEFAULT, CKN_ACC_LEVEL_DEFAULT, CKN_ENC_DEFAULT, 0 },	/* Enable or Disable JFFS custom scripts; Default: Disabled! */
+
 	/* Advanced_DHCP_Content.asp */
 	{ "dnsmasq_q", "0", CKN_STR1, CKN_TYPE_DEFAULT, CKN_ACC_LEVEL_DEFAULT, CKN_ENC_DEFAULT, 0 },	/* dnsmasq - process quiet flag */
 #endif /* TCONFIG_FTAX */
