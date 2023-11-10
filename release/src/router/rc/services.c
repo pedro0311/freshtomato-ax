@@ -19203,6 +19203,10 @@ _dprintf("nat_rule: the nat rule file was not ready. wait %d seconds...\n", retr
 	setup_ct_timeout(TRUE);
 	setup_udp_timeout(TRUE);
 
+#ifdef TCONFIG_FTAX
+	run_custom_script("nat-start", 0, NULL, NULL);
+#endif
+
 	return NAT_STATE_NORMAL;
 }
 
