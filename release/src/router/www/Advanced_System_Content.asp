@@ -2174,11 +2174,11 @@ function check_password_length(obj){
 						<input type="radio" name="ubifs_format" value="0" <% nvram_match("ubifs_format", "0", "checked"); %>><#checkbox_No#>
 					</td>
 				</tr>
-				<tr id="jffs2_scripts_enable_tr">
+				<tr id="user_scripts_enable_tr">
 					<th width="40%">Enable JFFS custom scripts</th>
 					<td>
-						<input type="radio" value="1" name="jffs2_scripts" <% nvram_match("jffs2_scripts", "1", "checked"); %>><#checkbox_Yes#>
-						<input type="radio" value="0" name="jffs2_scripts" <% nvram_match("jffs2_scripts", "0", "checked"); %>><#checkbox_No#>
+						<input type="radio" value="1" name="user_scripts" <% nvram_match("user_scripts", "1", "checked"); %>><#checkbox_Yes#>
+						<input type="radio" value="0" name="user_scripts" <% nvram_match("user_scripts", "0", "checked"); %>><#checkbox_No#>
 					</td>
 				</tr>
 			</table>

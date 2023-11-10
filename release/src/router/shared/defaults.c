@@ -3280,7 +3280,7 @@ struct nvram_tuple router_defaults[] = {
 #ifdef RTCONFIG_UBIFS
 	{ "ubifs_format", "0", CKN_STR1, CKN_TYPE_DEFAULT, CKN_ACC_LEVEL_DEFAULT, CKN_ENC_DEFAULT, 0 },		/* Format JFFS partition at next boot! */
 #endif
-	{ "jffs2_scripts", "0", CKN_STR1, CKN_TYPE_DEFAULT, CKN_ACC_LEVEL_DEFAULT, CKN_ENC_DEFAULT, 0 },	/* Enable or Disable JFFS custom scripts; Default: Disabled! */
+	{ "user_scripts", "0", CKN_STR1, CKN_TYPE_DEFAULT, CKN_ACC_LEVEL_DEFAULT, CKN_ENC_DEFAULT, 0 },		/* Enable or Disable JFFS custom scripts; Default: Disabled! */
 
 	/* Advanced_DHCP_Content.asp */
 	{ "dnsmasq_q", "0", CKN_STR1, CKN_TYPE_DEFAULT, CKN_ACC_LEVEL_DEFAULT, CKN_ENC_DEFAULT, 0 },	/* dnsmasq - process quiet flag */

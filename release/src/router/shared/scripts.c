@@ -62,7 +62,11 @@ void run_custom_script(char *name, int timeout, char *arg1, char *arg2)
 	snprintf(script, sizeof(script), "/jffs/scripts/%s", name);
 
 	if (!stat(script, &st)) {
+#ifdef TCONFIG_FTAX
+		if (nvram_match("user_scripts", "0"))
+#else
 		if (nvram_match("jffs2_scripts", "0"))
+#endif /* TCONFIG_FTAX */
 			error = "custom script execution is disabled!";
 		else if (!(st.st_mode & (S_IXUSR | S_IXGRP | S_IXOTH)))
 			error = "script is not set executable!";
@@ -104,7 +108,11 @@ void use_custom_config(char *config, char *target)
         snprintf(filename, sizeof(filename), "/jffs/configs/%s", config);
 
 	if (f_exists(filename)) {
+#ifdef TCONFIG_FTAX
+		if (nvram_match("user_scripts", "0")) {
+#else
 		if (nvram_match("jffs2_scripts", "0")) {
+#endif /* TCONFIG_FTAX */
 			logmessage("custom config", "Found %s, but custom configs are disabled!", filename);
 			return;
 		}
@@ -121,7 +129,11 @@ void append_custom_config(char *config, FILE *fp)
 	snprintf(filename, sizeof(filename), "/jffs/configs/%s.add", config);
 
 	if (f_exists(filename)) {
+#ifdef TCONFIG_FTAX
+		if (nvram_match("user_scripts", "0")) {
+#else
 		if (nvram_match("jffs2_scripts", "0")) {
+#endif /* TCONFIG_FTAX */
 			logmessage("custom config", "Found %s, but custom configs are disabled!", filename);
 			return;
 		}
