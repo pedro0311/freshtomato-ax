@@ -474,6 +474,7 @@ void start_jffs2(void)
 
 #ifdef TCONFIG_FTAX
 	if (!check_if_dir_exist("/jffs/scripts/")) mkdir("/jffs/scripts/", 0755);
+	if (!check_if_dir_exist("/jffs/configs/")) mkdir("/jffs/configs/", 0755);
 #endif
 
 	_dprintf("%s: create jffs2 successfully\n", __func__);
