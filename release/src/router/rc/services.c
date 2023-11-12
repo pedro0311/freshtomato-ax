@@ -11193,12 +11193,19 @@ start_services(void)
 #ifdef RTCONFIG_FSMD
 	system("fsmd");
 #endif
+#ifdef TCONFIG_FTAX
+	run_custom_script("services-start", 0, NULL, NULL);
+#endif
+
 	return 0;
 }
 
 void
 stop_services(void)
 {
+#ifdef TCONFIG_FTAX
+	run_custom_script("services-stop", 0, NULL, NULL);
+#endif
 #ifdef RTCONFIG_FSMD
 	killall_tk("fsmd");
 #endif
