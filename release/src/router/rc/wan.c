@@ -768,6 +768,38 @@ void update_wan_state(char *prefix, int state, int reason)
 		snprintf(tmp, sizeof(tmp), "/var/run/ppp-wan%d.status", unit);
 		unlink(tmp);
 	}
+
+#ifdef TCONFIG_FTAX
+	snprintf(tmp, sizeof(tmp), "%d", unit);
+
+	switch (state) {
+	case WAN_STATE_INITIALIZING:
+		strlcpy(tmp1, "init", sizeof(tmp1));
+		break;
+	case WAN_STATE_CONNECTING:
+		strlcpy(tmp1, "connecting", sizeof(tmp1));
+		break;
+	case WAN_STATE_CONNECTED:
+		strlcpy(tmp1, "connected", sizeof(tmp1));
+		break;
+	case WAN_STATE_DISCONNECTED:
+		strlcpy(tmp1, "disconnected", sizeof(tmp1));
+		break;
+	case WAN_STATE_STOPPED:
+		strlcpy(tmp1, "stopped", sizeof(tmp1));
+		break;
+	case WAN_STATE_DISABLED:
+		strlcpy(tmp1, "disabled", sizeof(tmp1));
+		break;
+	case WAN_STATE_STOPPING:
+		strlcpy(tmp1, "stopping", sizeof(tmp1));
+		break;
+	default:
+		snprintf(tmp1, sizeof(tmp1), "state %d", state);
+	}
+
+	run_custom_script("wan-event", 0, tmp, tmp1);
+#endif /* TCONFIG_FTAX */
 }
 
 #ifdef RTCONFIG_IPV6
