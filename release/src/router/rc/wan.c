@@ -573,7 +573,14 @@ start_igmpproxy(char *wan_ifname)
 		wan_ifname, *altnet ? altnet : "0.0.0.0/0",
 		nvram_get("lan_ifname") ? : "br0");
 
+#ifdef TCONFIG_FTAX
+	append_custom_config("igmpproxy.conf", fp);
+#endif /* TCONFIG_FTAX */
 	fclose(fp);
+#ifdef TCONFIG_FTAX
+	use_custom_config("igmpproxy.conf", igmpproxy_conf);
+	run_postconf("igmpproxy", igmpproxy_conf);
+#endif /* TCONFIG_FTAX */
 
 	eval("/usr/sbin/igmpproxy", igmpproxy_conf);
 #endif
