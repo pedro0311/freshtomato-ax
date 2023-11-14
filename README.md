@@ -15,7 +15,7 @@
   
 4. Packages
     ```sh
-    sudo apt-get install liblzo2-dev uuid-dev docbook-xsl libtool-bin bc
+    sudo apt-get install liblzo2-dev uuid-dev docbook-xsl libtool-bin bc rsync sgdisk
     ```
   
 5. Compiling for Asus TUF-AX3000_V2 (Note: bash as the default shell - required by the build system for the HND router models)
