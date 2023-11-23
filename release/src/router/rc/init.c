@@ -2760,10 +2760,24 @@ static void shutdn(int rb)
 #if defined(BCM6855) || defined(GTAXE16000)
 	config_jumbo_frame();
 #endif
+#ifdef TCONFIG_FTAX
+#ifdef RTCONFIG_HND_ROUTER_AX_6756
+#ifndef MNT_DETACH
+#define MNT_DETACH	0x00000002
+#endif
+#define UBIFS_MNT_DIR	"/jffs"
+	if (f_exists("/jffs/remove_hidden_flag")) {
+		if (umount(UBIFS_MNT_DIR))
+			umount2(UBIFS_MNT_DIR, MNT_DETACH);
+		mtd_erase_misc2();
+	}
+#endif /* RTCONFIG_HND_ROUTER_AX_6756 */
+#else
 #ifdef RTCONFIG_HND_ROUTER_AX_6756
 	if (f_exists("/jffs/remove_hidden_flag"))
 		mtd_erase_misc2();
 #endif
+#endif /* TCONFIG_FTAX */
 	printf("\nStopping bcm_boot_launcher ...\n");
 	system("bcm_boot_launcher stop");
 #endif
@@ -21098,6 +21112,15 @@ int init_main(int argc, char *argv[])
 		case SIGHUP:		/* RESTART */
 		case SIGINT:		/* STOP */
 		case SIGTERM:		/* REBOOT */
+#ifdef TCONFIG_FTAX
+#ifdef RTCONFIG_HND_ROUTER_AX_6756
+			if (nvram_match("ubifs_format", "1") && /* check if user wants to format UBIFS with REBOOT or HALT*/
+			    ((state == SIGTERM /* REBOOT */) ||
+			     (state == SIGQUIT /* HALT */))) {
+				eval("touch", "/jffs/remove_hidden_flag");
+			}
+#endif
+#endif /* TCONFIG_FTAX */
 			stop_mcsd();
 #if defined(RTCONFIG_USB_MODEM) && (defined(RTCONFIG_JFFS2) || defined(RTCONFIG_BRCM_NAND_JFFS2) || defined(RTCONFIG_UBIFS))
 		_dprintf("modem data: save the data during the signal %d.\n", state);
