@@ -6308,7 +6308,8 @@ start_httpd(void)
 		NULL, NULL,	/* -i ifname */
 		NULL, NULL,	/* -p port */
 		NULL };
-	int httpd_index = 1;
+	int httpd_index = 1, i = 0;
+	char httpd_argv_buf[128] = {0};
 #ifdef RTCONFIG_HTTPS
 	char *https_argv[] = { "httpds", "-s",
 		NULL, NULL,	/* -i ifname */
@@ -6316,12 +6317,14 @@ start_httpd(void)
 		NULL };
 	int https_index = 2;
 	int enable;
+	char https_argv_buf[128] = {0};
 #ifdef RTCONFIG_IPV6
 	char *https_ipv6_argv[] = { "httpds", "-s",
 		NULL, NULL,	/* -i ifname */
 		NULL, NULL,	/* -p port */
 		NULL, NULL };
 	int https_ipv6_index = 2;
+	char https_ipv6_argv_buf[128] = {0};
 #endif
 #endif
 	char *cur_dir;
@@ -6387,7 +6390,16 @@ start_httpd(void)
 			https_argv[https_index++] = nvram_safe_get("https_lanport");
 		}
 		logmessage(LOGNAME, "start https:%d", pid);
-		_eval(https_argv, NULL, 0, &pid);
+
+		for(i=0;i<https_index;i++){
+			if(i!=0)
+				strlcat(https_argv_buf, " ",sizeof(https_argv_buf));
+			strlcat(https_argv_buf, https_argv[i],sizeof(https_argv_buf));
+		}
+
+		if(get_pid_by_process_name(https_argv_buf) == -1)
+			_eval(https_argv, NULL, 0, &pid);
+
 #ifdef RTCONFIG_IPV6
 		if (ipv6_enabled() && nvram_get_int("misc_http_x")
 			&& is_intf_up(https_ipv6_argv[3])) {
@@ -6396,7 +6408,15 @@ start_httpd(void)
 			https_ipv6_argv[https_ipv6_index++] = ((pid == 8443) ? "8443" : nvram_safe_get("misc_httpsport_x"));
 			https_ipv6_argv[https_ipv6_index++] = "-6";
 			logmessage(LOGNAME, "start https:%d", pid);
-			_eval(https_ipv6_argv, NULL, 0, &pid);
+
+			for(i=0;i<https_ipv6_index;i++){
+				if(i!=0)
+					strlcat(https_ipv6_argv_buf, " ",sizeof(https_ipv6_argv_buf));
+				strlcat(https_ipv6_argv_buf, https_ipv6_argv[i],sizeof(https_ipv6_argv_buf));
+			}
+
+			if(get_pid_by_process_name(https_ipv6_argv_buf) == -1)
+				_eval(https_ipv6_argv, NULL, 0, &pid);
 		}
 #endif
 #if defined(RTCONFIG_ALPINE) || defined(RTCONFIG_LANTIQ)
@@ -6414,7 +6434,15 @@ start_httpd(void)
 			httpd_argv[httpd_index++] = nvram_safe_get("http_lanport");
 		}
 		logmessage(LOGNAME, "start httpd:%d", pid);
-		_eval(httpd_argv, NULL, 0, &pid);
+
+		for(i=0;i<httpd_index;i++){
+			if(i!=0)
+				strlcat(httpd_argv_buf, " ",sizeof(httpd_argv_buf));
+			strlcat(httpd_argv_buf, httpd_argv[i],sizeof(httpd_argv_buf));
+		}
+
+		if(get_pid_by_process_name(httpd_argv_buf) == -1)
+			_eval(httpd_argv, NULL, 0, &pid);
 #if defined(RTCONFIG_ALPINE) || defined(RTCONFIG_LANTIQ)
 		sleep(1);
 #endif
@@ -6676,7 +6704,7 @@ void start_upnp(void)
 					"friendly_name=%s\n"
 					"model_name=%s\n"
 					"model_description=%s\n"
-					"model_number=%s.%s\n"
+					"model_number=%s\n"
 					"serial=%s\n"
 					"uuid=%s\n"
 					"lease_file=%s\n",
@@ -6694,9 +6722,9 @@ void start_upnp(void)
 					nvram_get_int("upnp_secure") ? "yes" : "no",	// secure_mode (only forward to self)
 					nvram_get_int("upnp_ssdp_interval"),
 					get_lan_hostname(),
-					get_productid(),
 					"ASUS Wireless Router",
-					rt_version, rt_serialno,
+					"ASUS Wireless Router",
+					get_productid(),
 					nvram_get("serial_no") ? : serial, uuid,
 					"/tmp/upnp.leases");
 
@@ -13172,13 +13200,16 @@ again:
 #endif
 		}
 #if defined(RTCONFIG_HND_ROUTER_AX_6756)
+		if((action & RC_SERVICE_START) && nvram_match("upgrade_done", "2"))
+			goto skip;
+
 		_dprintf(">> wait upgrading\n");
 		int i;
 		for(i=0; i<120; ++i) {
 			_dprintf("*");
 			sleep(1);
 			if(nvram_match("upgrade_done", "1")) {
-				nvram_set("upgrade_done", "0");
+				nvram_set("upgrade_done", "2");
 				break;
 			}
 		}

@@ -1155,10 +1155,8 @@ start_wan_if(int unit)
 #ifdef RTCONFIG_DSL_REMOTE
 	char dsl_prefix[16] = {0};
 #endif
-#if 0
 #if defined(BCM4912)
 	uint phy_pwr_skip = 0;
-#endif
 #endif
 
 #ifdef RTCONFIG_HND_ROUTER_AX
@@ -1216,33 +1214,31 @@ start_wan_if(int unit)
 	}
 #endif
 
-#if defined(BCM4912)
-#if 0
-	snprintf(wan_ifname, sizeof(wan_ifname), "%s", nvram_safe_get(strcat_r(prefix, "ifname", tmp)));
-	if(strlen(wan_ifname) && strstr(wan_ifname, "eth") != NULL) {
+#if defined(BCM4912) && !defined(RTAX86U_PRO)
+	switch (get_wan_proto(prefix)) {
+	case WAN_V6PLUS:
+	case WAN_OCNVC:
+		snprintf(wan_ifname, sizeof(wan_ifname), "%s", nvram_safe_get(strcat_r(prefix, "ifname", tmp)));
+		if (strlen(wan_ifname) && strstr(wan_ifname, "eth") != NULL) {
 #ifdef RTCONFIG_DUALWAN
-		if(!nvram_contains_word("wans_dualwan", "none") &&
-			WAN_STATE_CONNECTED == nvram_get_int(strcat_r(prefix, "state_t", tmp))) {
-			phy_pwr_skip = 1;
-		}
+			if (!nvram_contains_word("wans_dualwan", "none") &&
+			     WAN_STATE_CONNECTED == nvram_get_int(strcat_r(prefix, "state_t", tmp))) {
+				phy_pwr_skip = 1;
+			}
 #endif
-#if defined(RTAX86U_PRO)
-		phy_pwr_skip = 1;
-#endif
-		if(!phy_pwr_skip) {
-			nvram_set("freeze_duck", "7");
+			if (!phy_pwr_skip) {
+				nvram_set("freeze_duck", "7");
 				doSystem("ethctl %s phy-power down", wan_ifname);
 				usleep(100*1000);
 				doSystem("ethctl %s phy-power up", wan_ifname);
-			/* add delay to wait wan link up, in order to avoid skip by add_multi_routes() */
-			if (nvram_match(strcat_r(prefix, "proto", tmp), "static")) {
-				sleep(10);
 			}
-		}
 		else
 			_dprintf("%s: skip to power recycle %s\n", __func__, wan_ifname);
+		}
+		break;
+	default:
+		break;
 	}
-#endif
 #endif
 
 #if defined(RTCONFIG_DUALWAN) || defined(RTCONFIG_USB_MODEM)

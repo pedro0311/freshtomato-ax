@@ -384,18 +384,13 @@ bool is_in_lanv6(struct in6_addr *src)
     }
 
     if(prefix_len < 1 || prefix_len > 127) {
-       nf_printf("wrong prefix lenght %d \n ", prefix_len); 
        return false;
     } 
     if(!inet_pton(AF_INET6, nvram_get("ipv6_prefix"), &prefix)) {
-   
-       nf_printf("can't convert ipv6 prefix into v6 addr - %s \n ", nvram_get("ipv6_prefix")); 
       return false;
     }
-   // nf_printf("is_in_lavn6 prefix_length %d\n", prefix_len);
     for(int i = 0; i< prefix_len/8; i++)
     {    
-        nf_printf("is_in_lanv6 %d %2x<->%2x\n", i, src->s6_addr[i], prefix.s6_addr[i]);
         if (src->s6_addr[i] != prefix.s6_addr[i]) {
             return false;
         }
@@ -405,7 +400,6 @@ bool is_in_lanv6(struct in6_addr *src)
             return false;
     }
 
-    nf_printf("is_in_lanv6 return true\n");
     return true;
 }
 

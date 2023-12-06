@@ -305,6 +305,13 @@ int inet_intersect(const char *addr1, const char *mask1, const char *addr2, cons
 		(inet_network(addr2) & max_netmask));
 }
 
+int inet_overlap(const char *addr1, const char *mask1, const char *addr2, const char *mask2)
+{
+	in_addr_t max_netmask = inet_network(mask1) & inet_network(mask2);
+	return ((inet_network(addr1) & max_netmask) ==
+		(inet_network(addr2) & max_netmask));
+}
+
 int inet_deconflict(const char *addr1, const char *mask1, const char *addr2, const char *mask2, struct in_addr *result)
 {
 	const static struct class {
@@ -1419,6 +1426,102 @@ int test_and_get_free_char_network(int t_class, char *ip_cidr_str, uint32_t excl
 }
 
 #endif /* RTCONFIG_COOVACHILLI || RTCONFIG_PORT_BASED_VLAN || RTCONFIG_TAGGED_BASED_VLAN */
+
+#if defined(RTCONFIG_SWITCH_QCA8075_QCA8337_PHY_AQR107_AR8035_QCA8033)
+/* Return minimal network, maximum CIDR value, for @ipaddr
+ * Start from 30 to 1 until we got non-zero host ID.
+ * @ipaddr:	IP address
+ * @return:
+ *  1 ~ 30:	CIDR for @ipaddr
+ * 	0:	Good CIDR is not available
+ */
+int min_cidr(char *ipaddr)
+{
+	in_addr_t ip, h_mask;
+	int i, d, cidr = 0;
+
+	if (!ipaddr || illegal_ipv4_address(ipaddr))
+		return 0;
+
+	/* Find maximum CIDR value that has non-zero host ID and
+	 * have network/broadcast address.
+	 */
+	ip = inet_network(ipaddr);
+	for (i = 30; !cidr && i > 0; --i) {
+		d = 32 - i;
+		h_mask = ((0xFFFFFFFF >> d) << d) ^ 0xFFFFFFFF;
+		if ((ip & h_mask) != 0 && ((ip + 1) & h_mask) != 0)
+			cidr = i;
+	}
+
+	return cidr;
+}
+
+/* Return minimal size of network mask for @ipaddr
+ * @ipaddr:	IP address
+ * @mask:	char array that big enough to save a network mask string.
+ * 		If it's NULL, internal buffer is used instead.
+ * @mask_len:	length of @mask
+ * @return:	Pointer to char pointer that contain network mask string or empty string.
+ */
+char *min_netmask(char *ipaddr, char *mask, size_t mask_len)
+{
+	static char mask_str[18];
+	char *buf = mask_str;
+	size_t buf_len = sizeof(mask_str);
+	int cidr, d;
+	in_addr_t m = 0xFFFFFFFF;
+
+	if (mask_len < 16)
+		mask = NULL;
+	if (mask) {
+		buf = mask;
+		buf_len = mask_len;
+	}
+	*buf = '\0';
+	cidr = min_cidr(ipaddr);
+	if (cidr <= 0 || cidr > 30)
+		return buf;
+
+	d = 32 - cidr;
+	m = htonl((0xFFFFFFFF >> d) << d);	/* to network byte order */
+	if (!inet_ntop(AF_INET, &m, buf, buf_len))
+		*buf = '\0';
+
+	return buf;
+}
+
+/* Return IP address that removed host IDs part.
+ * @ipaddr:	IP address
+ * @mask:	netmask
+ * @nwaddr:	char array that big enough to save IP address string.
+ * @nwaddr_len:	length of @nwaddr
+ * @return:	IP address that doesn't have host ID or empty string if invalid parameter.
+ */
+char *network_addr(char *ipaddr, char *mask, char *nwaddr, size_t nwaddr_len)
+{
+	static char nwaddr_str[18];
+	char *buf = nwaddr_str;
+	size_t buf_len = sizeof(nwaddr_str);
+	in_addr_t n_addr;
+
+	if (nwaddr_len < 16)
+		nwaddr = NULL;
+	if (nwaddr) {
+		buf = nwaddr;
+		buf_len = nwaddr_len;
+	}
+	*buf = '\0';
+	if (!ipaddr | !mask || illegal_ipv4_address(ipaddr) || illegal_ipv4_netmask(mask))
+		return buf;
+
+	n_addr = htonl(inet_network(ipaddr) & inet_network(mask));
+	if (!inet_ntop(AF_INET, &n_addr, buf, buf_len))
+		*buf = '\0';
+
+	return buf;
+}
+#endif
 
 /**
  * Return first/lowest configured and connected WAN unit.
@@ -7039,3 +7142,44 @@ int asus_openssl_crypt(char *key, char *salt, char *out, int out_len)
 	return ret;
 }
 
+/**
+ * @return:
+ * 	0:		invalid parameter
+ * 	1:		safe
+ **/
+int validate_rc_service(char *value)
+{
+	while(*value) {
+		if (isalnum(*value) != 0 || *value == ';' || *value == '_' || isspace(*value) != 0)
+			value++;
+		else{
+			dbg("validate_rc_service: invalid(%c)\n", *value);
+			return 0;
+		}
+	}
+	return 1;
+}
+
+int adjust_62_nv_list(char *name)
+{
+	char nv[2048] = {0}, nv_tmp[2048] = {0};
+	char word[32]={0}, *next=NULL;
+
+	strlcpy(nv, nvram_safe_get(name), sizeof(nv));
+
+	foreach_60(word, nv, next){
+		if(isValidMacAddress(word)){
+			strlcat(nv_tmp, "<", sizeof(nv_tmp));
+			strlcat(nv_tmp, word, sizeof(nv_tmp));
+		}else
+			dbg("%s is invaild\n", word);
+	}
+
+	if(strcmp(nv, nv_tmp) != 0){
+		dbg("update %s to %s\n", nv, nv_tmp);
+		nvram_set(name, nv_tmp);
+		nvram_commit();
+		return 1;
+	}
+	return 0;
+}

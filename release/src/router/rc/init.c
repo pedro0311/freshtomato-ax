@@ -488,7 +488,7 @@ misc_ioctrl(void)
 #ifdef GTAC2900
 			eval("sw", "0x800c00a0", "0");	// disable event on tx/rx activity
 #else
-#if defined(RTAX58U_V2) || defined(GTAX6000) || defined(RTAX3000N) || defined(BR63) || defined(RTAX82U_V2) || defined(TUFAX5400_V2) || defined(RTAX88U_PRO) || defined(RTAX5400) || defined(RTAX9000)
+#if defined(RTAX58U_V2) || defined(GTAX6000) || defined(RTAX3000N) || defined(BR63) || defined(RTAX82U_V2) || defined(TUFAX5400_V2) || defined(RTAX88U_PRO) || defined(RTAX5400)
 			wan_phy_led_pinmux(0);
 #endif
 			led_control(LED_WAN_NORMAL, LED_ON);
@@ -527,7 +527,7 @@ misc_ioctrl(void)
 #ifdef HND_ROUTER
 #ifndef GTAC2900
 			else {
-#if defined(RTAX58U_V2) || defined(GTAX6000) || defined(RTAX3000N) || defined(BR63) || defined(RTAX82U_V2) || defined(TUFAX5400_V2) || defined(RTAX88U_PRO) || defined(RTAX5400) || defined(RTAX9000)
+#if defined(RTAX58U_V2) || defined(GTAX6000) || defined(RTAX3000N) || defined(BR63) || defined(RTAX82U_V2) || defined(TUFAX5400_V2) || defined(RTAX88U_PRO) || defined(RTAX5400)
 				wan_phy_led_pinmux(0);
 #else
 				led_control(LED_WAN_NORMAL, LED_ON);
@@ -14528,8 +14528,10 @@ _dprintf("%s: set autowan_ifnames to be \"eth0 eth1\"\n", __func__);
 			if(!strncmp(nvram_safe_get("territory_code"), "EU", 2) ||
 			!strncmp(nvram_safe_get("territory_code"), "UK", 2)
 			) {
-				nvram_set("sb/0/eu_edthresh2g", "-72");
-				nvram_set("sb/1/eu_edthresh5g", "-72");
+				nvram_unset("sb/0/eu_edthresh2g");
+				nvram_unset("sb/1/eu_edthresh5g");
+				nvram_unset("sb/0/ed_thresh2g");
+				nvram_unset("sb/1/ed_thresh5g");
 			} else {
 				nvram_set("no_dy_ed_thresh_ctrl", "-1");
 				nvram_set("sb/0/ed_thresh2g", "-16");
@@ -14673,8 +14675,10 @@ _dprintf("%s: set autowan_ifnames to be \"eth0 eth1\"\n", __func__);
 			if(!strncmp(nvram_safe_get("territory_code"), "EU", 2) ||
 			!strncmp(nvram_safe_get("territory_code"), "UK", 2)
 			) {
-				nvram_set("sb/0/eu_edthresh2g", "-62");
-				nvram_set("sb/1/eu_edthresh5g", "-62");
+				nvram_unset("sb/0/eu_edthresh2g");
+				nvram_unset("sb/1/eu_edthresh5g");
+				nvram_unset("sb/0/ed_thresh2g");
+				nvram_unset("sb/1/ed_thresh5g");
 			} else {
 				nvram_set("no_dy_ed_thresh_ctrl", "-1");
 				nvram_set("sb/0/ed_thresh2g", "-16");
@@ -18388,6 +18392,12 @@ NO_USB_CAP:
 
 #ifdef RTCONFIG_VPN_FUSION
 	add_rc_support("vpn_fusion");
+#ifdef MAX_VPNFUSION_NUM
+	if(MAX_VPNFUSION_NUM > 0 && nvram_get_int("vpnc_max_conn") < MAX_VPNFUSION_NUM)
+	{
+		nvram_set_int("vpnc_max_conn", MAX_VPNFUSION_NUM);
+	}
+#endif
 #endif
 
 #ifdef RTCONFIG_VPN_FUSION_SUPPORT_INTERFACE
@@ -19035,6 +19045,14 @@ int init_nvram2(void)
 	/* reset the counter "fb_req_cnt" to "0" */
 	nvram_set("fb_req_cnt", "0");
 #endif /* RTCONFIG_FRS_FEEDBACK */
+
+#if defined(RTCONFIG_BWDPI)
+	if(!nvram_match("extendno", nvram_safe_get("extendno_org"))){
+		adjust_62_nv_list("bwdpi_game_list");
+		adjust_62_nv_list("bwdpi_stream_list");
+		adjust_62_nv_list("bwdpi_wfh_list");
+	}
+#endif
 
 	// upgrade/downgrade dont keep info
 	if(!nvram_match("extendno", nvram_safe_get("extendno_org"))){
@@ -20337,9 +20355,7 @@ def_boot_reinit:
 	f_write_string("/proc/sys/kernel/core_pattern", "/tmp/core-%e-%g-%p-%s-%t-%u", 0, 0);
 	f_write_string("/proc/sys/fs/suid_dumpable", "2", 0, 0);
 #endif
-#ifdef RTCONFIG_BCMARM
 	f_write_string("/proc/sys/kernel/print-fatal-signals", "1", 0, 0);
-#endif
 
 	for (i = 0; i < sizeof(fatalsigs) / sizeof(fatalsigs[0]); i++) {
 		signal(fatalsigs[i], handle_fatalsigs);
@@ -21823,6 +21839,10 @@ int reboothalt_main(int argc, char *argv[])
 		_dprintf("Still running... Doing machine reset.\n");
 #ifdef RTCONFIG_USB
 		remove_usb_module();
+#endif
+#if defined(RTAX58U_V2) || defined(RTAX3000N) || defined(BR63)
+		rtkswitch_LanPort_linkDown();
+		eval("rtkswitch", "45");
 #endif
 		f_write("/proc/sysrq-trigger", "s", 1, 0 , 0); /* sync disks */
 		sleep(1);

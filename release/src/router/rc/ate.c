@@ -395,16 +395,17 @@ static int setAllSpecificColorLedOn(enum ate_led_color color)
 			all_led[LED_COLOR_WHITE] = white_led;
 			all_led[LED_COLOR_RED] = red_led;
 
-			wan_phy_led_pinmux(1);
 			if (color == LED_COLOR_WHITE)
 			{
-				eval("wl", "-i", "eth2", "ledbh", "0", "1");	// wl 2.4G
-				eval("wl", "-i", "eth3", "ledbh", "0", "1");	// wl 5G
+				eval("wl", "-i", "eth8", "ledbh", "0", "1");	// wl 2.4G
+				eval("wl", "-i", "eth6", "ledbh", "13", "1");	// wl 5G low
+				eval("wl", "-i", "eth7", "ledbh", "13", "1");	// wl 5G high
 			}
 			else
 			{
-				eval("wl", "-i", "eth2", "ledbh", "0", "21");	// wl 2.4G
-				eval("wl", "-i", "eth3", "ledbh", "0", "21");	// wl 5G
+				eval("wl", "-i", "eth8", "ledbh", "0", "0");	// wl 2.4G
+				eval("wl", "-i", "eth6", "ledbh", "13", "0");	// wl 5G low
+				eval("wl", "-i", "eth7", "ledbh", "13", "0");	// wl 5G high
 			}
 		}
 
@@ -4126,9 +4127,10 @@ int asus_ate_command(const char *command, const char *value, const char *value2)
 #ifdef CONFIG_BCMWL5
 	else if (!strcmp(command, "Set_CoBrand")) {
 		int n = atoi(value);
-		if ((n >= 0) && (n <= 100))
-			set_cb(n);
-		else
+		if ((n >= 0) && (n <= 100)) {
+			if(set_cb(n) < 0)
+				puts("ATE_ERROR_INCORRECT_PARAMETER");
+		} else
 			puts("ATE_ERROR");
 		return 0;
 	}

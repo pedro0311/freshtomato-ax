@@ -3335,6 +3335,8 @@ int main(int argc, char **argv)
 			return add_multi_routes(0, -1);
 	}
 	else if (!strcmp(base, "led_ctrl")) {
+                if(strcmp(argv[1], "?") == 0)
+                        return dump_led_enum();
 		return do_led_ctrl(atoi(argv[1]), atoi(argv[2]));
 	}
 	else if (!strcmp(base, "led_str_ctrl")) {

@@ -1966,6 +1966,7 @@ struct nvram_tuple router_defaults[] = {
 	/* 0/1000/10000: auto/1G/10G, SFP+ maximum link speed */
 	{ "sfpp_max_speed", "0", CKN_STR8, CKN_TYPE_DEFAULT, CKN_ACC_LEVEL_DEFAULT, CKN_ENC_DEFAULT, 0 },
 	{ "sfpp_force_on", "0", CKN_STR1, CKN_TYPE_DEFAULT, CKN_ACC_LEVEL_DEFAULT, CKN_ENC_DEFAULT, 0 },	/* auto/force SFP+ TX clock */
+	{ "sfpp_module_ipaddr", "", CKN_STR15, CKN_TYPE_DEFAULT, CKN_ACC_LEVEL_DEFAULT, CKN_ENC_DEFAULT, 0 },	/* IP address of GPON SFP module that built-in telnet/web server */
 #endif
 #if defined(RTCONFIG_BONDING_WAN)
 	{ "bond_wan", "0", CKN_STR1, CKN_TYPE_DEFAULT, CKN_ACC_LEVEL_DEFAULT, CKN_ENC_DEFAULT, 0 },	/* WAN bonding enable or not */

@@ -462,45 +462,17 @@ void set_radio(int on, int unit, int subunit)
 	int sub = (subunit >= 0) ? subunit : 0;
 	char tmp[100], prefix[] = "wlXXXXXXXXXXXXXX", athfix[]="athXXXXXX";
 	char path[sizeof(NAWDS_SH_FMT) + 6], wds_iface[IFNAMSIZ] = "";
+#if !defined(RTCONFIG_SINGLE_HOSTAPD) || !defined(RTCONFIG_CFG80211)
+	char conf_path[sizeof("/etc/Wireless/conf/hostapd_athXXX.confYYYYYY")];
+	char pid_path[sizeof("/var/run/hostapd_athXXX.pidYYYYYY")];
+	char entropy_path[sizeof("/var/run/entropy_athXXX.binYYYYYY")];
+#endif
 
 	if (unit < WL_2G_BAND || unit >= WL_NR_BANDS) {
 		dbg("%s: wl%d is not supported!\n", __func__, unit);
 		return;
 	}
 
-#if defined(RTCONFIG_SOC_IPQ8074)
-	if(sub)
-	{
-		snprintf(prefix, sizeof(prefix), "wl%d.%d_", unit, sub);
-		strcpy(wds_iface, nvram_safe_get(strcat_r(prefix, "ifname", tmp)));
-	}	
-	else	
-		strlcpy(wds_iface, get_wififname(unit), sizeof(wds_iface));
-
-#if defined(RTCONFIG_SINGLE_HOSTAPD)
-		if (on) {
-			char bss_cfg[sizeof("bss_config=") + IFNAMSIZ + sizeof(":/etc/Wireless/conf/hostapd_XXX.conf") + IFNAMSIZ];
-
-			snprintf(bss_cfg, sizeof(bss_cfg), "bss_config=%s:/etc/Wireless/conf/hostapd_%s.conf", wds_iface, wds_iface);
-			eval(QWPA_CLI, "-g", QHOSTAPD_CTRL_IFACE, "raw", "ADD", bss_cfg);
-		} else {
-			eval(QWPA_CLI, "-g", QHOSTAPD_CTRL_IFACE, "raw", "REMOVE", wds_iface);
-		}
-#else
-		char conf_path[sizeof("/etc/Wireless/conf/hostapd_athXXX.confYYYYYY")];
-		char pid_path[sizeof("/var/run/hostapd_athXXX.pidYYYYYY")];
-		char entropy_path[sizeof("/var/run/entropy_athXXX.binYYYYYY")];
-
-		snprintf(pid_path, sizeof(pid_path), "/var/run/hostapd_%s.pid", wds_iface);
-		if (on) {
-			snprintf(conf_path, sizeof(conf_path), "/etc/Wireless/conf/hostapd_%s.conf", wds_iface);
-			snprintf(entropy_path, sizeof(entropy_path), "/var/run/entropy_%s.bin", wds_iface);
-			eval("hostapd", "-d", "-B", "-P", pid_path, "-e", entropy_path, conf_path);
-		} else {
-			kill_pidfile(pid_path);
-		}
-#endif
-#endif
 	do {
 		if (sub > 0)
 			snprintf(prefix, sizeof(prefix), "wl%d.%d_", unit, sub);
@@ -521,7 +493,16 @@ void set_radio(int on, int unit, int subunit)
 				} else {
 					eval(QWPA_CLI, "-g", QHOSTAPD_CTRL_IFACE, "raw", "REMOVE", athfix);
 				}
-#endif
+#else
+				snprintf(pid_path, sizeof(pid_path), "/var/run/hostapd_%s.pid", wds_iface);
+				if (on) {
+					snprintf(conf_path, sizeof(conf_path), "/etc/Wireless/conf/hostapd_%s.conf", wds_iface);
+					snprintf(entropy_path, sizeof(entropy_path), "/var/run/entropy_%s.bin", wds_iface);
+					eval("hostapd", "-d", "-B", "-P", pid_path, "-e", entropy_path, conf_path);
+				} else {
+					kill_pidfile(pid_path);
+				}
+#endif	/* RTCONFIG_SINGLE_HOSTAPD && RTCONFIG_CFG80211 */
 			}
 
 			/* Reconnect to peer WDS AP */

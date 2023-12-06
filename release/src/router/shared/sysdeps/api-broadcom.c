@@ -2208,8 +2208,8 @@ int get_bonding_port_status(int port)
 #elif defined(RTAX9000)
         int lan_ports=5;
         int ports[lan_ports+1];
-        /* 0 5 1 2 3 4 W0 L5 L1 L2 L3 L4 */
-        ports[0]=0; ports[1]=5; ports[2]=1; ports[3]=2; ports[4]=3; ports[5]=4;
+        /* 0 5 1 2 3 4 W0 L1 L2 L3 L4 L5 */
+        ports[0]=0; ports[1]=1; ports[2]=2; ports[3]=3; ports[4]=4; ports[5]=5;
 #elif defined(RTAX82_XD6) || defined(XD6_V2)
 	int lan_ports=3;
 	int ports[lan_ports+1];

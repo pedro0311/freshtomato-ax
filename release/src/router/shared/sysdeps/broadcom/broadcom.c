@@ -1400,14 +1400,14 @@ get_uplinkports_linkrate(char *ifname)
 		}
 		break;
 	case MODEL_RTAX9000:
-		/* 0 1 2 3 4 5 W0 L5 L1 L2 L3 L4 */
+		/* 0 1 2 3 4 5 W0 L1 L2 L3 L4 L5 */
 		ports[0]=0; ports[1]=5; ports[2]=1; ports[3]=2; ports[4]=3; ports[5]=4;
 		sprintf(pif[0], "%s", "eth0");
-		sprintf(pif[1], "%s", "eth5");
-		sprintf(pif[2], "%s", "eth1");
-		sprintf(pif[3], "%s", "eth2");
-		sprintf(pif[4], "%s", "eth3");
-		sprintf(pif[5], "%s", "eth4");
+		sprintf(pif[1], "%s", "eth1");
+		sprintf(pif[2], "%s", "eth2");
+		sprintf(pif[3], "%s", "eth3");
+		sprintf(pif[4], "%s", "eth4");
+		sprintf(pif[5], "%s", "eth5");
 		break;
 	case MODEL_RTAX55:
 	case MODEL_RTAX58U_V2:

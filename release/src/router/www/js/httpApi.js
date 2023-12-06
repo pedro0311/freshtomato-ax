@@ -1494,15 +1494,17 @@ var httpApi ={
 							}
 						})();
 
+						var link_rate = isNaN(parseInt(data.link_rate)) ? 0 : parseInt(data.link_rate);
+						var max_rate = isNaN(parseInt(data.max_rate)) ? 0 : parseInt(data.max_rate);
 						data["link_rate_text"] = (data.is_on == "1") ? "0 Mbps" : "";
 						var link_rate_data = rate_map.filter(function(item, index, array){
-							return (item.value == data.link_rate);
+							return (item.value == link_rate);
 						})[0];
 						if(link_rate_data != undefined){
 							data["link_rate_text"] = link_rate_data.text;
 						}
 						if(data["label"] == "C"){
-							var _rate = parseInt(data.link_rate);
+							var _rate = link_rate;
 							if(isNaN(_rate)) _rate = 0;
 							else if(_rate < 0) _rate = 0;
 
@@ -1518,13 +1520,14 @@ var httpApi ={
 						}
 
 						if(data.cap_support.USB){
+							data["link_rate_text"] = ((data.is_on == "1") ? (link_rate + " Mbps") : "");
 							var max_rate_data = rate_map_USB.filter(function(item, index, array){
-								return (item.value == data.max_rate);
+								return (item.value == max_rate);
 							})[0];
 						}
 						else{
 							var max_rate_data = rate_map.filter(function(item, index, array){
-								return (item.value == data.max_rate);
+								return (item.value == max_rate);
 							})[0];
 						}
 
@@ -1537,13 +1540,13 @@ var httpApi ={
 							}
 							else{
 								if(data.cap_support.USB){
-									data["special_port_name"] = max_rate_data.text;
+									data["special_port_name"] = (data.is_on == "1") ? "USB Modem" : max_rate_data.text;
 								}
 								else{
-									var max_rate = parseInt(max_rate_data.value);
-									if(max_rate > 1000){
+									var max_rate_value = parseInt(max_rate_data.value);
+									if(max_rate_value > 1000){
 										data["special_port_name"] = max_rate_data.text.replace(" Gbps", "");
-										if(max_rate == 10000){
+										if(max_rate_value == 10000){
 											if(data["cap_support"]["SFPP"] == true)
 												data["special_port_name"] = data["special_port_name"] + "G SFP+";
 											else
@@ -1556,11 +1559,11 @@ var httpApi ={
 							}
 						}
 
-						var link_rate = isNaN(parseInt(data.link_rate)) ? 0 : parseInt(data.link_rate);
-						var max_rate = isNaN(parseInt(data.max_rate)) ? 0 : parseInt(data.max_rate);
 						data["link_rate_status"] = 1;//normal
-						if(data.is_on == "1" && link_rate < 1000)
-							data["link_rate_status"] = 0;//abnormal
+						if(!(data.cap_support.USB)){
+							if(data.is_on == "1" && link_rate < 1000)
+								data["link_rate_status"] = 0;//abnormal
+						}
 
 						var sort_key = "";
 						if(data.cap_support.DUALWAN_PRIMARY_WAN || data.cap_support.DUALWAN_SECONDARY_WAN){

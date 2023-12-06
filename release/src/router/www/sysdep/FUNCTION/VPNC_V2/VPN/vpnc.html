@@ -84,13 +84,17 @@ var str_vpnc_profile_select_suggest = stringSafeGet("<#vpnc_profile_select_sugge
 var str_vpn_WiFi_in_use = stringSafeGet("<#vpn_WiFi_in_use#>");
 var support_WG = (isSupport("vpn_fusion") && isSupport("wireguard"));
 //var support_Surfshark = (isSupport("vpn_fusion") && isSupport("surfshark"));
-var support_Surfshark = support_WG;
+var support_Surfshark = (!is_CN && support_WG);
 if(support_WG || support_Surfshark){
 	var wg_max = 5;
 	var wg_unit_edit = 5;
 	//Surfshark_w625_Default.png
 	//Surfshark_w728_Default.png
-	if(!app_lang){
+	if(is_CN){
+		var UrlPromote = "https://nw-dlcdnet.asus.com/plugin/vpn/Surfshark_w625_CN.png";
+		var UrlBanner = "https://nw-dlcdnet.asus.com/plugin/vpn/Surfshark_w728_CN.png";
+	}
+	else if(!app_lang){
 		var UrlPromote = "https://nw-dlcdnet.asus.com/plugin/vpn/Surfshark_w625_"+ ui_lang +".png";
 		var UrlBanner = "https://nw-dlcdnet.asus.com/plugin/vpn/Surfshark_w728_"+ ui_lang +".png";
 	}
@@ -101,7 +105,11 @@ if(support_WG || support_Surfshark){
 	var UrlPromoteDefault = "https://nw-dlcdnet.asus.com/plugin/vpn/Surfshark_w625_Default.png";
 	var UrlBannerDefault = "https://nw-dlcdnet.asus.com/plugin/vpn/Surfshark_w728_Default.png";
 
-	if(!app_lang){
+	if(is_CN){
+		var UrlPromoteMobile = "https://nw-dlcdnet.asus.com/plugin/vpn/Surfshark_375x160_CN_mobile.png";
+		var UrlBannerMobile = "https://nw-dlcdnet.asus.com/plugin/vpn/Surfshark_375x72_CN_mobile.png";
+	}
+	else if(!app_lang){
 		var UrlPromoteMobile = "https://nw-dlcdnet.asus.com/plugin/vpn/Surfshark_375x160_"+ ui_lang +"_mobile.png";
 		var UrlBannerMobile = "https://nw-dlcdnet.asus.com/plugin/vpn/Surfshark_375x72_"+ ui_lang +"_mobile.png";
 	}
@@ -1049,23 +1057,26 @@ function Get_Component_Setting_Profile(_type){
 	//SurfShark promote
 	if(support_Surfshark){
 		
-		$content_container.append($("<div>").append( $("<img>").attr({"id":"ssk_promote_img","height":"185px"})));
+		$content_container.append($("<div>").append( $("<img>").attr({"id":"ssk_promote_img"})));
 
 		if(ww > 500){
+
 			$content_container.find("#ssk_promote_img").on("click", function(event){
 				window.open(surfshark_href);
 				event.preventDefault();
                         }).attr('src', UrlPromote).on('load', function() {
 	 			// image loaded successfully
+				$content_container.find("#ssk_promote_img").css({"height":"185px","margin-left":"15px","cursor":"pointer"});
 			}).on('error', function() {
 	  			// image failed to load
 	  			$(this).attr('src', UrlPromoteDefault).on('load', function() {
 	 				// image loaded successfully
+					$content_container.find("#ssk_promote_img").css({"height":"185px","margin-left":"15px","cursor":"pointer"});
 				}).on('error', function() {
+					// image failed to load
 	  				$(this).unbind('error').hide();
 	  			});
 			});
-			$content_container.find("#ssk_promote_img").css({"margin-left":"15px"});
 
 		}
 		else{
@@ -1074,18 +1085,18 @@ function Get_Component_Setting_Profile(_type){
 				event.preventDefault();
 			}).attr('src', UrlPromoteMobile).on('load', function() {
 	 			// image loaded successfully
+				$content_container.find("#ssk_promote_img").css({"width":"375px","margin-left":"15px","cursor":"pointer"});
 			}).on('error', function() {
 	  			// image failed to load
 	  			$(this).attr('src', UrlPromoteMobileDefault).on('load', function() {
 	 				// image loaded successfully
+					$content_container.find("#ssk_promote_img").css({"width":"375px","margin-left":"15px","cursor":"pointer"});
 				}).on('error', function() {
 	  				// image failed to load
 	  				$(this).unbind('error').hide();
 	  			});
 			});
-			$content_container.find("#ssk_promote_img").css({"width":"375px","margin-left":"15px"});
 		}
-		$content_container.find("#ssk_promote_img").hide();
 
 		if(_type != "popup"){
 			$content_container.find("#ssk_promote_img").addClass("ssk_promote");
@@ -1188,7 +1199,6 @@ function Get_Component_Setting_Profile(_type){
 		$peer_content_container.append(Get_Component_Input(wgc_alive_parm));
 	}
 
-	//ssk country list need to update //https://api.surfshark.com/v4/server/clusters GUI inside & updating it on-line
 	if(support_Surfshark){
 		var ssk_country_option_parm = {"title": "<#Manual_Setting_contry#>", "id": "ssk_country_options", "options": ssk_country_options, "set_value": ssk_country_options[0].value, "show_item":["surfshark"]};
 		$content_container.append(Get_Component_Custom_Select(ssk_country_option_parm));
@@ -1967,7 +1977,7 @@ function updateRegionListOnline(){
 		Update_ssk_region("fw");
 		if(httpApi.isConnected(0) || httpApi.isConnected(1)){
 			setTimeout(function(){
-				$.getJSON("https://api.surfshark.com/v4/server/clusters",
+				$.getJSON("https://nw-dlcdnet.asus.com/plugin/vpn/clusters.json",
 					function(cloud_data){
 						if(JSON.stringify(local_data) != JSON.stringify(cloud_data)){
 							if(Object.keys(cloud_data).length > 0){
@@ -2149,7 +2159,7 @@ function vpn_type_change_control(_obj, _value){
 		$(_obj).find("#ssk_promote_img").show();
 	}
 	else{
-		$(_obj).find("#ssk_promote_img").hide();	
+		$(_obj).find("#ssk_promote_img").hide();
 	}
 
 	resize_iframe_height();
@@ -2503,6 +2513,8 @@ function set_profile_data(_obj, _data){
 
 		if(support_WG){
 			if(wg_unit_edit == 0){
+				vpn_proto = (vpnc_openvpn_unit_edit == 0)?"pptp":"openvpn";
+
 				if(support_Surfshark){
 					$select_vpn_type.children("[value='wireguard']").html("WireGuard & Surfshark (<#List_limit#> " + openvpnc_max + ")").css("color", "rgba(164, 183, 195, 0.6)");
 					$select_vpn_type.children("[value='surfshark']").hide();

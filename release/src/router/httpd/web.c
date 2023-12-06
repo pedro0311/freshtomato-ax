@@ -18,14 +18,6 @@
  * ASUS Home Gateway Reference Design
  * Web Page Configuration Support Routines
  *
- * Copyright 2001, ASUSTeK Inc.
- * All Rights Reserved.
- *
- * This is UNPUBLISHED PROPRIETARY SOURCE CODE of ASUSTeK Inc.;
- * the contents of this file may not be disclosed to third parties, copied or
- * duplicated in any form, in whole or in part, without the prior written
- * permission of ASUSTeK Inc..
- *
  * $Id: web_ex.c,v 1.4 2007/04/09 12:01:50 shinjung Exp $
  */
 #ifndef _GNU_SOURCE
@@ -5583,7 +5575,7 @@ static int ej_update_variables(int eid, webs_t wp, int argc, char_t **argv)
 	int rc_2g = find_word(rc_support, "2.4G")? 1 : 0;
 	int rc_5g = find_word(rc_support, "5G")? 1 : 0;
 	const int nr_band = rc_2g + rc_5g;
-	int sleep1 = 0, sleep2 = 0;
+	int sleep1 = 0, sleep2 = 0, reload_wifi_drv_time __attribute__((unused)) = 0;
 	int delta1 = 0;
 #endif
 #endif
@@ -5600,6 +5592,7 @@ static int ej_update_variables(int eid, webs_t wp, int argc, char_t **argv)
 	int usb_modem_plug = usb_modem_plugged();
 #endif
 
+	/* If new GUI for Smart-Connect in Wireless - General exist, adjust calc_rc_time_for_apply_cgi() too. */
 #if defined(RTCONFIG_RALINK)
 	sleep1 = 10;
 	sleep2 = 5;
@@ -5830,10 +5823,10 @@ static int ej_update_variables(int eid, webs_t wp, int argc, char_t **argv)
 
 #if defined(RTCONFIG_NO_RELOAD_WIFI_DRV_IF_POSSIBLE)
 			if (restart_wifi_srv && !__need_to_reload_wifi_drv())
-				restart_needed_time -= min(14, restart_needed_time);
+				restart_needed_time -= min(reload_wifi_drv_time, restart_needed_time);
 #endif
 			websWrite(wp, "<script>restart_needed_time(%d);</script>\n", restart_needed_time);
-			_dprintf("restart_needed_time [%d]\n", restart_needed_time);
+			_dprintf("%s: restart_needed_time [%d]\n", __func__, restart_needed_time);
 		}
 	}
 #if defined(RTCONFIG_USB_SMS_MODEM) && !defined(RTCONFIG_USB_MULTIMODEM)
@@ -12617,26 +12610,93 @@ do_wl_apply_cgi(char *url, FILE *stream)
 	}
 }
 
+/* Calculate rc_time of new Advanced_Wireless_Content.asp that is able to configure channel/bandwidth of
+ * each band even Smart Connect is enable. In older GUI, it's been called restart_needed_time.
+ * @return:
+ * 	<= 0	error or no need to adjust rc_time
+ * 	> 0	new rc_time (restart_needed_time)
+ */
+static int calc_rc_time_for_apply_cgi(int action_wait)
+{
+	int bss_sleep = 0, sleep1 = 0, reload_wifi_drv_time __attribute__((unused)) = 0;
+	int val, restart_needed_time = 0;
+	int rc_2g = find_word(nvram_safe_get("rc_support"), "2.4G")? 1 : 0;
+	int rc_5g = find_word(nvram_safe_get("rc_support"), "5G")? 1 : 0;
+	const int nr_guest = get_nr_guest_network(-1);
+	const int nr_band = rc_2g + rc_5g;
+
+	/* Refine rc_time of new Wireless General GUI.
+	 * Reference to ej_update_variables() that is used to adjust restart_needed_time for old GUI.
+	 */
+	if (action_wait < 5 || action_wait >= 300) {
+#if defined(RTCONFIG_QCA)
+		action_wait = 30;
+#elif defined(RTCONFIG_RALINK)
+		action_wait = 20;
+#endif
+	}
+
+#if defined(RTCONFIG_RALINK)
+	sleep1 = 10;
+	bss_sleep = 0;
+#if defined(RTCONFIG_MT798X)
+	sleep1 = 11;
+	bss_sleep = 3;
+#endif
+#elif defined(RTCONFIG_QCA)
+#if defined(RTCONFIG_WIFI_QCA9557_QCA9882) || \
+defined(RTCONFIG_WIFI_QCA9990_QCA9990) || \
+defined(RTCONFIG_WIFI_QCA9994_QCA9994)
+	sleep1 = 11;
+	bss_sleep = 3;
+#elif defined(RTCONFIG_WIFI_QCN5024_QCN5054)
+	/* Assume CAC is zero, e.g., 2G band, WiFi STA is not possible to connect to AP unless
+	 * set_vsie commands finished.
+	 * Record percentage when firmware finished set_vsie and calculate below expression.
+	 * New restart_needed_time = old_restart_needed_time * percentage / 0.96
+	 * Test result via LibreOffice Calc.
+	 */
+	action_wait = 33;		/* expect: 33s */
+	sleep1 = 3;
+	bss_sleep = 3;
+	reload_wifi_drv_time = 14 - 8;	/* expect: 6s */
+#elif defined(RTCONFIG_SOC_IPQ40XX)
+	sleep1 = 13;
+#endif
+#elif defined(RTCONFIG_LANTIQ)
+	sleep1 = 15;
+#endif	/* RTCONFIG_RALINK */
+	restart_needed_time = action_wait;
+	/* restart_wireless only. */
+	restart_needed_time += sleep1 * nr_band + bss_sleep * nr_guest;
+#if defined(RTCONFIG_NO_RELOAD_WIFI_DRV_IF_POSSIBLE)
+	if (!__need_to_reload_wifi_drv())
+		restart_needed_time -= min(reload_wifi_drv_time, restart_needed_time);
+#endif
+
+	return restart_needed_time;
+}
+
 static int
 apply_cgi(webs_t wp, char_t *urlPrefix, char_t *webDir, int arg,
 		char_t *url, char_t *path, char_t *query)
 {
 	char *action_mode;
-	char *action_para;
+	char *action_para, *str;
 	char *current_url;
 	char *config_name;
 	char command[128];
 #ifdef RTCONFIG_CFGSYNC
 	int apply_lock = 0;
 #endif
-	memset(command, 0, sizeof(command));
-	int i=0, j=0, len=0;
+	int i=0, j=0, len=0, action_wait = 5, val, restart_needed_time;
 #ifdef RTCONFIG_LANTIQ
 	wave_app_flag=0;
 #endif
 
 	struct json_object *root = json_object_new_object();
 
+	memset(command, 0, sizeof(command));
 	do_json_decode(root);
 
 	action_mode = get_cgi_json("action_mode", root);
@@ -12682,6 +12742,10 @@ apply_cgi(webs_t wp, char_t *urlPrefix, char_t *webDir, int arg,
 
 		action_para = get_cgi_json("rc_service",root);
 		config_name = get_cgi_json("nvram_config", root);
+		str = get_cgi_json("action_wait", root);
+		val = str? safe_atoi(str) : "-1";
+		if (val > 0 && val < 300)
+			action_wait = val;
 
 		if (config_name != NULL){
 			//_dprintf("apply_cgi: nvram_config = %s\n", config_name);
@@ -12715,6 +12779,11 @@ apply_cgi(webs_t wp, char_t *urlPrefix, char_t *webDir, int arg,
 #endif                    
 			notify_rc(action_para);
 			json_object_object_add(res, "run_service", json_object_new_string(action_para));
+
+			if ((val = calc_rc_time_for_apply_cgi(action_wait)) > 0)
+				restart_needed_time = val;
+			json_object_object_add(res, "restart_needed_time", json_object_new_int(restart_needed_time));
+			_dprintf("%s: restart_needed_time [%d]\n", __func__, restart_needed_time);
 		}
 		websWrite(wp, "%s\n", json_object_to_json_string(res));
 		json_object_put(res);
@@ -15272,6 +15341,8 @@ do_upgrade_post(char *url, FILE *stream, int len, char *boundary)
 	boot_set = BOOT_SET_NEW_IMAGE;
 #else
 	if (sec_upgrade == 1)
+		boot_set = BOOT_SET_NEW_IMAGE;
+	else if (nvram_match(ATE_FACTORY_MODE_STR(), "1") || nvram_match(ATE_UPGRADE_MODE_STR(), "1"))
 		boot_set = BOOT_SET_NEW_IMAGE;
 	else
 		boot_set = BOOT_SET_NEW_IMAGE_ONCE;
@@ -20365,6 +20436,10 @@ do_mobile_dev_mode_cgi(char *url, FILE *stream)
 	action = safe_get_cgi_json("action", root);
 	maclist = safe_get_cgi_json("maclist", root);
 
+	adjust_62_nv_list("bwdpi_game_list");
+	adjust_62_nv_list("bwdpi_stream_list");
+	adjust_62_nv_list("bwdpi_wfh_list");
+
 	if(!isValidEnableOption(do_rc, 1)){
 		HTTPD_DBG("invalid option\n");
 		ret = HTTP_INVALID_ENABLE_OPT;
@@ -20412,8 +20487,7 @@ do_mobile_dev_mode_cgi(char *url, FILE *stream)
 					ret = HTTP_OVER_MAX_RULE_LIMIT;
 					goto FINISH;
 				}
-				if(strlen(add_list) != 0)
-					strlcat(add_list, "<", sizeof(add_list));
+				strlcat(add_list, "<", sizeof(add_list));
 				strlcat(add_list, word, sizeof(add_list));
 				find_del_list += remove_client_in_list(del_list, word);
 				find_del2_list += remove_client_in_list(del2_list, word);
@@ -20485,6 +20559,10 @@ do_mobile_game_mode_cgi(char *url, FILE *stream)
 	char bwdpi_game_list[2048] = {0}, bwdpi_stream_list[2048] = {0}, bwdpi_wfh_list[2048] = {0};
 	struct json_object *root = json_object_new_object();
 
+	adjust_62_nv_list("bwdpi_game_list");
+	adjust_62_nv_list("bwdpi_stream_list");
+	adjust_62_nv_list("bwdpi_wfh_list");
+
 	do_json_decode(root);
 	do_rc = safe_get_cgi_json("do_rc", root);
 	action = safe_get_cgi_json("action", root);
@@ -20522,8 +20600,8 @@ do_mobile_game_mode_cgi(char *url, FILE *stream)
 					ret = HTTP_OVER_MAX_RULE_LIMIT;
 					goto FINISH;
 				}
-				if(bwdpi_game_list[0] != '\0')
-					strlcat(bwdpi_game_list, "<", sizeof(bwdpi_game_list));
+
+				strlcat(bwdpi_game_list, "<", sizeof(bwdpi_game_list));
 				strlcat(bwdpi_game_list, word, sizeof(bwdpi_game_list));
 				find_stream_list += remove_client_in_list(bwdpi_stream_list, word);
 				find_wfh_list += remove_client_in_list(bwdpi_wfh_list, word);
@@ -37738,7 +37816,7 @@ static int get_clientlist_ex(struct json_object **clients)
 	return 0;
 }
 
-static int get_client_name(char *ipaddr, char *name){
+static int get_client_name(char *ipaddr, char *name, size_t name_len){
 	struct json_object *clients = NULL;
 	struct json_object *ip_obj = NULL, *name_obj = NULL, *nickname_obj = NULL;
 	char *ip_string, *nickname_string, *name_string;
@@ -37750,16 +37828,18 @@ static int get_client_name(char *ipaddr, char *name){
 			ip_string = (char *)json_object_get_string(ip_obj);
 			if(strcmp(ip_string, ipaddr) == 0)
 			{
-				json_object_object_get_ex(val, "nickName", &nickname_obj);
-				json_object_object_get_ex(val, "name", &name_obj);
-				nickname_string = (char *)json_object_get_string(nickname_obj);
-				name_string = (char *)json_object_get_string(name_obj);
-				if(strlen(nickname_string) != 0)
-					snprintf(name, 33, "%s", nickname_string);
-				else if(strlen(name_string) != 0)
-					snprintf(name, 33, "%s", name_string);
-				else
-					snprintf(name, 33, "%s", ipaddr);
+				strlcpy(name, ipaddr, name_len);
+				if(json_object_object_get_ex(val, "name", &name_obj)){
+					name_string = (char *)json_object_get_string(name_obj);
+					if(name_string && *name_string != '\0')
+						strlcpy(name, name_string, name_len);
+				}
+
+				if(json_object_object_get_ex(val, "nickName", &nickname_obj)){
+					nickname_string = (char *)json_object_get_string(nickname_obj);
+					if(nickname_string && *nickname_string != '\0')
+						strlcpy(name, nickname_string, name_len);
+				}
 			}
 		}
 	}
@@ -37783,7 +37863,7 @@ get_nat_vserver_table(int eid, webs_t wp, int argc, char_t **argv)
 	char dst[sizeof("!255.255.255.255/24")];
 	char *range, *host, *port, *ptr, *val;
 	int ret = 0;
-	char cur_chain[32], client_name[64];
+	char cur_chain[32], client_name[34];
 
 	/* dump nat table including VSERVER and VUPNP chains */
 	_eval(nat_argv, ">/tmp/vserver.log", 10, NULL);
@@ -37853,7 +37933,7 @@ get_nat_vserver_table(int eid, webs_t wp, int argc, char_t **argv)
 		}
 
 		if(strlen(host) != 0){
-			get_client_name(host, client_name);
+			get_client_name(host, client_name, sizeof(client_name));
 		}
 
 		ret += websWrite(wp,

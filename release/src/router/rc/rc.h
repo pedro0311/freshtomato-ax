@@ -956,7 +956,7 @@ extern void update_cfe_ax82u();
 #ifdef GTAX6000
 extern void update_cfe_ax6000();
 #endif
-#if defined(RTAX58U_V2) || defined(GTAX6000) || defined(RTAX86U_PRO) || defined(RTAX3000N) || defined(BR63) || defined(RTAX82U_V2) || defined(TUFAX5400_V2) || defined(RTAX88U_PRO) || defined(RTAX5400) || defined(RTAX9000)
+#if defined(RTAX58U_V2) || defined(GTAX6000) || defined(RTAX86U_PRO) || defined(RTAX3000N) || defined(BR63) || defined(RTAX82U_V2) || defined(TUFAX5400_V2) || defined(RTAX88U_PRO) || defined(RTAX5400)
 extern void wan_phy_led_pinmux(int force);
 #endif
 #if defined(TUFAX3000_V2) || defined(RTAXE7800) || defined(TUFAX5400_V2) || defined(RTAX5400) || defined(RTAX88U_PRO)
