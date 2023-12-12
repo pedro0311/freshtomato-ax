@@ -953,6 +953,9 @@ char *iprange_ex_conv(char *ip, char *buf)
 
 	strcpy(buf, "");
 
+	if (!ip || (ip && (strchr(ip, ':') || strchr(ip, '/') || strlen(ip) > INET_ADDRSTRLEN)))
+		return ip;
+
 	//printf("## iprange_ex_conv: %s, %d, %s\n", ip_name, idx, ip);	// tmp test
 	// scan all ip string
 	i=j=k=0;
@@ -1644,6 +1647,10 @@ void nat_setting(char *wan_if, char *wan_ip, char *wanx_if, char *wanx_ip, char 
 
 	_dprintf("writting prerouting %s %s %s %s %s %s\n", wan_if, wan_ip, wanx_if, wanx_ip, lan_if, lan_ip);
 
+#if defined(RTCONFIG_SWITCH_QCA8075_QCA8337_PHY_AQR107_AR8035_QCA8033)
+	add_nat_rule_for_gpon_sfp_module(fp);
+#endif
+
 	//Log
 	//if (nvram_match("misc_natlog_x", "1"))
 	// 	fprintf(fp, "-A PREROUTING -i %s -j LOG --log-prefix ALERT --log-level 4\n", wan_if);
@@ -2114,6 +2121,10 @@ void nat_setting2(char *lan_if, char *lan_ip, char *logaccept, char *logdrop)	//
 
 		_dprintf("writting prerouting 2 %s %s %s %s %s %s\n", wan_if, wan_ip, wanx_if, wanx_ip, lan_if, lan_ip);
 
+#if defined(RTCONFIG_SWITCH_QCA8075_QCA8337_PHY_AQR107_AR8035_QCA8033)
+		add_nat_rule_for_gpon_sfp_module(fp);
+#endif
+
 		//Log
 		//if (nvram_match("misc_natlog_x", "1"))
 		//	fprintf(fp, "-A PREROUTING -i %s -j LOG --log-prefix ALERT --log-level 4\n", wan_if);
@@ -2578,6 +2589,10 @@ void redirect_setting(void)
 #endif
 	}
 
+#if defined(RTCONFIG_SWITCH_QCA8075_QCA8337_PHY_AQR107_AR8035_QCA8033)
+	add_nat_rule_for_gpon_sfp_module(redirect_fp);
+#endif
+
 	fprintf(redirect_fp,
 		"-A PREROUTING ! -d %s -p tcp --dport 80 -j DNAT --to-destination %s:18017\n"
 		"-A PREROUTING -p udp --dport 53 -j DNAT --to-destination %s:18018\n",
@@ -2734,6 +2749,10 @@ start_default_filter(int lanunit)
 #ifdef RTCONFIG_PROTECTION_SERVER
 	fprintf(fp, ":%sWAN - [0:0]\n", PROTECT_SRV_RULE_CHAIN);
 	fprintf(fp, ":%sLAN - [0:0]\n", PROTECT_SRV_RULE_CHAIN);
+#endif
+
+#if defined(RTCONFIG_SWITCH_QCA8075_QCA8337_PHY_AQR107_AR8035_QCA8033)
+	add_filter_rule_for_gpon_sfp_module(fp);
 #endif
 
 #ifdef RTCONFIG_RESTRICT_GUI
@@ -3498,6 +3517,10 @@ filter_setting(int wan_unit, char *lan_if, char *lan_ip, char *logaccept, char *
 	fprintf(fp, "-A FORWARD -j IPSEC_STRONGSWAN\n");
 #endif /* RTCONFIG_IPSEC */
 
+#if defined(RTCONFIG_SWITCH_QCA8075_QCA8337_PHY_AQR107_AR8035_QCA8033)
+	add_filter_rule_for_gpon_sfp_module(fp);
+#endif
+
 #if defined(WEB_REDIRECT)
 	/* Below rules are supposed to be used if below conditions are true
 	 * and output interface should be WAN interface.
@@ -4244,16 +4267,6 @@ TRACE_PT("writing Parental Control\n");
 		}
 	}
 
-#ifdef RTCONFIG_IPV6
-	if (ipv6_enabled() && *wan6face) {
-		if (nvram_match("ipv6_fw_enable", "1")) {
-			fprintf(fp_ipv6, "-A FORWARD -o %s -i %s -j %s\n", wan6face, lan_if, logaccept);
-		} else {	// The default DROP rule from the IPv6 firewall would take care of it
-	fprintf(fp_ipv6, "-A FORWARD -o %s ! -i %s -j %s\n", wan6face, lan_if, logdrop);
-		}
-	}
-#endif
-
 	/* Accept the redirect, might be seen as INVALID, packets */
 	fprintf(fp, "-A FORWARD -i %s -o %s -j %s\n", lan_if, lan_if, logaccept);
 #ifdef RTCONFIG_IPV6
@@ -4413,7 +4426,7 @@ TRACE_PT("writing Parental Control\n");
 		}
 
 		if(apply) {
-			v4v6_ok = IPT_V4;
+			v4v6_ok = IPT_V4|IPT_V6;
 
 			// LAN/WAN filter
 			nv = nvp = strdup(nvram_safe_get("filter_lwlist"));
@@ -4426,8 +4439,8 @@ TRACE_PT("writing Parental Control\n");
 					g_buf_init(); // need to modified
 
 					setting = filter_conv(protoptr, flagptr, iprange_ex_conv(srcip, srcipbuf), srcport, iprange_ex_conv(dstip, dstipbuf), dstport);
-					if (srcip) v4v6_ok = ipt_addr_compact(srcipbuf, v4v6_ok, (v4v6_ok == IPT_V4));
-					if (dstip) v4v6_ok = ipt_addr_compact(dstipbuf, v4v6_ok, (v4v6_ok == IPT_V4));
+					if (srcip) v4v6_ok = ipt_addr_compact((*srcipbuf)?srcipbuf:srcip, v4v6_ok, (v4v6_ok == IPT_V4));
+					if (dstip) v4v6_ok = ipt_addr_compact((*dstipbuf)?dstipbuf:dstip, v4v6_ok, (v4v6_ok == IPT_V4));
 
 					/* separate lanwan timematch */
 					strcpy(lanwan_buf, lanwan_timematch);
@@ -4446,6 +4459,8 @@ TRACE_PT("writing Parental Control\n");
 				}
 				if(nv) free(nv);
 			}
+			//restore
+			v4v6_ok = IPT_V4;
 		}
 		// ICMP
 		foreach(ptr, nvram_safe_get("filter_lw_icmp_x"), icmplist)
@@ -4750,6 +4765,17 @@ TRACE_PT("write wl filter\n");
 	dnsfilter_dot_rules(fp);
 #endif
 
+	// Allow LAN -> X after all (URL/Keyword/Network...) filter.
+#ifdef RTCONFIG_IPV6
+	if (ipv6_enabled() && *wan6face) {
+		if (nvram_match("ipv6_fw_enable", "1")) {
+			fprintf(fp_ipv6, "-A FORWARD -o %s -i %s -j %s\n", wan6face, lan_if, logaccept);
+		} else {	// The default DROP rule from the IPv6 firewall would take care of it
+			fprintf(fp_ipv6, "-A FORWARD -o %s ! -i %s -j %s\n", wan6face, lan_if, logdrop);
+		}
+	}
+#endif
+
 #ifdef RTCONFIG_WIREGUARD
 	fprintf(fp, "-A FORWARD -j WGCF\n");
 #ifdef RTCONFIG_IPV6
@@ -4964,6 +4990,10 @@ filter_setting2(char *lan_if, char *lan_ip, char *logaccept, char *logdrop)
 	fprintf(fp, "-A FORWARD -j IPSEC_DROP_SUBNET_ICMP\n");
 	fprintf(fp, "-A FORWARD -j IPSEC_STRONGSWAN\n");
 #endif /* RTCONFIG_IPSEC */
+
+#if defined(RTCONFIG_SWITCH_QCA8075_QCA8337_PHY_AQR107_AR8035_QCA8033)
+	add_filter_rule_for_gpon_sfp_module(fp);
+#endif
 
 #if defined(WEB_REDIRECT)
 	/* Below rules are supposed to be used if below conditions are true
@@ -5689,15 +5719,7 @@ TRACE_PT("writing Parental Control\n");
 // ~ oleg patch
 		/* Filter out invalid WAN->WAN connections */
 		fprintf(fp, "-A FORWARD -o %s ! -i %s -j %s\n", wan_if, lan_if, logdrop);
-#ifdef RTCONFIG_IPV6
-		 if (ipv6_enabled() && *wan6face) {
-			if (nvram_match("ipv6_fw_enable", "1")) {
-				fprintf(fp_ipv6, "-A FORWARD -o %s -i %s -j %s\n", wan6face, lan_if, logaccept);
-			} else {	// The default DROP rule from the IPv6 firewall would take care of it
-			fprintf(fp_ipv6, "-A FORWARD -o %s ! -i %s -j %s\n", wan6face, lan_if, logdrop);
-			}
-		}
-#endif
+
 		if (strcmp(wanx_if, wan_if) && inet_addr_(wanx_ip) && dualwan_unit__nonusbif(unit)) {
 			fprintf(fp, "-A FORWARD -o %s ! -i %s -j %s\n", wanx_if, lan_if, logdrop);
 #ifdef RTCONFIG_AMAS_WGN
@@ -5875,7 +5897,7 @@ TRACE_PT("writing Parental Control\n");
 		}
 
 		if(apply) {
-			v4v6_ok = IPT_V4;
+			v4v6_ok = IPT_V4|IPT_V6;
 
 			// LAN/WAN filter
 			nv = nvp = strdup(nvram_safe_get("filter_lwlist"));
@@ -5888,8 +5910,8 @@ TRACE_PT("writing Parental Control\n");
 					g_buf_init(); // need to modified
 
 					setting = filter_conv(protoptr, flagptr, iprange_ex_conv(srcip, srcipbuf), srcport, iprange_ex_conv(dstip, dstipbuf), dstport);
-					if (srcip) v4v6_ok = ipt_addr_compact(srcipbuf, v4v6_ok, (v4v6_ok == IPT_V4));
-					if (dstip) v4v6_ok = ipt_addr_compact(dstipbuf, v4v6_ok, (v4v6_ok == IPT_V4));
+					if (srcip) v4v6_ok = ipt_addr_compact((*srcipbuf)?srcipbuf:srcip, v4v6_ok, (v4v6_ok == IPT_V4));
+					if (dstip) v4v6_ok = ipt_addr_compact((*dstipbuf)?dstipbuf:dstip, v4v6_ok, (v4v6_ok == IPT_V4));
 					for(unit = WAN_UNIT_FIRST; unit < wan_max_unit; ++unit){
 						if(!is_wan_connect(unit))
 							continue;
@@ -5923,6 +5945,9 @@ TRACE_PT("writing Parental Control\n");
 				}
 				if(nv) free(nv);
 			}
+
+			//restore
+			v4v6_ok = IPT_V4;
 		}
 
 		// ICMP
@@ -6261,6 +6286,22 @@ TRACE_PT("write wl filter\n");
 #ifdef RTCONFIG_DNSFILTER
 	dnsfilter_dot_rules(fp);
 #endif
+
+	// Allow LAN -> X after all (URL/Keyword/Network...) filter.
+	for (unit = WAN_UNIT_FIRST; unit < wan_max_unit; ++unit) {
+		if(!is_wan_connect(unit))
+			continue;
+
+#ifdef RTCONFIG_IPV6
+		if ((get_ipv6_service_by_unit(unit) != IPV6_DISABLED)) {
+			if (nvram_match("ipv6_fw_enable", "1")) {
+				fprintf(fp_ipv6, "-A FORWARD -o %s -i %s -j %s\n", get_wan6_ifname(unit), lan_if, logaccept);
+			} else {	// The default DROP rule from the IPv6 firewall would take care of it
+				fprintf(fp_ipv6, "-A FORWARD -o %s ! -i %s -j %s\n", get_wan6_ifname(unit), lan_if, logdrop);
+			}
+		}
+#endif
+	}
 
 #ifdef RTCONFIG_WIREGUARD
 	fprintf(fp, "-A FORWARD -j WGCF\n");

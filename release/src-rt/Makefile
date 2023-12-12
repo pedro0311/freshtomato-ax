@@ -726,7 +726,6 @@ ifeq ($(HND_ROUTER),y)
 	@rm -rf image
 	@ln -sf targets/${PROFILE} image
 	$(MAKE) buildimage
-	@rm -rf targets/${PROFILE}/*cferom*
 else
 	@-mkdir -p image
 
@@ -5870,6 +5869,10 @@ fi;
 		sed -i "/CONFIG_BCM_BPM_BUF_MEM_PRCNT/d" $(1); \
 		echo "CONFIG_BCM_BPM_BUF_MEM_PRCNT=10" >>$(1); \
 	fi;
+	if [ "$(BUILD_NAME)" = "RT-AX9000" ]; then \
+		sed -i "/CONFIG_BCM_WLCLED/d" $(1); \
+		echo "CONFIG_BCM_WLCLED=y" >>$(1); \
+	fi; \
 	if [ "$(BUILD_NAME)" = "RT-AX3000N" ]; then \
 		sed -i "/CONFIG_BCM_MAX_UCAST_FLOWS/d" $(1); \
 		echo "CONFIG_BCM_MAX_UCAST_FLOWS=4096" >>$(1); \

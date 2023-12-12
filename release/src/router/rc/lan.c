@@ -1375,9 +1375,9 @@ void start_lan(void)
 #ifdef RTAX9000
 	// configure 6715 GPIO direction
 	eval("wl", "-i", "eth6", "gpioout", "0x2002", "0x2002");
-	eval("wl", "-i", "eth6", "ledbh", "15", "7");
+	eval("wl", "-i", "eth6", "ledbh", "13", "7");
 	eval("wl", "-i", "eth7", "gpioout", "0x2002", "0x2002");
-	eval("wl", "-i", "eth7", "ledbh", "15", "7");
+	eval("wl", "-i", "eth7", "ledbh", "13", "7");
 #endif
 
 #if defined(GTAX6000) || defined(RTAX88U_PRO)

@@ -799,6 +799,10 @@ function genAuthMethod(unit, id, nmode_x, auth_mode_x){
 		}
 	}
 
+	if(is_KR_sku){ //remove Open System
+		auth_array = auth_array.filter(subArr => subArr[1] !== 'open');
+	}
+
 	if(isSupport("amas") && isSupport("amasRouter") && (isSwMode("rt") || isSwMode("ap"))){
 		var re_count = httpApi.hookGet("get_cfg_clientlist", true).length;
 		if(re_count > 1){
@@ -1027,6 +1031,15 @@ function apply(rc_flag){
 		}
 		postObj = Object.assign(postObj, variable);
 		httpApi.nvramSet(postObj, function(){
+			if (Qcawifi_support || Rawifi_support) {
+				var restart_needed_time = this.restart_needed_time;	// restart wireless time
+				if (restart_needed_time) {
+					var tmp_rc_time = parseInt(restart_needed_time);
+					if (!isNaN(tmp_rc_time) && tmp_rc_time > 0 && tmp_rc_time < 300) {
+						rc_time = tmp_rc_time;
+					}
+				}
+			}
 			parent.showLoading(rc_time);
 			setTimeout(function(){
 				location.reload();

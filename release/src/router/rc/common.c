@@ -1199,6 +1199,7 @@ const zoneinfo_t tz_list[] = {
         {"UTC4DST_2",	"America/Santiago"},	// (GMT-04:00) Santiago
         {"NST3.30DST",	"Canada/Newfoundland"},	// (GMT-03:30) Newfoundland
         {"EBST3",	"America/Araguaina"},	// (GMT-03:00) Brasilia //EBST3DST_1
+	{"UTC3DST",	"America/Saint-Pierre-et-Miquelon"},	// (GMT-03:00) Saint Pierre	//UTC2DST
 	{"UTC3",	"America/Araguaina"},	// (GMT-03:00) Buenos Aires, Georgetown
         {"UTC2_1",	"America/Godthab"},	// (GMT-03:00) Greenland	//EBST3DST_2
         {"UTC2",	"Atlantic/South_Georgia"},	// (GMT-02:00) South Georgia
@@ -1382,6 +1383,9 @@ void time_zone_x_mapping(void)
 	}	
 	else if (nvram_match("time_zone", "UTC-6_2")){  /*Novosibirsk*/
 		nvram_set("time_zone", "UTC-7_3");
+	}
+	else if (nvram_match("time_zone", "UTC2DST")){	/*Saint-Pierre-et-Miquelon*/
+		nvram_set("time_zone", "UTC3DST");
 	}
 
 	len = snprintf(tmpstr, sizeof(tmpstr), "%s", nvram_safe_get("time_zone"));

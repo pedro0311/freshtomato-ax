@@ -687,6 +687,10 @@ HOSTAPD_PKG:=hostapd-2.6
 QCA_HOSTAPD_DIR:=$(TOP)/$(HOSTAPD_PKG)
 endif
 
+ifneq ($(MAX_VPNF),)
+CFLAGS += -DMAX_VPNFUSION_NUM=$(MAX_VPNF)
+endif
+
 ifneq ($(findstring CONFIG_BRIDGE_NF_EBTABLES=y, $(shell cat $(LINUXDIR)/.config)),)
 CFLAGS += -DEBTABLES_BUILTIN
 endif
@@ -878,7 +882,7 @@ obj-$(RTCONFIG_BT_CONN) += libical-2.0.0
 ifeq ($(RTCONFIG_NCURSES_6_1),y)
 obj-$(RTCONFIG_BT_CONN) += ncurses-6.1
 else
-obj-$(RTCONFIG_BT_CONN) += ncurses-6.0
+obj-$(RTCONFIG_BT_CONN) += ncurses-6.3
 endif
 obj-$(RTCONFIG_BT_CONN) += readline-6.2
 obj-$(RTCONFIG_BT_CONN) += json-c
@@ -6935,7 +6939,7 @@ curl/Makefile: curl/configure
 		CFLAGS="$(if $(RTCONFIG_DEBUG),-g,-Os) -Wall -ffunction-sections -fdata-sections" \
 		CPPFLAGS="-I$(STAGEDIR)/usr/include" \
 		LDFLAGS="-Wl$(if $(RTCONFIG_TR069),$(comma)-rpath=$(STAGEDIR)/usr/lib,),--gc-sections $(LDFLAGS) -L$(STAGEDIR)/usr/lib" \
-		LIBS="-ldl $(if $(RTCONFIG_OPENSSL11),-lpthread,) \
+		LIBS="-ldl $(if $(RTCONFIG_OPENSSL11),-lssl -lcrypto -lpthread,) $(if $(RTCONFIG_TR069),-lssh2 -lz) \
 			   $(if $(RTCONFIG_MBEDTLS),-lmbedcrypto -lmbedx509 -lmbedtls,) \
 			   $(if $(RTCONFIG_WOLFSSL),-lwolfssl,)"
 
@@ -7750,7 +7754,7 @@ libfapi-0.1-install:
 	cd libfapi-0.1; make clean; make
 	install -D libfapi-0.1/libfapi.so $(TARGETDIR)/usr/lib/
 
-fapi_wlan_common-05.04.00.131: ncurses-6.0 readline-6.2 libhelper-1.4.0.2
+fapi_wlan_common-05.04.00.131: ncurses-6.3 readline-6.2 libhelper-1.4.0.2
 	cd fapi_wlan_common-05.04.00.131; make clean; make
 
 fapi_wlan_common-05.04.00.131-install:
@@ -8027,8 +8031,19 @@ ncurses-6.1-install: ncurses-6.1
 		ln -sf libpanel.so.6.1 libpanel.so.6 &&\
 		ln -sf libpanel.so.6.1 libpanel.so
 
-ncurses-6.0/Makefile: ncurses-6.0/configure
-	cd ncurses-6.0 && $(CONFIGURE)\
+#build the “tic” program on the build host
+ncurses-6.3/progs/tic:
+	cd ncurses-6.3 && \
+	mkdir -p build_tic && \
+	cd build_tic && \
+	CC=gcc RANLIB=ranlib CFLAGS='-O3 -Wall' ../$(CONFIGURE) && \
+	make -C include && \
+	make -C progs tic && \
+	cp $(SRCBASE)/router/ncurses-6.3/build_tic/progs/tic $(SRCBASE)/router/ncurses-6.3/progs/ && \
+	rm -rf $(SRCBASE)/router/ncurses-6.3/build_tic/
+
+ncurses-6.3/Makefile: ncurses-6.3/configure
+	cd ncurses-6.3 && $(CONFIGURE)\
 		--prefix=/usr --exec_prefix=/usr --bindir=/usr/bin --sbindir=/usr/sbin --libexecdir=/usr/lib\
 		--sysconfdir=/etc --datadir=/usr/share --localstatedir=/var --mandir=/usr/man\
 		--without-normal --with-debug --with-shared\
@@ -8036,30 +8051,30 @@ ncurses-6.0/Makefile: ncurses-6.0/configure
 		CFLAGS="-I$(STAGEDIR)/usr/local/include"\
 		LDFLAGS="-L$(STAGEDIR)/usr/local/lib -ldl -lpthread"
 
-ncurses-6.0: ncurses-6.0/progs/tic ncurses-6.0/Makefile
-	$(MAKE) -C $@ && $(MAKE) $@-stage
+ncurses-6.3: ncurses-6.3/progs/tic ncurses-6.3/Makefile
+	export TIC_PATH=$(SRCBASE)/router/ncurses-6.3/progs/tic && $(MAKE) -C $@ && $(MAKE) $@-stage
 
-ncurses-6.0-clean:
-	[ ! -f ncurses-6.0/Makefile ] || $(MAKE) -C ncurses-6.0 distclean
+ncurses-6.3-clean:
+	[ ! -f ncurses-6.3/Makefile ] || $(MAKE) -C ncurses-6.3 distclean
 
-ncurses-6.0-install: ncurses-6.0
-	install -D ncurses-6.0/lib/libform.so.6.0 $(INSTALLDIR)/ncurses-6.0/usr/lib/libform.so.6.0
-	install -D ncurses-6.0/lib/libmenu.so.6.0 $(INSTALLDIR)/ncurses-6.0/usr/lib/libmenu.so.6.0
-	install -D ncurses-6.0/lib/libncurses.so.6.0 $(INSTALLDIR)/ncurses-6.0/usr/lib/libncurses.so.6.0
-	install -D ncurses-6.0/lib/libpanel.so.6.0 $(INSTALLDIR)/ncurses-6.0/usr/lib/libpanel.so.6.0
-	$(STRIP) $(INSTALLDIR)/ncurses-6.0/usr/lib/libform.so.6.0
-	$(STRIP) $(INSTALLDIR)/ncurses-6.0/usr/lib/libmenu.so.6.0
-	$(STRIP) $(INSTALLDIR)/ncurses-6.0/usr/lib/libncurses.so.6.0
-	$(STRIP) $(INSTALLDIR)/ncurses-6.0/usr/lib/libpanel.so.6.0
-	cd $(INSTALLDIR)/ncurses-6.0/usr/lib && \
-		ln -sf libncurses.so.6.0 libncurses.so.6 &&\
-		ln -sf libncurses.so.6.0 libncurses.so &&\
-		ln -sf libform.so.6.0 libform.so.6 &&\
-		ln -sf libform.so.6.0 libform.so &&\
-		ln -sf libmenu.so.6.0 libmenu.so.6 &&\
-		ln -sf libmenu.so.6.0 libmenu.so &&\
-		ln -sf libpanel.so.6.0 libpanel.so.6 &&\
-		ln -sf libpanel.so.6.0 libpanel.so
+ncurses-6.3-install: ncurses-6.3
+	install -D ncurses-6.3/lib/libform.so.6.3 $(INSTALLDIR)/ncurses-6.3/usr/lib/libform.so.6.3
+	install -D ncurses-6.3/lib/libmenu.so.6.3 $(INSTALLDIR)/ncurses-6.3/usr/lib/libmenu.so.6.3
+	install -D ncurses-6.3/lib/libncurses.so.6.3 $(INSTALLDIR)/ncurses-6.3/usr/lib/libncurses.so.6.3
+	install -D ncurses-6.3/lib/libpanel.so.6.3 $(INSTALLDIR)/ncurses-6.3/usr/lib/libpanel.so.6.3
+	$(STRIP) $(INSTALLDIR)/ncurses-6.3/usr/lib/libform.so.6.3
+	$(STRIP) $(INSTALLDIR)/ncurses-6.3/usr/lib/libmenu.so.6.3
+	$(STRIP) $(INSTALLDIR)/ncurses-6.3/usr/lib/libncurses.so.6.3
+	$(STRIP) $(INSTALLDIR)/ncurses-6.3/usr/lib/libpanel.so.6.3
+	cd $(INSTALLDIR)/ncurses-6.3/usr/lib && \
+		ln -sf libncurses.so.6.3 libncurses.so.6 &&\
+		ln -sf libncurses.so.6.3 libncurses.so &&\
+		ln -sf libform.so.6.3 libform.so.6 &&\
+		ln -sf libform.so.6.3 libform.so &&\
+		ln -sf libmenu.so.6.3 libmenu.so.6 &&\
+		ln -sf libmenu.so.6.3 libmenu.so &&\
+		ln -sf libpanel.so.6.3 libpanel.so.6 &&\
+		ln -sf libpanel.so.6.3 libpanel.so
 
 # Start merlin components
 nettle/stamp-h1:

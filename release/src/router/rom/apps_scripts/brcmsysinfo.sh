@@ -13,6 +13,13 @@ cat /etc/image_version
 
 echo
 echo "######build profile######"
+if [ -e /etc/build_profile ]; then
+    ls -al /etc/build_profile|cut -d'>' -f 2
+    cat /etc/build_profile
+fi
+
+echo
+echo "######build kernel config######"
 gunzip -c /proc/config.gz
 
 if [ -e /etc/patch.version ]; then
@@ -108,6 +115,19 @@ ifconfig -a
 echo
 echo "###### dump all vlanctl rules ######"
 vlanctl --rule-dump-all
+
+#TC rules
+echo
+echo "###### dump all interfaces ######"
+sleep 1
+ip -d link
+echo
+echo
+
+echo
+echo "###### dump all TC rules ######"
+sleep 1
+for i in $(ip -br a | awk '{print$1}'); do echo "### $i qdisc ###"; tc qdisc show dev $i 2>/dev/null; echo "### $i class ###"; tc class show dev $i 2>/dev/null; echo "### $i filter ###"; tc -s filter show dev $i 2>/dev/null; done;
 
 echo
 echo "######brctl show######"
@@ -278,10 +298,11 @@ redirect_dmesg () {
     cat /tmp/dmesg_tmp
 }
 
+mkdir -p /tmp/asusfbsvcs/duplicate_log
+dmesg -c >> /tmp/asusfbsvcs/duplicate_log/dmesg.txt
+
 # Archer
 if [ -e /bin/archerctl ]; then
-    mkdir -p /tmp/asusfbsvcs/duplicate_log
-    dmesg -c >> /tmp/asusfbsvcs/duplicate_log/dmesg.txt
     echo "###### archerctl status ######"
     archerctl status
     redirect_dmesg
@@ -308,7 +329,7 @@ if [ -e /proc/driver/phy/cmd ]; then
     redirect_dmesg
 fi
 
-mipdump=`nvram get eth_mibdump`
+mibdump=`nvram get eth_mibdump`
 if [ "$mibdump" == "1" ]; then
 if [ -e /bin/ethswctl ]; then
     echo

@@ -844,6 +844,7 @@ static inline int legal_vlanid(int vid) { return (vid < 0 || vid >= 4096)? 0 : 1
 extern in_addr_t inet_addr_(const char *addr);
 extern int inet_equal(const char *addr1, const char *mask1, const char *addr2, const char *mask2);
 extern int inet_intersect(const char *addr1, const char *mask1, const char *addr2, const char *mask2);
+extern int inet_overlap(const char *addr1, const char *mask1, const char *addr2, const char *mask2);
 extern int inet_deconflict(const char *addr1, const char *mask1, const char *addr2, const char *mask2, struct in_addr *result);
 
 extern void chld_reap(int sig);
@@ -2985,6 +2986,9 @@ extern int illegal_ipv4_netmask(char *netmask);
 extern void convert_mac_string(char *mac);
 extern int test_and_get_free_uint_network(int t_class, uint32_t *exp_ip, uint32_t exp_cidr, uint32_t excl);
 extern int test_and_get_free_char_network(int t_class, char *ip_cidr_str, uint32_t excl);
+extern int min_cidr(char *ipaddr);
+extern char *min_netmask(char *ipaddr, char *mask, size_t mask_len);
+extern char *network_addr(char *ipaddr, char *mask, char *nwaddr, size_t nwaddr_len);
 extern enum wan_unit_e get_first_connected_public_wan_unit(void);
 extern enum wan_unit_e get_first_connected_dual_wan_unit(void);
 #ifdef RTCONFIG_IPV6
@@ -3008,6 +3012,12 @@ extern int set_crt_parsed(const char *name, char *file_path);
 #endif
 extern int get_upstream_wan_unit(void);
 extern int __get_upstream_wan_unit(void) __attribute__((weak));
+#if defined(RTCONFIG_SWITCH_QCA8075_QCA8337_PHY_AQR107_AR8035_QCA8033)
+extern char *calc_sfpp_iface_ipaddr(char *ipaddr, size_t ipaddr_len);
+extern int sfpp_iface_in_wan(void);
+extern int add_nat_rule_for_gpon_sfp_module(FILE *fp);
+extern int add_filter_rule_for_gpon_sfp_module(FILE *fp);
+#endif
 extern int get_wifi_unit(char *wif);
 #if defined(RTCONFIG_BCMWL6) && defined(RTCONFIG_PROXYSTA)
 #ifdef RTCONFIG_DPSTA
@@ -4555,5 +4565,7 @@ int check_pkgtb_boardid(char *ptr_pkgtb);
 
 extern char *make_salt(char *scheme_id, char *buf, size_t size);
 extern int asus_openssl_crypt(char *key, char *salt, char *out, int out_len);
+
+extern int adjust_62_nv_list(char *name);
 
 #endif	/* !__SHARED_H__ */

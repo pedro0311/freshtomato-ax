@@ -648,6 +648,65 @@ get_pid_by_thrd_name(char *name)
         return pid;
 }
 
+void replace_null_to_space(char *str, int len) {
+
+	int i = 0;
+	char *p = str;
+
+	for(i=0; i<len-1; i++){
+		if(*p == '\0')
+			*p = ' ';
+		p++;
+
+	}
+}
+
+pid_t
+get_pid_by_process_name(char *name)
+{
+	int i = 0;
+	size_t size = 0;
+	char p_name[128] = {0}, filename[256] = {0};
+	pid_t           pid = -1;
+	DIR             *dir;
+	struct dirent   *next;
+
+	if ((dir = opendir("/proc")) == NULL) {
+		perror("Cannot open /proc");
+		return -1;
+	}
+
+	while ((next = readdir(dir)) != NULL) {
+		/* If it isn't a number, we don't want it */
+		if (!isdigit(*next->d_name))
+			continue;
+
+		memset(filename, 0, sizeof(filename));
+		snprintf(filename, sizeof(filename), "/proc/%s/cmdline", next->d_name);
+		FILE* f = fopen(filename,"r");
+		if(f){
+			size = fread(p_name, sizeof(char), sizeof(p_name), f);
+
+			if(size>0){
+				replace_null_to_space(p_name, size);
+				if('\n'==p_name[size-1])
+				p_name[size-1]='\0';
+			}else
+				memset(p_name, 0, sizeof(p_name));
+
+			fclose(f);
+		}
+
+		if (!strcmp(name, p_name)) {
+			pid = strtol(next->d_name, NULL, 0);
+			break;
+		}
+	}
+	closedir(dir);
+
+	return pid;
+}
+
 /*
  * Convert Ethernet address string representation to binary data
  * @param	a	string in xx:xx:xx:xx:xx:xx notation

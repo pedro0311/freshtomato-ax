@@ -1985,6 +1985,14 @@ void init_switch_pre()
 	doSystem("ethswctl -c createport -p 5 -w %d -i eth0", is_router_mode());
 #endif
 
+#ifdef RTAX9000
+	system("pspctl set WanRate 1010");
+	system("pspctl set RdpaWanType GBE");
+	system("pspctl set WanOEMac EPONMAC");
+	system("insmod bcmepon.ko epon_usr_init=0");
+	doSystem("ethswctl -c createport -p 8 -w %d -i eth0", is_router_mode());
+#endif
+
 #if defined(GTAC5300)
 	// clean the egress port first to avoid the 2nd WAN's DHCP.
 	system("ethswctl -c regaccess -l 4 -v 0x3102 -d 0x60");
@@ -8461,6 +8469,7 @@ _dprintf("*** Multicast IPTV: config Singtel TR069 on wan port ***\n");
 				if (model == MODEL_RTAX58U || model == MODEL_RTAX82_XD6S || model == MODEL_RTAX82U_V2 || model == MODEL_TUFAX5400_V2 || model == MODEL_XD6_V2 || model == MODEL_RTAX5400)
 					eval("ethswctl", "-c", "softswitch",  "-i",  ethPort2, "-o", "enable");
 			}
+#ifdef RTCONFIG_MULTICAST_IPTV
 			else if (nvram_match("switch_wantag", "unifi_biz_voip")) {
 				unsigned char eabuf[ETHER_ADDR_LEN];
 				char macaddr[32];
@@ -8505,6 +8514,7 @@ _dprintf("*** Multicast IPTV: config Singtel TR069 on wan port ***\n");
 				eval("brctl", "addif", br_dev, ethPort2);
 				eval("ifconfig", br_dev, "allmulti", "up"); // bridge interface must be up later, or brX can't receive packets
 			}
+#endif
 			else {  /* Nomo case. */
 				sprintf(vlan_entry, "0x%x", voip_vid);
 				_dprintf("vlan entry: %s\n", vlan_entry);

@@ -30,6 +30,9 @@
 #define DIAG_CLOUD_UPLOAD  DIAG_CLOUD_DIR"/upload"
 #define DIAG_CLOUD_DOWNLOAD  DIAG_CLOUD_DIR"/download"
 #endif
+
+#define DIAG_PORT_STATUS_FILE "/tmp/diag_port_status.json"
+
 int check_if_cable_diag_can_run(void);
 enum {
 	INIT_DB_NO=0,
@@ -268,6 +271,13 @@ extern int exec_iperf(char* caller, char *server_mac,char *client_mac);
 
 extern int query_stainfo(char *sta_mac,char **buf);
 extern void free_stainfo(char **buf);
+
+struct json_object* get_byte_field_string_json_object(unsigned char value, char *buf, int buf_len);
+struct json_object* get_int_field_string_json_object(int value, char *buf, int buf_len);
+struct json_object* get_uint_field_string_json_object(unsigned int value, char *buf, int buf_len);
+struct json_object* get_uint64_field_string_json_object(unsigned long long value, char *buf, int buf_len);
+struct json_object* get_rate_field_string_json_object(double value, char *buf, int buf_len);
+extern int _get_node_eth_port_status(char *node_mac,char **buf);
 
 #ifdef RTCONFIG_AWSIOT
 extern int wifi_dfs_on_all_channels_process();

@@ -21,7 +21,7 @@ SRCFILE = qca_ipq807x.spf8
 else ifneq ($(findstring $(_BUILD_NAME_),$(SPF11.0_MODEL_LIST)),)
 SRCFILE = qca_ipq807x.spf11.0
 else ifneq ($(findstring $(_BUILD_NAME_),$(SPF11.1_MODEL_LIST)),)
-SRCFILE = qca_ipq807x.spf11.1
+SRCFILE = $(if $(RTCONFIG_MUSL_LIBC),qca_ipq807x.musl64.spf11.1,qca_ipq807x.spf11.1)
 else ifneq ($(findstring $(_BUILD_NAME_),$(IPQ807X_MODEL_LIST)),)
 SRCFILE = $(if $(RTCONFIG_MUSL_LIBC),qca_ipq807x.musl64,qca_ipq807x)
 endif

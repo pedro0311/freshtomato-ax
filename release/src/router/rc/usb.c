@@ -3832,9 +3832,8 @@ void start_dms(void)
 			fprintf(f,
 				"serial=%s\n"
 				"uuid=%s\n"
-				"model_number=%s.%s\n",
-				serial, uuid,
-				rt_version, rt_serialno);
+				"model_number=%s\n",
+				serial, uuid, get_productid());
 
 			nv = nvram_safe_get("dms_sort");
 			if (!*nv || isdigit(*nv))

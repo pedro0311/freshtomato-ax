@@ -2354,7 +2354,7 @@ goTo.Welcome = function(){
 			}, 500);
 		}
 		else if(!systemVariable.isDefault){
-			if(!systemVariable.isDefault && isSku("JP") && systemVariable.ipv6Service != "disabled"){
+			if(isSupport("s46") && isSku("JP") && systemVariable.ipv6Service != "disabled"){
 				httpApi.startWan46AutoDet();
 
 				setTimeout(function(){
@@ -2527,7 +2527,7 @@ goTo.autoWan = function(skip_auto46det_flag){
 		qisPostData.cfg_master = "1";
 	}
 	var skip_auto46det = 0;
-	if(skip_auto46det_flag != 1 && isSku("JP") && systemVariable.ipv6Service != "disabled"){
+	if(skip_auto46det_flag != 1 && isSupport("s46") && isSku("JP") && systemVariable.ipv6Service != "disabled"){
 		systemVariable.detwan46Result = httpApi.detwan46GetRet();
 		httpApi.log("goTo.autoWan", "systemVariable.detwan46Result.wan46State = "+systemVariable.detwan46Result.wan46State, systemVariable.qisSession);
 		switch(systemVariable.detwan46Result.wan46State){
@@ -4479,20 +4479,13 @@ goTo.Waiting = function(){
 
 goTo.WaitingDSL = function(){
 	systemVariable.manualWanSetup = false;
-	/*var wandog_interval = parseInt(httpApi.nvramGet(["wandog_interval"], true).wandog_interval);
-	var errCount = 0;
-	var check_linkInternet_count = 0;
-	var MAX_WAN_Detection = wandog_interval * 4;
-	var MAX_LinkInternet_Detection = wandog_interval;*/
-
 	setTimeout(function(){
 		if(systemVariable.manualWanSetup) return false;
 
-		
-		if(isPage("waiting_dsl_page")) goTo.autoDSLWan();
+		goTo.autoDSLWan();
 	}, 1000);
 
-	goTo.loadPage("waiting_dsl_page", false);
+	if(!isPage("waiting_dsl_page")){ goTo.loadPage("waiting_dsl_page", false);}
 };
 
 goTo.Waiting46 = function(){

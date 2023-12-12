@@ -3876,7 +3876,7 @@ void btn_check(void)
 #if defined(RTAC3200) || defined(RTCONFIG_BCM_7114) || defined(HND_ROUTER)
 #ifdef HND_ROUTER
 #ifndef GTAC2900
-#if defined(RTAX58U_V2) || defined(GTAX6000) || defined(RTAX3000N) || defined(BR63) || defined(RTAX82U_V2) || defined(TUFAX5400_V2) || defined(RTAX5400) || defined(RTAX88U_PRO) || defined(RTAX9000)
+#if defined(RTAX58U_V2) || defined(GTAX6000) || defined(RTAX3000N) || defined(BR63) || defined(RTAX82U_V2) || defined(TUFAX5400_V2) || defined(RTAX5400) || defined(RTAX88U_PRO)
 			wan_phy_led_pinmux(0);
 #else
 			led_control(LED_WAN_NORMAL, LED_ON);
@@ -3900,8 +3900,12 @@ void btn_check(void)
 #endif
 #if !defined(RTCONFIG_FAKE_ETLAN_LED) || defined(RTAX86U) || defined(RTAX88U) || defined(GTAC5300)
 			setLANLedOn();
-#else
+#endif
+#ifdef RTCONFIG_FAKE_ETLAN_LED
 			nvram_set_int("etlan_led_reset", 1);
+#ifdef RTAX9000
+			nvram_set_int("etwan_led_reset", 1);
+#endif
 #endif
 #endif
 #else
@@ -3991,7 +3995,7 @@ void btn_check(void)
 #elif defined(RTAXE7800)
 				eval("wl", "-i", "eth7", "ledbh", "15", "7");
 #elif defined(RTAX9000)
-				eval("wl", "-i", "eth6", "ledbh", "15", "7");
+				eval("wl", "-i", "eth6", "ledbh", "13", "7");
 #elif defined(GTAX6000)
 				eval("wl", "-i", "eth7", "ledbh", "13", "7");
 #elif defined(GTAX11000_PRO)
@@ -4050,7 +4054,7 @@ void btn_check(void)
 #elif defined(RTAXE7800)
 				eval("wl", "-i", "eth6", "ledbh", "0", "25");
 #elif defined(RTAX9000)
-				eval("wl", "-i", "eth7", "ledbh", "15", "7");
+				eval("wl", "-i", "eth7", "ledbh", "13", "7");
 #endif
 			}
 #endif
@@ -5574,11 +5578,13 @@ void fake_etlan_led(void)
 #else
 	phystatus = GetPhyStatus(0, NULL);
 
-#if defined(RTCONFIG_EXTPHY_BCM84880) && !defined(BCM4912)
+#if defined(RTCONFIG_EXTPHY_BCM84880) && !defined(BCM4912) && !defined(BCM6855)
 	if ((nvram_get_int("wans_extwan") && !(phystatus & 0x3e)) || // configure 2.5G port as WAN, need to consider 1G WAN connectivity
 			(!nvram_get_int("wans_extwan") && !(phystatus & 0x1e)))  // configure 2.5G port as LAN, ignore 2.5G port
-#elif defined(GTAX6000) || defined(RTAX88U_PRO) || defined(RTAX9000)
+#elif defined(GTAX6000) || defined(RTAX88U_PRO)
 	if (!((phystatus & 0x2) || (phystatus & 0x4) || (phystatus & 0x8) || (phystatus & 0x10)))
+#elif defined(RTAX9000)
+	if (!((phystatus & 0x2) || (phystatus & 0x4) || (phystatus & 0x8) || (phystatus & 0x10) || (phystatus & 0x20)))
 #else
 	if (!phystatus
 #if defined(RTAX92U) || defined(RTAX95Q) || defined(XT8PRO) || defined(BM68) || defined(XT8_V2) || defined(RTAXE95Q) || defined(ET8PRO) || defined(ET8_V2) || defined(RTAX68U)
@@ -5741,6 +5747,104 @@ void fake_etlan_led_extra(void)
 	}
 
 	blink_check++;
+}
+#endif
+
+#ifdef RTAX9000
+unsigned long get_etwan_count()
+{
+	FILE *f;
+	char buf[256];
+	char *ifname, *p;
+	unsigned long tmpcnt=0;
+	unsigned long counter=0;
+
+	if ((f = fopen("/proc/net/dev", "r")) == NULL) return -1;
+
+	fgets(buf, sizeof(buf), f);
+	fgets(buf, sizeof(buf), f);
+
+	while (fgets(buf, sizeof(buf), f)) {
+		if ((p=strchr(buf, ':')) == NULL) continue;
+		*p = 0;
+		if ((ifname = strrchr(buf, ' ')) == NULL) ifname = buf;
+		else ++ifname;
+
+		if (strcmp(ifname, "eth0")) continue;
+
+		if (sscanf(p+1, "%lu", &tmpcnt) != 1) continue;
+		counter += tmpcnt;
+
+	}
+	fclose(f);
+
+	return counter;
+}
+
+void fake_etwan_led(void)
+{
+	static unsigned int blink_etwan_check = 0;
+	static unsigned int blink_etwan = 0;
+	static unsigned int data_etwan = 0;
+	unsigned long count_etwan;
+	int i;
+	static int j;
+
+	static int status = -1;
+	static int status_old;
+	int phystatus = 0;
+
+	phystatus = hnd_get_phy_status(0);
+	if (!phystatus ) {
+		led_control(LED_WAN_NORMAL, LED_OFF);
+		status = -1;
+		return;
+	}
+
+	if (nvram_match("AllLED", "0") || nvram_match("x_Setting", "0") || !nvram_match("link_internet", "2")) {
+		led_control(LED_WAN_NORMAL, LED_OFF);
+		return;
+	}
+
+	if (nvram_get_int("etwan_led_reset")) {
+		nvram_set_int("etwan_led_reset", 0);
+		status = -1;
+	}
+
+	// check data per 10 count
+	if ((blink_etwan_check%10) == 0) {
+		count_etwan = get_etwan_count();
+		if (count_etwan && data_etwan != count_etwan) {
+			blink_etwan = 1;
+			data_etwan = count_etwan;
+		}
+		else blink_etwan = 0;
+		led_control(LED_WAN_NORMAL, LED_ON);
+	}
+
+	if (blink_etwan) {
+		j = rand_seed_by_time() % 3;
+		for(i=0;i<10;i++) {
+			usleep(33*1000);
+
+			status_old = status;
+			if (((i%2) == 0) && (i > (3 + 2*j)))
+				status = 0;
+			else
+				status = 1;
+
+			if (status != status_old)
+			{
+				if (status)
+					led_control(LED_WAN_NORMAL, LED_ON);
+				else
+					led_control(LED_WAN_NORMAL, LED_OFF);
+			}
+		}
+		led_control(LED_WAN_NORMAL, LED_ON);
+	}
+
+	blink_etwan_check++;
 }
 #endif
 #endif	// RTCONFIG_FAKE_ETLAN_LED
@@ -6305,6 +6409,9 @@ void led_check(int sig)
 	fake_etlan_led();
 #if defined(GTAXE16000) || defined(GTAX11000_PRO)
 	fake_etlan_led_extra();
+#endif
+#ifdef RTAX9000
+	fake_etwan_led();
 #endif
 #endif
 
@@ -7041,8 +7148,8 @@ void httpd_check()
 #if defined(RTL_WTDOG)
 		stop_rtl_watchdog();
 #endif
-		logmessage("watchdog", "restart httpd");
-		stop_httpd();
+		logmessage("watchdog", "start httpd");
+		//stop_httpd();
 		nvram_set("last_httpd_handle_request", nvram_safe_get("httpd_handle_request"));
 		nvram_set("last_httpd_handle_request_fromapp", nvram_safe_get("httpd_handle_request_fromapp"));
 		nvram_commit();
@@ -8541,6 +8648,14 @@ void cfgsync_check()
 }
 #endif /* RTCONFIG_CFGSYNC */
 
+#ifdef RTCONFIG_CONNDIAG
+void conn_diag_check()
+{
+	if (!pids("conn_diag"))
+		start_conn_diag();
+}
+#endif /* RTCONFIG_CONNDIAG */
+
 #ifdef RTCONFIG_TUNNEL
 void mastiff_check()
 {
@@ -10004,6 +10119,9 @@ wdp:
 #endif
 #ifdef RTCONFIG_CFGSYNC
 	cfgsync_check();
+#endif
+#ifdef RTCONFIG_CONNDIAG
+	conn_diag_check();
 #endif
 #ifdef RTCONFIG_TUNNEL
 	mastiff_check();
