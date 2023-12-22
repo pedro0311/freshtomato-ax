@@ -95,10 +95,10 @@ typedef unsigned long long u64;
 #if defined(HAVE_SOLARIS_NETWORK)
 #  include <sys/sockio.h>
 #endif
-#if defined(__GLIBC__) || defined(__UCLIBC__) /* not musl */
-#include <sys/poll.h>
+#if defined(HAVE_POLL_H)
+#  include <poll.h>
 #else
-#include <poll.h>
+#  include <sys/poll.h>
 #endif
 #include <sys/wait.h>
 #include <sys/time.h>
@@ -1283,7 +1283,6 @@ unsigned short rand16(void);
 u32 rand32(void);
 u64 rand64(void);
 int legal_hostname(char *name);
-int valid_hostname(char *name);
 char *canonicalise(char *in, int *nomem);
 unsigned char *do_rfc1035_name(unsigned char *p, char *sval, char *limit);
 void *safe_malloc(size_t size);
@@ -1412,9 +1411,6 @@ char *host_from_dns(struct in_addr addr);
 
 /* lease.c */
 #ifdef HAVE_DHCP
-#ifdef HAVE_LEASEFILE_EXPIRE
-void lease_flush_file(time_t now);
-#endif
 void lease_update_file(time_t now);
 void lease_update_dns(int force);
 void lease_init(time_t now);
@@ -1441,7 +1437,6 @@ void lease_set_expires(struct dhcp_lease *lease, unsigned int len, time_t now);
 void lease_set_interface(struct dhcp_lease *lease, int interface, time_t now);
 struct dhcp_lease *lease_find_by_client(unsigned char *hwaddr, int hw_len, int hw_type,  
 					unsigned char *clid, int clid_len);
-struct dhcp_lease *lease_find_by_hwaddr(unsigned char *hwaddr, int hw_len, int hw_type);
 struct dhcp_lease *lease_find_by_addr(struct in_addr addr);
 struct in_addr lease_find_max_addr(struct dhcp_context *context);
 void lease_prune(struct dhcp_lease *target, time_t now);

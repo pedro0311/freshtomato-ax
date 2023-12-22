@@ -1,0 +1,426 @@
+diff --git dnsmasq/VERSION dnsmasq/VERSION
+index c4f343b..660a62c 100644
+--- dnsmasq/VERSION
++++ dnsmasq/VERSION
+@@ -1 +1 @@
+- (tag: v2.84rc2, tag: v2.84)
++2.84
+diff --git dnsmasq/src/config.h dnsmasq/src/config.h
+index 9f69ce3..9d75739 100644
+--- dnsmasq/src/config.h
++++ dnsmasq/src/config.h
+@@ -77,6 +77,12 @@ HAVE_BROKEN_RTC
+    NOTE: when enabling or disabling this, be sure to delete any old
+    leases file, otherwise dnsmasq may get very confused.
+ 
++HAVE_LEASEFILE_EXPIRE
++   define this if you want to enable lease file update with expire
++   timeouts instead of expiry times or lease lengths, if HAVE_BROKEN_RTC
++   is also enabled. Lease file will be rewritten upon SIGUSR2 signal
++   reception and/or dnsmasq termination.
++
+ HAVE_TFTP
+    define this to get dnsmasq's built-in TFTP server.
+ 
+@@ -165,6 +171,7 @@ RESOLVFILE
+ */
+ 
+ /* #define HAVE_BROKEN_RTC */
++/* #define HAVE_LEASEFILE_EXPIRE */
+ 
+ /* The default set of options to build. Built with these options, dnsmasq
+    has no library dependencies other than libc */
+diff --git dnsmasq/src/dnsmasq.c dnsmasq/src/dnsmasq.c
+index a2e1796..5a70b76 100644
+--- dnsmasq/src/dnsmasq.c
++++ dnsmasq/src/dnsmasq.c
+@@ -833,7 +833,7 @@ int main (int argc, char **argv)
+ 	my_syslog(LOG_INFO, _("DNS service limited to local subnets"));
+     }
+   
+-  my_syslog(LOG_INFO, _("compile time options: %s"), compile_opts);
++  my_syslog(LOG_DEBUG, _("compile time options: %s"), compile_opts);
+ 
+   if (chown_warn != 0)
+     my_syslog(LOG_WARNING, "chown of PID file %s failed: %s", daemon->runfile, strerror(chown_warn));
+@@ -908,14 +908,14 @@ int main (int argc, char **argv)
+   if (!option_bool(OPT_NOWILD)) 
+     for (if_tmp = daemon->if_names; if_tmp; if_tmp = if_tmp->next)
+       if (if_tmp->name && !if_tmp->used)
+-	my_syslog(LOG_WARNING, _("warning: interface %s does not currently exist"), if_tmp->name);
++	my_syslog(LOG_DEBUG, _("warning: interface %s does not currently exist"), if_tmp->name);
+    
+   if (daemon->port != 0 && option_bool(OPT_NO_RESOLV))
+     {
+       if (daemon->resolv_files && !daemon->resolv_files->is_default)
+ 	my_syslog(LOG_WARNING, _("warning: ignoring resolv-file flag because no-resolv is set"));
+       daemon->resolv_files = NULL;
+-      if (!daemon->servers)
++      if (!daemon->servers && !daemon->servers_file)
+ 	my_syslog(LOG_WARNING, _("warning: no upstream servers configured"));
+     } 
+ 
+@@ -1502,6 +1502,10 @@ static void async_event(int pipe, time_t now)
+ 	   we leave them logging to the old file. */
+ 	if (daemon->log_file != NULL)
+ 	  log_reopen(daemon->log_file);
++#if defined(HAVE_DHCP) && defined(HAVE_LEASEFILE_EXPIRE)
++	if (daemon->dhcp || daemon->dhcp6)
++	  lease_flush_file(now);
++#endif
+ 	break;
+ 
+       case EVENT_NEWADDR:
+@@ -1545,6 +1549,10 @@ static void async_event(int pipe, time_t now)
+ 	  }
+ #endif
+ 	
++#if defined(HAVE_DHCP) && defined(HAVE_LEASEFILE_EXPIRE)
++	if (daemon->dhcp || daemon->dhcp6)
++	  lease_flush_file(now);
++#endif
+ 	if (daemon->lease_stream)
+ 	  fclose(daemon->lease_stream);
+ 
+diff --git dnsmasq/src/dnsmasq.h dnsmasq/src/dnsmasq.h
+index e770454..e315856 100644
+--- dnsmasq/src/dnsmasq.h
++++ dnsmasq/src/dnsmasq.h
+@@ -95,10 +95,10 @@ typedef unsigned long long u64;
+ #if defined(HAVE_SOLARIS_NETWORK)
+ #  include <sys/sockio.h>
+ #endif
+-#if defined(HAVE_POLL_H)
+-#  include <poll.h>
++#if defined(__GLIBC__) || defined(__UCLIBC__) /* not musl */
++#include <sys/poll.h>
+ #else
+-#  include <sys/poll.h>
++#include <poll.h>
+ #endif
+ #include <sys/wait.h>
+ #include <sys/time.h>
+@@ -1283,6 +1283,7 @@ unsigned short rand16(void);
+ u32 rand32(void);
+ u64 rand64(void);
+ int legal_hostname(char *name);
++int valid_hostname(char *name);
+ char *canonicalise(char *in, int *nomem);
+ unsigned char *do_rfc1035_name(unsigned char *p, char *sval, char *limit);
+ void *safe_malloc(size_t size);
+@@ -1411,6 +1412,9 @@ char *host_from_dns(struct in_addr addr);
+ 
+ /* lease.c */
+ #ifdef HAVE_DHCP
++#ifdef HAVE_LEASEFILE_EXPIRE
++void lease_flush_file(time_t now);
++#endif
+ void lease_update_file(time_t now);
+ void lease_update_dns(int force);
+ void lease_init(time_t now);
+@@ -1437,6 +1441,7 @@ void lease_set_expires(struct dhcp_lease *lease, unsigned int len, time_t now);
+ void lease_set_interface(struct dhcp_lease *lease, int interface, time_t now);
+ struct dhcp_lease *lease_find_by_client(unsigned char *hwaddr, int hw_len, int hw_type,  
+ 					unsigned char *clid, int clid_len);
++struct dhcp_lease *lease_find_by_hwaddr(unsigned char *hwaddr, int hw_len, int hw_type);
+ struct dhcp_lease *lease_find_by_addr(struct in_addr addr);
+ struct in_addr lease_find_max_addr(struct dhcp_context *context);
+ void lease_prune(struct dhcp_lease *target, time_t now);
+diff --git dnsmasq/src/forward.c dnsmasq/src/forward.c
+index 8fb0327..df7295d 100644
+--- dnsmasq/src/forward.c
++++ dnsmasq/src/forward.c
+@@ -100,7 +100,10 @@ int send_from(int fd, int nowild, char *packet, size_t len,
+ #ifdef HAVE_LINUX_NETWORK
+       /* If interface is still in DAD, EINVAL results - ignore that. */
+       if (errno != EINVAL)
++      {
+ 	my_syslog(LOG_ERR, _("failed to send packet: %s"), strerror(errno));
++	exit(0);
++      }
+ #endif
+       return 0;
+     }
+diff --git dnsmasq/src/lease.c dnsmasq/src/lease.c
+index ecfe7c3..fa936f2 100644
+--- dnsmasq/src/lease.c
++++ dnsmasq/src/lease.c
+@@ -118,12 +118,14 @@ static int read_leases(time_t now, FILE *leasestream)
+ 
+ 	ei = atol(daemon->dhcp_buff3);
+ 
+-#ifdef HAVE_BROKEN_RTC
++#if defined(HAVE_BROKEN_RTC) || defined(HAVE_LEASEFILE_EXPIRE)
+ 	if (ei != 0)
+ 	  lease->expires = (time_t)ei + now;
+ 	else
+ 	  lease->expires = (time_t)0;
++#ifdef HAVE_BROKEN_RTC
+ 	lease->length = ei;
++#endif
+ #else
+ 	/* strictly time_t is opaque, but this hack should work on all sane systems,
+ 	   even when sizeof(time_t) == 8 */
+@@ -248,6 +250,22 @@ static void ourprintf(int *errp, char *format, ...)
+   va_end(ap);
+ }
+ 
++#ifdef HAVE_LEASEFILE_EXPIRE
++void lease_flush_file(time_t now)
++{
++  static time_t flush_time = 0;
++
++  if (difftime(flush_time, now) < 0)
++    file_dirty = 1;
++
++  lease_prune(NULL, now);
++  lease_update_file(now);
++
++  if (file_dirty == 0)
++    flush_time = now;
++}
++#endif
++
+ void lease_update_file(time_t now)
+ {
+   struct dhcp_lease *lease;
+@@ -269,7 +287,15 @@ void lease_update_file(time_t now)
+ 	    continue;
+ #endif
+ 
++#ifdef HAVE_LEASEFILE_EXPIRE
++	  ourprintf(&err, "%u ",
+ #ifdef HAVE_BROKEN_RTC
++		    (lease->length == 0) ? 0 :
++#else
++		    (lease->expires == 0) ? 0 :
++#endif
++		    (unsigned int)difftime(lease->expires, now));
++#elif defined(HAVE_BROKEN_RTC)
+ 	  ourprintf(&err, "%u ", lease->length);
+ #else
+ 	  ourprintf(&err, "%lu ", (unsigned long)lease->expires);
+@@ -313,7 +339,15 @@ void lease_update_file(time_t now)
+ 	      if (!(lease->flags & (LEASE_TA | LEASE_NA)))
+ 		continue;
+ 
++#ifdef HAVE_LEASEFILE_EXPIRE
++	      ourprintf(&err, "%u ",
+ #ifdef HAVE_BROKEN_RTC
++			(lease->length == 0) ? 0 :
++#else
++			(lease->expires == 0) ? 0 :
++#endif
++			(unsigned int)difftime(lease->expires, now));
++#elif defined(HAVE_BROKEN_RTC)
+ 	      ourprintf(&err, "%u ", lease->length);
+ #else
+ 	      ourprintf(&err, "%lu ", (unsigned long)lease->expires);
+@@ -615,6 +649,26 @@ struct dhcp_lease *lease_find_by_client(unsigned char *hwaddr, int hw_len, int h
+   return NULL;
+ }
+ 
++struct dhcp_lease *lease_find_by_hwaddr(unsigned char *hwaddr, int hw_len, int hw_type)
++{
++  struct dhcp_lease *lease;
++
++  for (lease = leases; lease; lease = lease->next)
++    {
++#ifdef HAVE_DHCP6
++      if (lease->flags & (LEASE_TA | LEASE_NA))
++	continue;
++#endif
++      if (hw_len != 0 &&
++	  lease->hwaddr_len == hw_len &&
++	  lease->hwaddr_type == hw_type &&
++	  memcmp(hwaddr, lease->hwaddr, hw_len) == 0)
++	return lease;
++    }
++
++  return NULL;
++}
++
+ struct dhcp_lease *lease_find_by_addr(struct in_addr addr)
+ {
+   struct dhcp_lease *lease;
+@@ -952,7 +1006,7 @@ void lease_set_hostname(struct dhcp_lease *lease, const char *name, int auth, ch
+   char *new_name = NULL, *new_fqdn = NULL;
+ 
+   if (config_domain && (!domain || !hostname_isequal(domain, config_domain)))
+-    my_syslog(MS_DHCP | LOG_WARNING, _("Ignoring domain %s for DHCP host name %s"), config_domain, name);
++    my_syslog(MS_DHCP | LOG_INFO, _("Ignoring domain %s for DHCP host name %s"), config_domain, name);
+   
+   if (lease->hostname && name && hostname_isequal(lease->hostname, name))
+     {
+diff --git dnsmasq/src/option.c dnsmasq/src/option.c
+index 0a72406..525dd07 100644
+--- dnsmasq/src/option.c
++++ dnsmasq/src/option.c
+@@ -2057,6 +2057,7 @@ static int one_opt(int option, char *arg, char *errstr, char *gen_err, int comma
+ 	break;
+       }
+       
++#ifdef HAVE_AUTH
+     case LOPT_AUTHSERV: /* --auth-server */
+       comma = split(arg);
+       
+@@ -2224,6 +2225,7 @@ static int one_opt(int option, char *arg, char *errstr, char *gen_err, int comma
+ 	}
+ 
+       break;
++#endif
+ 
+     case 's':         /* --domain */
+     case LOPT_SYNTH:  /* --synth-domain */
+diff --git dnsmasq/src/rfc2131.c dnsmasq/src/rfc2131.c
+index 3f50755..1238796 100644
+--- dnsmasq/src/rfc2131.c
++++ dnsmasq/src/rfc2131.c
+@@ -244,7 +244,11 @@ size_t dhcp_reply(struct dhcp_context *context, char *iface_name, int int_index,
+ 	}
+ 
+       /* do we have a lease in store? */
++#if 1
++      lease = lease_find_by_hwaddr(mess->chaddr, mess->hlen, mess->htype);
++#else
+       lease = lease_find_by_client(mess->chaddr, mess->hlen, mess->htype, clid, clid_len);
++#endif
+ 
+       /* If this request is missing a clid, but we've seen one before, 
+ 	 use it again for option matching etc. */
+@@ -710,7 +714,7 @@ size_t dhcp_reply(struct dhcp_context *context, char *iface_name, int int_index,
+       
+       *pq = 0;
+       
+-      if (legal_hostname(daemon->dhcp_buff))
++      if (valid_hostname(daemon->dhcp_buff))
+ 	offer_hostname = client_hostname = daemon->dhcp_buff;
+     }
+   else if ((opt = option_find(mess, sz, OPTION_HOSTNAME, 1)))
+@@ -724,7 +728,7 @@ size_t dhcp_reply(struct dhcp_context *context, char *iface_name, int int_index,
+ 	borken_opt = 1;
+       else
+ 	daemon->dhcp_buff[len] = 0;
+-      if (legal_hostname(daemon->dhcp_buff))
++      if (valid_hostname(daemon->dhcp_buff))
+ 	client_hostname = daemon->dhcp_buff;
+     }
+ 
+diff --git dnsmasq/src/rfc3315.c dnsmasq/src/rfc3315.c
+index 982c68a..72179df 100644
+--- dnsmasq/src/rfc3315.c
++++ dnsmasq/src/rfc3315.c
+@@ -169,7 +169,8 @@ static int dhcp6_maybe_relay(struct state *state, void *inbuff, size_t sz,
+ 	  if (!state->context)
+ 	    {
+ 	      inet_ntop(AF_INET6, state->link_address, daemon->addrbuff, ADDRSTRLEN); 
+-	      my_syslog(MS_DHCP | LOG_WARNING, 
++	      if (option_bool(OPT_LOG_OPTS))
++		my_syslog(MS_DHCP | LOG_WARNING, 
+ 			_("no address range available for DHCPv6 request from relay at %s"),
+ 			daemon->addrbuff);
+ 	      return 0;
+@@ -178,7 +179,8 @@ static int dhcp6_maybe_relay(struct state *state, void *inbuff, size_t sz,
+ 	  
+       if (!state->context)
+ 	{
+-	  my_syslog(MS_DHCP | LOG_WARNING, 
++	  if (option_bool(OPT_LOG_OPTS))
++	    my_syslog(MS_DHCP | LOG_WARNING, 
+ 		    _("no address range available for DHCPv6 request via %s"), state->iface_name);
+ 	  return 0;
+ 	}
+@@ -488,7 +490,7 @@ static int dhcp6_no_relay(struct state *state, int msg_type, void *inbuff, size_
+ 	     pq--;
+ 	   *pq = 0;
+ 	   
+-	   if (legal_hostname(daemon->dhcp_buff))
++	   if (valid_hostname(daemon->dhcp_buff))
+ 	     {
+ 	       struct dhcp_match_name *m;
+ 	       size_t nl = strlen(daemon->dhcp_buff);
+@@ -1094,7 +1096,8 @@ static int dhcp6_no_relay(struct state *state, int msg_type, void *inbuff, size_
+ 	else
+ 	  state->send_domain = get_domain6(NULL);
+ 
+-	log6_quiet(state, "DHCPINFORMATION-REQUEST", NULL, ignore ? _("ignored") : state->hostname);
++	if (ignore || option_bool(OPT_LOG_OPTS))
++	  log6_quiet(state, "DHCPINFORMATION-REQUEST", NULL, ignore ? _("ignored") : state->hostname);
+ 	if (ignore)
+ 	  return 0;
+ 	*outmsgtypep = DHCP6REPLY;
+diff --git dnsmasq/src/util.c dnsmasq/src/util.c
+index 972c60b..a0669ce 100644
+--- dnsmasq/src/util.c
++++ dnsmasq/src/util.c
+@@ -164,13 +164,15 @@ static int check_name(char *in)
+    so check for legal char a-z A-Z 0-9 - _ 
+    Note that this may receive a FQDN, so only check the first label 
+    for the tighter criteria. */
+-int legal_hostname(char *name)
++static int check_hostname(char *name)
+ {
+-  char c;
++  char c, *at, *src = name;
+   int first;
+ 
+   if (!check_name(name))
+-    return 0;
++    return -1;
++
++  at = strchr(name, '@');
+ 
+   for (first = 1; (c = *name); name++, first = 0)
+     /* check for legal char a-z A-Z 0-9 - _ . */
+@@ -182,14 +184,49 @@ int legal_hostname(char *name)
+ 
+       if (!first && (c == '-' || c == '_'))
+ 	continue;
++
++      /* relax name part */
++      if (at && (name <= at) && (c >= 33) && (c < 127))
++	continue;
+       
+       /* end of hostname part */
+       if (c == '.')
+-	return 1;
++	break;
+       
+-      return 0;
++      return -1;
+     }
+   
++  return name - src;
++}
++
++int legal_hostname(char *name)
++{
++  return check_hostname(name) >= 0;
++}
++
++int valid_hostname(char *name)
++{
++  static const char *reserved[] = {
++    "localhost",
++    "ip6-localhost",
++    "ip6-loopback",
++    "wpad",
++    "isatap",
++    NULL
++  };
++  const char **next;
++  int len;
++
++  len = check_hostname(name);
++  if (len < 0)
++    return 0;
++
++  for (next = reserved; *next; next++)
++    {
++      if (strncasecmp(name, *next, len) == 0 && len == strlen(*next))
++	return 0;
++    }
++
+   return 1;
+ }
+   

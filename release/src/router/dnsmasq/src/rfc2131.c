@@ -244,11 +244,7 @@ size_t dhcp_reply(struct dhcp_context *context, char *iface_name, int int_index,
 	}
 
       /* do we have a lease in store? */
-#if 1
-      lease = lease_find_by_hwaddr(mess->chaddr, mess->hlen, mess->htype);
-#else
       lease = lease_find_by_client(mess->chaddr, mess->hlen, mess->htype, clid, clid_len);
-#endif
 
       /* If this request is missing a clid, but we've seen one before, 
 	 use it again for option matching etc. */
@@ -714,7 +710,7 @@ size_t dhcp_reply(struct dhcp_context *context, char *iface_name, int int_index,
       
       *pq = 0;
       
-      if (valid_hostname(daemon->dhcp_buff))
+      if (legal_hostname(daemon->dhcp_buff))
 	offer_hostname = client_hostname = daemon->dhcp_buff;
     }
   else if ((opt = option_find(mess, sz, OPTION_HOSTNAME, 1)))
@@ -728,7 +724,7 @@ size_t dhcp_reply(struct dhcp_context *context, char *iface_name, int int_index,
 	borken_opt = 1;
       else
 	daemon->dhcp_buff[len] = 0;
-      if (valid_hostname(daemon->dhcp_buff))
+      if (legal_hostname(daemon->dhcp_buff))
 	client_hostname = daemon->dhcp_buff;
     }
 

@@ -3508,6 +3508,9 @@ endif
 
 dnsmasq:  $(if $(RTCONFIG_DNSSEC_OPENSSL),openssl,) $(if $(RTCONFIG_DNSSEC_NETTLE),nettle,)
 	@$(SEP)
+ifeq ($(TCONFIG_FTAX),y)
+	$(call patch_files,dnsmasq)
+endif
 	$(MAKE) -C dnsmasq \
 	COPTS="-DHAVE_BROKEN_RTC -DHAVE_LEASEFILE_EXPIRE \
 		-DNO_ID -DNO_AUTH -DNO_INOTIFY -DNO_DUMPFILE -DNO_GMP \
@@ -3526,6 +3529,12 @@ dnsmasq:  $(if $(RTCONFIG_DNSSEC_OPENSSL),openssl,) $(if $(RTCONFIG_DNSSEC_NETTL
 dnsmasq-install:
 	install -D dnsmasq/src/dnsmasq $(INSTALLDIR)/dnsmasq/usr/sbin/dnsmasq
 	$(STRIP) $(INSTALLDIR)/dnsmasq/usr/sbin/dnsmasq
+
+dnsmasq-clean:
+	-@$(MAKE) -C dnsmasq clean
+ifeq ($(TCONFIG_FTAX),y)
+	$(call unpatch_files,dnsmasq)
+endif
 
 libyaml/configure:
 	cd libyaml && autoreconf -fi

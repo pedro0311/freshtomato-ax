@@ -77,12 +77,6 @@ HAVE_BROKEN_RTC
    NOTE: when enabling or disabling this, be sure to delete any old
    leases file, otherwise dnsmasq may get very confused.
 
-HAVE_LEASEFILE_EXPIRE
-   define this if you want to enable lease file update with expire
-   timeouts instead of expiry times or lease lengths, if HAVE_BROKEN_RTC
-   is also enabled. Lease file will be rewritten upon SIGUSR2 signal
-   reception and/or dnsmasq termination.
-
 HAVE_TFTP
    define this to get dnsmasq's built-in TFTP server.
 
@@ -171,7 +165,6 @@ RESOLVFILE
 */
 
 /* #define HAVE_BROKEN_RTC */
-/* #define HAVE_LEASEFILE_EXPIRE */
 
 /* The default set of options to build. Built with these options, dnsmasq
    has no library dependencies other than libc */
