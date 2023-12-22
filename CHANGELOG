@@ -5,6 +5,34 @@ FreshTomato-AX Changelog
 
 
 
+2023.5          2023.12.21
+---------------------------
+
+- merge GPL_TUF_AX3000_V2_3004_388_23785
+- GUI: Advanced_DHCP_Content.asp - add option to mute DHCP (IPv4 and IPv6) logging
+- GUI: Advanced_VPN_OpenVPN.asp - fix typo (var service_state) / correction for GPL 388_23588 & 388_22525
+- GUI: Advanced_System_Content.asp - add option to enable/disable JFFS custom scripts (/jffs/scripts/)
+- GUI: Advanced_System_Content.asp - add option to format JFFS partition at next boot! (Note: currently not working, fix needed from Asus)
+- GUI: Advanced_System_Content.asp - repair option to format JFFS partition at next boot!
+- GUI: Main_Login.asp - Add (small) FreshTomato Logo
+- GUI: TomatoAnon: switch from drop-down to radio buttons
+- HND 5.04 - fix missing ethctl userspace tool (fix for GPL 388_23588) 
+- HND 5.04 - adjust custom script user execution control (avoid using nvram var. "jffs2_scripts" - not working/accepted/allowed)
+- README.md: fix the list of needed software for correct compilation
+- rc: firewall.c - run/add firewall-start user script
+- rc: init.c - run/add init-start user script (before we come to the main loop)
+- rc: jffs2.c/ubifs.c - create "/jffs/scripts/" at mounting time automatically if it does not already exist
+- rc: jffs2.c/ubifs.c - create "/jffs/configs/" at mounting time automatically if it does not already exist
+- rc: jffs2.c/ubifs.c - create "/jffs/addons/" at mounting time automatically if it does not already exist
+- rc: lan.c - use nvram lan_hostname for AP hostname (align closer to FreshTomato ARM)
+- rc: services.c - run/add nat-start user script
+- rc: services.c - run/add user scripts for function stop_services(void) [first call] and start_services(void) [last call]
+- rc: services.c - adjust function start_dnsmasq() and implement to use a custom config, postconf script and also append a custum config
+- rc: usb.c - run/add pre-mount, post-mount and unmount user scripts
+- rc: wan.c - run/add wan-event user script (event type with a string)
+- rc: wan.c - adjust function start_igmpproxy() and implement to use a custom config, postconf script and also append a custum config
+
+
 2023.4          2023.09.10
 ---------------------------
 
