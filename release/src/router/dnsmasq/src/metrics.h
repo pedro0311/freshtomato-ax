@@ -1,4 +1,4 @@
-/* dnsmasq is Copyright (c) 2000-2021 Simon Kelley
+/* dnsmasq is Copyright (c) 2000-2023 Simon Kelley
    
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -21,6 +21,8 @@ enum {
   METRIC_DNS_QUERIES_FORWARDED,
   METRIC_DNS_AUTH_ANSWERED,
   METRIC_DNS_LOCAL_ANSWERED,
+  METRIC_DNS_STALE_ANSWERED,
+  METRIC_DNS_UNANSWERED_QUERY,
   METRIC_BOOTP,
   METRIC_PXE,
   METRIC_DHCPACK,
@@ -36,8 +38,10 @@ enum {
   METRIC_LEASES_PRUNED_4,
   METRIC_LEASES_ALLOCATED_6,
   METRIC_LEASES_PRUNED_6,
+  METRIC_TCP_CONNECTIONS,
   
   __METRIC_MAX,
 };
 
 const char* get_metric_name(int);
+void clear_metrics(void);
