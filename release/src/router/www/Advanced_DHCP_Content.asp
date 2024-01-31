@@ -78,7 +78,12 @@ if(yadns_support){
 	var yadns_mode = '<% nvram_get("yadns_mode"); %>';
 }
 var ipv6_proto_orig = httpApi.nvramGet(["ipv6_service"]).ipv6_service;
+/* NOFTAX-BEGIN */
 var MaxRule_extend_limit = ((isSupport("MaxRule_extend_limit") != "") ? isSupport("MaxRule_extend_limit") : 64);
+/* NOFTAX-END */
+/* FTAX-BEGIN */
+var MaxRule_extend_limit = 192;
+/* FTAX-END */
 var manually_dhcp_sort_type = 0;//0:increase, 1:decrease
 
 var faq_href = "https://nw-dlcdnet.asus.com/support/forward.html?model=&type=Faq&lang="+ui_lang+"&kw=&num=101";
