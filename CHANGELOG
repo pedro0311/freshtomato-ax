@@ -5,6 +5,14 @@ FreshTomato-AX Changelog
 
 
 
+2024.1          2024.02.14
+---------------------------
+
+- dnsmasq: clean src v2.84 commit 2029501 (2021-01-24) snapshot
+- dnsmasq: update to 63ba726 (2023-12-03) snapshot
+- GUI: Advanced_DHCP_Content.asp - extend static DHCP clients limit from 64 to 192
+
+
 2023.5          2023.12.21
 ---------------------------
 
