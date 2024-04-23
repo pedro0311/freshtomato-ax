@@ -1,5 +1,6 @@
 SWITCH=DEVICE_0
-CHECKFILE=/jffs/amas_bhopt.log
+CHECKFILE=/jffs/amas_wlcconnect.log
+Receive event: START_SELF_OPTIMIZATION
+BandIndex\(2\) Unit\(2\) Scanned AP
 Current AP is better than New AP or is same as New AP
-The AP have last byte information
-Band\(0\) The New AP\(\w\w:\w\w:\w\w:\w\w:\w\w:\w\w\) is same as Current AP\. Skip Re-Connect
+

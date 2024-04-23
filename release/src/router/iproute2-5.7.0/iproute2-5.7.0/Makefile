@@ -61,7 +61,7 @@ ifeq ($(LK_MATCH),y)
 DEFINES += -D__KERNEL_4_X__
 endif
 
-CFLAGS := $(WFLAGS) $(CCOPTS) -I../include -I../include/uapi $(DEFINES) $(CFLAGS)
+CFLAGS := $(WFLAGS) $(CCOPTS) -I../include -I../include/uapi $(DEFINES) #$(CFLAGS)
 YACCFLAGS = -d -t -v
 
 #brcm extra cflags

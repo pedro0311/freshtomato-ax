@@ -405,7 +405,7 @@ function initial(){
 		}
 	}
 
-	$("#https_download_cert").css("display", (le_enable != "1" && orig_http_enable != "0")? "": "none");
+	$("#https_download_cert").css("display", (le_enable == "0" && orig_http_enable != "0")? "": "none");
 
 	$("#login_captcha_tr").css("display", captcha_support? "": "none");
 
@@ -607,7 +607,7 @@ function applyRule(){
 			
 			if (('<% nvram_get("enable_ftp"); %>' == "1")
 				&& ('<% nvram_get("ftp_tls"); %>' == "1")) {
-					action_script_tmp += ";restart_ftpd";
+					action_script_tmp += "restart_ftpd;";
 			}
 		}
 
@@ -916,7 +916,7 @@ var timezones = [
 	["UTC-8_1",     "(GMT+08:00) <#TZ70#>"],
 	["UTC-9_1",	"(GMT+09:00) <#TZ70_1#>"],
 	["UTC-9_3",	"(GMT+09:00) <#TZ72#>"],
-	["JST",		"(GMT+09:00) <#TZ71#>"],
+	["JST-9",	"(GMT+09:00) <#TZ71#>"],
 	["CST-9.30",	"(GMT+09:30) <#TZ73#>"],
 	["UTC-9.30DST",	"(GMT+09:30) <#TZ74#>"],
 	["UTC-10DST_1",	"(GMT+10:00) <#TZ75#>"],
@@ -1047,13 +1047,22 @@ function hide_https_lanport(_value){
 		$("#https_download_cert").css("display", "");
 		if(orig_http_enable == "0"){
 			$("#download_cert_btn").css("display", "none");
+			$("#clear_server_cert_btn").css("display", "none");
 			$("#clear_cert_btn").css("display", "none");
 			$("#download_cert_desc").css("display", "");
 		}
 		else{
-			$("#download_cert_btn").css("display", "");
-			$("#clear_cert_btn").css("display", "");
-			$("#download_cert_desc").css("display", "none");
+			if (le_enable == "0") {
+				$("#download_cert_btn").css("display", "");
+				$("#clear_server_cert_btn").css("display", "");
+				$("#clear_cert_btn").css("display", "");
+				$("#download_cert_desc").css("display", "");
+			} else {
+				$("#download_cert_btn").css("display", "none");
+				$("#clear_server_cert_btn").css("display", "none");
+				$("#clear_cert_btn").css("display", "none");
+				$("#download_cert_desc").css("display", "none");
+			}
 		}
 	}
 	else{
@@ -1640,14 +1649,44 @@ function reset_portconflict_hint(){
 }
 
 function save_cert_key(){
-	location.href = "cert.tar";
+	location.href = "cert.crt";
+}
+
+function clear_server_cert_key(){
+	$.ajax({url: "clear_file.cgi?clear_file_name=server_certs"})
+	showLoading();
+	setTimeout(function(){
+		setInterval(function(){
+			var http = new XMLHttpRequest
+			http.onreadystatechange=function(){
+				if(http.readyState==4 && http.status==200){
+					top.location.href="/Advanced_System_Content.asp"
+				}
+			},
+
+			http.open("GET","/httpd_check.xml",!0);
+			http.send(null);
+		}, 1000);
+	}, 1000)
 }
 
 function clear_cert_key(){
-	if(confirm("You will be automatically logged out for the renewal, are you sure you want to continue?")){
+	if(confirm(`<#DDNS_Install_Root_Cert_Desc#>`)){
 		$.ajax({url: "clear_file.cgi?clear_file_name=cert.tgz"})
 		showLoading();
-		setTimeout(refreshpage, 1000);
+		setTimeout(function(){
+			setInterval(function(){
+				var http = new XMLHttpRequest
+				http.onreadystatechange=function(){
+					if(http.readyState==4 && http.status==200){
+						top.location.href="/Advanced_System_Content.asp"
+					}
+				},
+
+				http.open("GET","/httpd_check.xml",!0);
+				http.send(null);
+			}, 1000);
+		}, 1000)
 	}
 }
 
@@ -2474,7 +2513,8 @@ function check_password_length(obj){
 					<th><#Local_access_certificate_download#></th>
 					<td>
 						<input id="download_cert_btn" class="button_gen" onclick="save_cert_key();" type="button" value="<#btn_Export#>" />
-						<input id="clear_cert_btn" class="button_gen" style="margin-left:10px" onclick="clear_cert_key();" type="button" value="<#CTL_renew#>" />
+						<input id="clear_server_cert_btn" class="button_gen" style="margin-left:10px" onclick="clear_server_cert_key();" type="button" value="<#CTL_renew#> <#vpn_openvpn_KC_SA#>" /><!-- untranslated -->
+						<input id="clear_cert_btn" class="button_gen" style="margin-left:10px" onclick="clear_cert_key();" type="button" value="<#CTL_renew#> Root Certificate" /><!-- untranslated -->
 						<span id="download_cert_desc"><#Local_access_certificate_desc#></span><a id="creat_cert_link" href="" style="font-family:Lucida Console;text-decoration:underline;color:#FFCC00; margin-left: 5px;" target="_blank">FAQ</a>
 					</td>
 				</tr>

@@ -1672,7 +1672,7 @@ function handle_ipv6_submit_settings(){
 											</td>
 										</tr>
 										<tr id="trServerPortBasic">
-											<th><a class="hintstyle" href="javascript:void(0);" onClick="openHint(32,6);"><#WLANAuthentication11a_ExAuthDBPortNumber_itemname#></a>
+											<th><#WLANAuthentication11a_ExAuthDBPortNumber_itemname#>
 												<div class="setup_info_icon basic" style="display:none;"></div>
 											</th>
 											<td>
@@ -1874,7 +1874,7 @@ function handle_ipv6_submit_settings(){
 												</td>
 											</tr>
 											<tr>
-												<th><a class="hintstyle" href="javascript:void(0);" onClick="openHint(32,6);"><#WLANAuthentication11a_ExAuthDBPortNumber_itemname#></a>
+												<th><#WLANAuthentication11a_ExAuthDBPortNumber_itemname#>
 													<div class="setup_info_icon adv" style="display:none;"></div>
 												</th>
 												<td>

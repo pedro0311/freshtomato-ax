@@ -900,11 +900,7 @@ IPTC_LIBS := -lip4tc $(if $(RTCONFIG_IPV6),-lip6tc,) -liptc
 obj-y += iptables-1.4.x
 ifeq ($(HND_ROUTER),y)
 ifeq ($(or $(HND_ROUTER_AX_6756),$(HND_ROUTER_BE_4916)),y)
-ifeq ($(BRCM_CHIP),$(filter $(BRCM_CHIP),6813 4912))
-obj-y += iproute2-4.19.0
-else
 obj-y += iproute2-5.7.0
-endif
 else
 obj-y += iproute2-4.3
 endif
@@ -1009,7 +1005,7 @@ endif
 # obj-y += vlan # use Busybox vconfig
 #obj-y += utils
 obj-y += ntpclient
-ifeq ($(BUILD_NAME), $(filter $(BUILD_NAME), RT-AX82_XD6 XD6_V2))
+ifeq ($(BUILD_NAME), $(filter $(BUILD_NAME), RT-AX82_XD6 XD6_V2 ET12))
 obj-y += ntp-4.2.8p15
 endif
 
@@ -1060,6 +1056,12 @@ endif
 # ethtool to disable TSO
 ifeq ($(RTCONFIG_WLMODULE_MT7915D_AP), y)
 obj-y += ethtool-3.7
+endif
+
+# ethtool to disable GSO for JP V6plus tunnel
+ifeq ($(or $(HND_ROUTER_AX_6756),$(HND_ROUTER_BE_4916)),y)
+obj-y += ethtool-6.2
+obj-y += libmnl-1.0.4
 endif
 
 # !!TB - updated Broadcom Wireless driver
@@ -1573,6 +1575,7 @@ endif
 
 obj-$(RTCONFIG_TCPDUMP) += libpcap
 obj-$(RTCONFIG_TCPDUMP) += tcpdump-4.4.0
+obj-$(RTCONFIG_TCPREPLAY) += libpcap-1.9.1 tcpreplay
 obj-$(RTCONFIG_DUMP4000) += libpcap
 obj-$(RTCONFIG_DUMP4000) += tcpdump-4.4.0
 obj-$(RTCONFIG_TRACEROUTE) += traceroute-2.1.0
@@ -3142,7 +3145,12 @@ ifeq ($(HND_ROUTER),y)
 	mkdir -p $(BCM_FSBUILD_DIR)/public/include/openssl
 	cp -u $(OPENSSL)/include/openssl/* $(BCM_FSBUILD_DIR)/public/include/openssl
 endif
-	install -D -m 0500 httpd/gencert.sh $(INSTALLDIR)$(INSTALLSUBDIR)/usr/sbin/gencert.sh
+	install -D -m 0700 httpd/gencert.sh $(INSTALLDIR)$(INSTALLSUBDIR)/usr/sbin/gencert.sh
+ifeq ($(RTCONFIG_ECC256),y)
+	sed -i -e "s,^ECC256=0,ECC256=1," $(INSTALLDIR)$(INSTALLSUBDIR)/usr/sbin/gencert.sh
+endif
+	sed -i -e "s,^[ 	]*#[^!]*$$,," $(INSTALLDIR)$(INSTALLSUBDIR)/usr/sbin/gencert.sh
+	sed -i '/^$$/d' $(INSTALLDIR)$(INSTALLSUBDIR)/usr/sbin/gencert.sh
 endif
 
 openssl-stage:
@@ -4195,7 +4203,7 @@ ndisc6-install: ndisc6
 #	$(STRIP) $(INSTALLDIR)/ndisc6/usr/sbin/ndisc6
 ifneq ($(RTCONFIG_BCMWL6),y)
 ifneq ($(or $(MUSL32),$(MUSL64)),y)
-	install -D $(shell dirname $(shell which $(CXX)))/../lib/librt.so.0 $(TARGETDIR)/lib/librt.so.0
+	$(if $(wildcard $(shell dirname $(shell which $(CXX)))/../lib/librt.so.0),install -D $(shell dirname $(shell which $(CXX)))/../lib/librt.so.0 $(TARGETDIR)/lib/librt.so.0)
 endif
 endif
 
@@ -4782,7 +4790,7 @@ fprobe-1.1-clean:
 	@$(MAKE) -C fprobe-1.1 clean
 
 libev-4.33/stamp-h1:
-	cd libev-4.33 && $(CONFIGURE) --prefix='' --host=arm-linux
+	cd libev-4.33 && $(CONFIGURE) --prefix='' $(if $(or $(RTCONFIG_QCA),$(RTCONFIG_RALINK)),,--host=arm-linux)
 	touch $@
 
 libev-4.33: libev-4.33/stamp-h1
@@ -4792,7 +4800,7 @@ libev-4.33: libev-4.33/stamp-h1
 libev-4.33-install: libev-4.33
 	@$(SEP)
 	install -D libev-4.33/.libs/libev.so.4.0.0 $(INSTALLDIR)/$</usr/lib/libev.so.4.0.0
-	$(STRIP) $(INSTALLDIR)/$</usr/lib/libev.so.4.0.0
+	$(if $(RTCONFIG_DEBUG),,$(STRIP) $(INSTALLDIR)/$</usr/lib/libev.so.4.0.0)
 	cd $(INSTALLDIR)/$</usr/lib && ln -sf libev.so.4.0.0 libev.so.4
 
 libev-4.33-clean:
@@ -4863,14 +4871,17 @@ pstree-clean:
 libcodb/stamp-h1:
 	touch $@
 
-libcodb: libcodb/stamp-h1 sqlite3
+libcodb: libcodb/stamp-h1 sqlite sqlite3
 	@$(SEP)
-	@$(MAKE) -C libcodb CC=$(CC)
+	@$(MAKE) -C libcodb CC=$(CC) && $(MAKE) -C libcodb stage
 
 libcodb-install: libcodb
 	@echo INSTALLDIR=$(INSTALLDIR)
 	install -D libcodb/libcodb.so $(INSTALLDIR)/$</usr/lib/libcodb.so
-	$(STRIP) $(INSTALLDIR)/$</usr/lib/libcodb.so
+	$(if $(RTCONFIG_DEBUG),,$(STRIP) $(INSTALLDIR)/$</usr/lib/libcodb.so)
+
+libcodb-stage: libcodb
+	$(MAKE) -C libcodb stage
 
 libcodb-clean:
 	@$(SEP)
@@ -4986,9 +4997,9 @@ lldpd-0.9.8-install: lldpd-0.9.8
 	install -D lldpd-0.9.8/src/client/.libs/lldpcli $(INSTALLDIR)/lldpd-0.9.8/usr/sbin/lldpcli
 	install -D lldpd-0.9.8/src/daemon/lldpd $(INSTALLDIR)/lldpd-0.9.8/usr/sbin/lldpd
 	install -D lldpd-0.9.8/src/lib/.libs/liblldpctl.so.4.8.0 $(INSTALLDIR)/lldpd-0.9.8/usr/lib/liblldpctl.so.4.8.0
-	$(STRIP) $(INSTALLDIR)/lldpd-0.9.8/usr/sbin/lldpcli
-	$(STRIP) $(INSTALLDIR)/lldpd-0.9.8/usr/sbin/lldpd
-	$(STRIP) $(INSTALLDIR)/lldpd-0.9.8/usr/lib/liblldpctl.so.4.8.0
+	$(if $(RTCONFIG_DEBUG),,$(STRIP) $(INSTALLDIR)/lldpd-0.9.8/usr/sbin/lldpcli)
+	$(if $(RTCONFIG_DEBUG),,$(STRIP) $(INSTALLDIR)/lldpd-0.9.8/usr/sbin/lldpd)
+	$(if $(RTCONFIG_DEBUG),,$(STRIP) $(INSTALLDIR)/lldpd-0.9.8/usr/lib/liblldpctl.so.4.8.0)
 	cd $(INSTALLDIR)/lldpd-0.9.8/usr/lib && ln -sf liblldpctl.so.4.8.0 liblldpctl.so && ln -sf liblldpctl.so.4.8.0 liblldpctl.so.4
 
 lldpd-0.9.8-clean:
@@ -5182,7 +5193,7 @@ ntpclient: nvram$(BCMEX)$(EX7) shared $(if $(BCM_502L07P2),ethctl_lib)
 
 ntpclient-install:
 	$(MAKE) -C ntpclient INSTALLDIR=$(INSTALLDIR)/ntpclient install
-ifeq ($(BUILD_NAME), $(filter $(BUILD_NAME), RT-AX82_XD6 XD6_V2))
+ifeq ($(BUILD_NAME), $(filter $(BUILD_NAME), RT-AX82_XD6 XD6_V2 ET12))
 ntp-4.2.8p15: ntp-4.2.8p15/Makefile
 	$(MAKE) -C ntp-4.2.8p15
 
@@ -5381,7 +5392,7 @@ mxl371x_sdk-install:
 
 sqlite/stamp-h1:
 	cd sqlite && autoreconf -i -f && \
-	CC=$(CC) CFLAGS="-Os $(EXTRACFLAGS) -ffunction-sections -fdata-sections -fPIC" \
+	CC=$(CC) CFLAGS="$(if $(RTCONFIG_DEBUG),-g -Wall,-Os) $(EXTRACFLAGS) -ffunction-sections -fdata-sections -fPIC" \
 		LDFLAGS="-ffunction-sections -fdata-sections -Wl,--gc-sections -lpthread -ldl" \
 		$(CONFIGURE) --prefix=/usr --enable-shared --enable-static \
 		--disable-readline --disable-dynamic-extensions --enable-threadsafe \
@@ -5398,10 +5409,10 @@ sqlite-clean:
 sqlite-install: sqlite
 	@$(SEP)
 	install -D sqlite/.libs/libsqlite3.so.0.8.6 $(INSTALLDIR)/sqlite/usr/lib/libsqlite3.so.0.8.6
-	$(STRIP) $(INSTALLDIR)/sqlite/usr/lib/libsqlite3.so.0.8.6
+	$(if $(RTCONFIG_DEBUG),,$(STRIP) $(INSTALLDIR)/sqlite/usr/lib/libsqlite3.so.0.8.6)
 	cd $(INSTALLDIR)/sqlite/usr/lib && ln -sf libsqlite3.so.0.8.6 libsqlite3.so.0 && ln -sf libsqlite3.so.0.8.6 libsqlite3.so
 	install -D sqlite/sqlite3 $(INSTALLDIR)/sqlite/usr/sbin/sqlite3
-	$(STRIP) $(INSTALLDIR)/sqlite/usr/sbin/sqlite3
+	$(if $(RTCONFIG_DEBUG),,$(STRIP) $(INSTALLDIR)/sqlite/usr/sbin/sqlite3)
 
 # sqlite encrpted version
 sqlCipher/stamp-h1:
@@ -5656,10 +5667,52 @@ ifneq ($(MEDIA_SERVER_STATIC),y)
 	$(STRIP) $(INSTALLDIR)/libvorbis/usr/lib/libvorbis.so.0
 endif
 
-minidlna: zlib sqlite ffmpeg libogg flac jpeg libexif libid3tag libvorbis
-	@$(SEP)
-	@cd minidlna && ./genosver.sh
-	$(MAKE) -C minidlna CC=$(CC) $(if $(MEDIA_SERVER_STATIC),STATIC=1) $(if $(RTCONFIG_MEDIASERVER_LIMIT),MS_LIMIT=1) minidlna
+minidlna-clean:
+	cd minidlna; make clean
+
+minidlna/configure:
+	if [ ! -f $@ ] ; then \
+		cd minidlna; autoreconf -fi; \
+	fi
+
+minidlna-configure: minidlna/configure
+	if [ ! -f minidlna/Makefile ] ; then \
+		cd minidlna; \
+		$(CONFIGURE) \
+		--with-log-path=/tmp/minidlna \
+		--with-db-path=/tmp/minidlna \
+		--with-os-name=asuswrt \
+		--with-os-version=$(LINUX_KERNEL) \
+		--with-os-url=http://www.asus.com/ \
+		--enable-tivo \
+		ac_cv_header_stddef_h=no ac_cv_header_stdlib_h=no \
+		$(if $(MSIPK),ac_cv_func_inotify_init=no ac_cv_header_sys_inotify_h=no) \
+		$(if $(MSIPK),$(if $(filter i686,$(PLATFORM)),EXTRACFLAGS="-DLINUX26 -DCONFIG_BCMWL5 -pipe -DBCMWPA2 -funit-at-a-time -Wno-pointer-sign -DLINUX_KERNEL_VERSION=132630 -DMS_IPK -DMS_I686",EXTRACFLAGS="-DLINUX26 -DCONFIG_BCMWL5 -pipe -DBCMWPA2 -funit-at-a-time -Wno-pointer-sign -mtune=mips32 -mips32 -DLINUX_KERNEL_VERSION=132630 -DMS_IPK"),) \
+		CFLAGS="-Wall -g -Os -D_GNU_SOURCE $(EXTRACFLAGS) \
+		-D_FILE_OFFSET_BITS=64 -ffunction-sections -fdata-sections \
+		-I$(TOP)/flac/include -I$(TOP)/sqlite -I$(TOP)/jpeg \
+		-I$(TOP)/libexif -I$(TOP)/libid3tag -I$(TOP)/libogg/include \
+		-I$(TOP)/libvorbis/include \
+		$(if $(MSIPK),-I$(TOP)/ffmpeg-0.5/libavutil -I$(TOP)/ffmpeg-0.5/libavcodec -I$(TOP)/ffmpeg-0.5/libavformat -I$(TOP)/ffmpeg-0.5/libswscale -I$(TOP)/ffmpeg-0.5,-I$(TOP)/ffmpeg) \
+		$(if $(RTCONFIG_BCMARM),-I$(SRCBASE)/shared/bcmwifi/include -DTYPEDEF_FLOAT_T,) \
+		$(if $(MSIPK),,-I$(TOP)/shared $(if $(RTAC68U),-I$(SRCBASE)/include) $(if $(RTN65U),-DRTN56U) $(if $(RTAC66U),-DRTN66U) $(if $(RTCONFIG_MEDIASERVER_LIMIT),-DMS_LIMIT) $(if $(RPAC68U),-DRPAC68U) $(if $(HND_ROUTER_BE_4916),-fcommon))" \
+		LDFLAGS="-ffunction-sections -fdata-sections -Wl,--gc-sections \
+		$(if $(MEDIA_SERVER_STATIC),-static,) \
+		-L$(TOP)/zlib -L$(TOP)/sqlite/.libs \
+		$(if $(MEDIA_SERVER_STATIC),-L$(TOP)/jpeg/.libs,-L$(TOP)/jpeg) \
+		-L$(TOP)/libvorbis/lib/.libs -L$(TOP)/libogg/src/.libs \
+		-L$(TOP)/libexif/libexif/.libs -L$(TOP)/flac/src/libFLAC/.libs \
+		$(if $(MEDIA_SERVER_STATIC),-L$(TOP)/APP-IPK/MediaServer-ipk/asusffmpeg_1.0.0.5/opt/lib,-L$(TOP)/ffmpeg/libavutil -L$(TOP)/ffmpeg/libavcodec -L$(TOP)/ffmpeg/libavformat -L$(TOP)/libid3tag/.libs) \
+		$(if $(or $(RTAC68U),$(RTAX82U),$(GTAX6000),$(RTAX82U_V2)),-L$(TOP_PLATFORM)/nvram${BCMEX} -lnvram -L$(TOP)/shared -lshared,)" \
+		LDLIBS="$(if $(MSIPK),-lpthread -lm -lvorbis -logg -lsqlite3 -lexif -ljpeg -lFLAC -lid3tag_ms -lz $(TOP)/libid3tag/.libs/libid3tag_ms.so $(TOP)/APP-IPK/MediaServer-ipk/asusffmpeg_1.0.0.5/opt/lib/libavformat_asus.so $(TOP)/APP-IPK/MediaServer-ipk/asusffmpeg_1.0.0.5/opt/lib/libavcodec_asus.so $(TOP)/APP-IPK/MediaServer-ipk/asusffmpeg_1.0.0.5/opt/lib/libavutil_asus.so $(if $(filter i686,$(PLATFORM)),-lrt),)$(if $(MEDIA_SERVER_STATIC),-lpthread -ldl -lm $(TOP)/libvorbis/lib/.libs/libvorbis.a $(TOP)/libogg/src/.libs/libogg.a $(TOP)/sqlite/.libs/libsqlite3.a $(TOP)/libexif/libexif/.libs/libexif.a $(TOP)/jpeg/libjpeg.a $(TOP)/flac/src/libFLAC/.libs/libFLAC.a $(TOP)/libid3tag/.libs/libid3tag.a $(TOP)/zlib/libz.a $(TOP)/ffmpeg/libavformat/libavformat.a $(TOP)/ffmpeg/libavcodec/libavcodec.a $(TOP)/ffmpeg/libavutil/libavutil.a,-lpthread -ldl -lm -lvorbis -logg -lsqlite3 -lexif -ljpeg -lFLAC -lid3tag -lz -lavformat -lavcodec -lavutil)"; \
+	fi
+
+minidlna: zlib sqlite ffmpeg libogg flac jpeg libexif libid3tag libvorbis minidlna-configure
+	cd minidlna; make
+
+minidlna-install: minidlna
+	install -D minidlna/minidlnad $(INSTALLDIR)/minidlna/usr/sbin/minidlna
+	$(STRIP) $(INSTALLDIR)/minidlna/usr/sbin/minidlna
 
 libgdbm/stamp-h1:
 	cd libgdbm && \
@@ -5999,7 +6052,7 @@ endif
 
 else
 	[ -d wlexe ] || install -d wlexe
-	install $(SRC_PRE_WLEXE)/prebuilt/wl wlexe
+	-install $(SRC_PRE_WLEXE)/prebuilt/wl wlexe
 	-install $(SRC_PRE_WLEXE)/prebuilt/wl_server_socket wlexe
 ifeq ($(or $(HND_ROUTER_AX_675X),$(HND_ROUTER_AX_6710),$(BCM_502L07P2)),y)
 	install $(SRCBASE)/router-sysdep/hnd_extra/prebuilt/wl_server_socket wlexe
@@ -7642,6 +7695,27 @@ qca-ssdk30:
 qca-ssdk30-stage:
 	$(MAKE) -C qca-ssdk30 stage
 
+ethtool-6.2/configure:
+	cd ethtool-6.2 && ./autogen.sh \
+
+ethtool-6.2/Makefile: ethtool-6.2/configure
+	cd ethtool-6.2 && $(CONFIGURE) \
+		--with-kernel=$(LINUXDIR)
+
+ethtool-6.2: ethtool-6.2/Makefile
+	$(MAKE) -C $@ KERNEL_DIR=$(LINUXDIR) \
+	CFLAGS="$(CFLAGS) -I$(TOP)/libmnl-1.0.4/include -L$(TOP)/libmnl-1.0.4/src/.libs -lmnl" \
+	LIBMNL_CFLAGS="-L$(TOP)/libmnl-1.0.4/src/.libs" \
+	LIBMNL_LIBS="-lmnl" \
+
+ethtool-6.2-clean:
+	[ ! -f ethtool-6.2/Makefile ] || $(MAKE) -C ethtool-6.2 distclean
+	@rm -f ethtool-6.2/Makefile
+
+ethtool-6.2-install: ethtool-6.2
+	install -D ethtool-6.2/ethtool $(INSTALLDIR)/ethtool-6.2/usr/sbin/ethtool
+	$(STRIP) $(INSTALLDIR)/ethtool-6.2/usr/sbin/ethtool
+
 .PHONY: lm-sensors-master btconfig ethtool-3.7 i2c-tools-3.1.2 i2c-tools-2013-12-15 bluez-5.56
 ethtool-3.7/configure:
 	cd ethtool-3.7 && ./autogen.sh
@@ -8243,13 +8317,13 @@ asusnatnl-install:
 
 mastiff: shared $(if $(BCM_502L07P2),ethctl_lib) nvram${BCMEX}$(EX7) wb
 	cd aaews && \
-	CC=$(CC) AR=$(AR) RANLIB=$(RANLIB) LD=$(LD) CFLAGS="-Os -Wall $(EXTRACFLAGS)" \
+	CC=$(CC) AR=$(AR) RANLIB=$(RANLIB) LD=$(LD) CFLAGS="$(if $(RTCONFIG_DEBUG),-g,-Os) -Wall $(EXTRACFLAGS)" \
 	$(MAKE) mastiff
 
 mastiff-install:
 	install -d $(INSTALLDIR)/wb/usr/lib/
 	install -D aaews/mastiff $(INSTALLDIR)/wb/usr/sbin/mastiff
-	$(STRIP) -s $(INSTALLDIR)/wb/usr/sbin/mastiff
+	$(if $(RTCONFIG_DEBUG),,$(STRIP) -s $(INSTALLDIR)/wb/usr/sbin/mastiff)
 
 mastiff-clean:
 	cd aaews && make clean
@@ -8287,7 +8361,7 @@ lantiq_cmd-clean:
 #wb: shared $(if $(BCM_502L07P2),ethctl_lib) nvram curl openssl libxml2 asusnatnl
 aaews: wb
 	cd aaews && \
-	CC=$(CC) CXX=$(CXX) AR=$(AR) RANLIB=$(RANLIB) LD=$(LD) CFLAGS="-Os -Wall $(EXTRACFLAGS)" \
+	CC=$(CC) CXX=$(CXX) AR=$(AR) RANLIB=$(RANLIB) LD=$(LD) CFLAGS="$(if $(RTCONFIG_DEBUG),-g,-Os) -Wall $(EXTRACFLAGS)" \
 	make router
 #make static-lib && \
 
@@ -8704,6 +8778,9 @@ rastatus: cms_msg cms_util bcm_flashutil cms_boardctl tmctl vlanctl bridgeutil p
 
 fdt: libyaml
 	@$(eval TOPX_DIR:=$(firstword $(wildcard $(TOP_PLATFORM)/$@) $(wildcard $@)))
+ifeq ($(HND_ROUTER_BE_4916),y)
+	$(MAKE) -C $(TOPX_DIR) -f Bcmbuild.mk
+endif
 	$(MAKE) -C $(TOPX_DIR)/dtc-1.5.1 EXTRA_CFLAGS="-I$(TOP)/libyaml/include" LDFLAGS="-L$(TOP)/libyaml/src/.libs"
 
 fdt-install: fdt

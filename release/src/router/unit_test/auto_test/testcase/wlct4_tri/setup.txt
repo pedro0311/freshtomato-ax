@@ -6,9 +6,9 @@ nvram set amas_wlc0_priority=3
 nvram set amas_wlc2_priority=0
 nvram commit
 amas_ipc -m 2 -e RESTART_CONNECTING
-SLEEP=10
+SLEEP=120
 IFGO=120=nvram get amas_wlc0_state=2
 IFGO=120=nvram get amas_wlc2_state=2
 wl -i $(nvram get amas_wlc0_ifname) disassoc
 IFGO=120=nvram get amas_wlc0_state=0
-rm -rf /jffs/amas_bhopt.log
+rm -rf /jffs/amas_wlcconnect.log

@@ -1,0 +1,4 @@
+在編譯時請註意：
+1.需要將Makefile_router文件的內容添加至./router/Makefile中。
+2.需要將./router/cfg_mnt文件中的cfg_mnt.c中cm_transformCfgParam函數和cm_addPrivateCfg函數的static與cfg_client.c中的cm_applyCfgAction函數的static
+3.在編譯時需要將bandindex_test放至./router/unit_test文件夾下。

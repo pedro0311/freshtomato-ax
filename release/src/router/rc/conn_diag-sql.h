@@ -1,3 +1,5 @@
+#ifndef _CONN_DIAG_SQL_H_
+#define _CONN_DIAG_SQL_H_
 #include <limits.h>
 #include <sqlite3.h>
 #include <pthread.h>
@@ -85,6 +87,12 @@ struct amas_eth_port {
 	struct amas_eth_port *next;
 	int cable_diag_triger_link_st;
 	time_t cmd_time;
+	int seq_no;
+	char ui_display[32];
+	int phy_port_id;
+	int ext_port_id;
+	char ifname[32];
+	unsigned int flag;
 };
 
 struct amas_eth_port_table {
@@ -249,6 +257,7 @@ extern int run_upload_file_by_name(const char *uploaded_file);
 extern int run_download_file_at_ts(unsigned long ts, unsigned long ts2);
 extern int run_download_file_by_name(const char *downloaded_file);
 extern int is_valid_event(const char *name);
+#endif
 extern unsigned long get_mem_info(char *name);
 extern int special_alphasort(const void *d1, const void *d2);
 extern struct CONNDIAG_DB_t *find_db_profile_by_mode_and_version(int db_mode,char *version);
@@ -262,7 +271,6 @@ extern int get_eth_txrxbyte_avg(int is_bh,char *mac,double *txbyte,double *rxbyt
 extern int get_ethphy_txrxbyte_avg(int is_bh,char *mac,double *txbyte,double *rxbyte,int diff_range);
 extern int get_sta_txrxbyte_avg(char *sta_mac,char *mac,double *txbyte,double *rxbyte,int diff_range);
 extern int get_staphy_txrxbyte_avg(char *sta_mac,char *mac,double *txbyte,double *rxbyte,int diff_range);
-#endif
 extern int exec_force_cable_diag(char *node_mac,char *label_name);
 extern int exec_wifi_dfs_diag(char *json_data);
 #ifdef RTCONFIG_CD_IPERF
@@ -282,3 +290,4 @@ extern int _get_node_eth_port_status(char *node_mac,char **buf);
 #ifdef RTCONFIG_AWSIOT
 extern int wifi_dfs_on_all_channels_process();
 #endif
+#endif	/* !_CONN_DIAG_SQL_H_ */

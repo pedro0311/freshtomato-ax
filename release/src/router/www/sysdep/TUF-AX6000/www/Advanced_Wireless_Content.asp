@@ -498,6 +498,16 @@ function initial(){
 	else if(document.form.band0_nmode_x.value == '1'){
 		document.getElementById('band0_gmode_check').disabled = true;
 	}
+
+	if(is_KR_sku){
+		if(document.form.smart_connect_x.value == '1'){
+			$("#band01_auth_mode_x option[value='open']").remove();
+		}
+		else{
+			$("#band0_auth_mode_x option[value='open']").remove();
+			$("#band1_auth_mode_x option[value='open']").remove();
+		}
+	}
 }
 
 function genBWTable(_unit, wl_nmode){
@@ -574,7 +584,7 @@ function genBWTable(_unit, wl_nmode){
 		}
 		else{
 			bws = [1, 0, 2, 3];
-			bwsDesc = [document.form.wl_bw[0].text, "20 MHz", "40 MHz", "80 MHz"];
+			bwsDesc = ["20/40/80 MHz", "20 MHz", "40 MHz", "80 MHz"];
 		}
 
 		if(wl_nmode == 8 || (_unit != 0 && wl_nmode == 0)){// N/AC mixed or 5G Auto
@@ -1240,15 +1250,32 @@ function validForm(){
 			return false;	
 
 	if(auth_mode == "psk" || auth_mode == "psk2" || auth_mode == "pskpsk2" || auth_mode == "sae" || auth_mode == "psk2sae"){ //2008.08.04 lock modified
-		if(is_KR_sku){
-			if(!validator.psk_KR(document.form.wl_wpa_psk))
+	
+	if(is_KR_sku){
+		if(document.form.smart_connect_x.value == '1'){
+			if(!validator.psk_KR(document.form.band01_wpa_psk))
 				return false;
 		}
 		else{
-			if(!validator.psk(document.form.wl_wpa_psk))
+			if(!validator.psk_KR(document.form.band0_wpa_psk))
+				return false;
+			if(!validator.psk_KR(document.form.band1_wpa_psk))
 				return false;
 		}
-		
+	}
+	else{
+		if(document.form.smart_connect_x.value == '1'){
+			if(!validator.psk(document.form.band01_wpa_psk))
+				return false;
+		}
+		else{
+			if(!validator.psk(document.form.band0_wpa_psk))
+				return false;
+			if(!validator.psk(document.form.band1_wpa_psk))
+				return false;
+		}
+	}
+	
 		//confirm common string combination	#JS_common_passwd#
 		var is_common_string = check_common_string(document.form.wl_wpa_psk.value, "wpa_key");
 		if(is_common_string){
@@ -1674,6 +1701,16 @@ function enableSmartCon(val){
 	}
 
 	controlHideSSIDHint();
+	
+	if(is_KR_sku){
+		if(document.form.smart_connect_x.value == '1'){
+			$("#band01_auth_mode_x option[value='open']").remove();
+		}
+		else{
+			$("#band0_auth_mode_x option[value='open']").remove();
+			$("#band1_auth_mode_x option[value='open']").remove();
+		}
+	}
 }
 
 function enable_160MHz(obj){
@@ -3565,7 +3602,7 @@ function handleAcsCh13(channel){
 				<tr>
 					<th><a class="hintstyle" href="javascript:void(0);" onClick="openHint(0, 5);"><#WLANConfig11b_AuthenticationMethod_itemname#></a></th>
 					<td>
-						<select name="band01_auth_mode_x" class="input_option" onChange="auth_mehtod_change('01', this.value);">
+						<select id="band01_auth_mode_x" name="band01_auth_mode_x" class="input_option" onChange="auth_mehtod_change('01', this.value);">
 							<option value="open"    <% nvram_match("wl0_auth_mode_x", "open",   "selected"); %>>Open System</option>
 							<option value="shared"  <% nvram_match("wl0_auth_mode_x", "shared", "selected"); %>>Shared Key</option>
 							<option value="psk"     <% nvram_match("wl0_auth_mode_x", "psk",    "selected"); %>>WPA-Personal</option>
@@ -3811,7 +3848,7 @@ function handleAcsCh13(channel){
 				<tr id="band0_auth_mode_x_field">
 					<th><a class="hintstyle" href="javascript:void(0);" onClick="openHint(0, 5);"><#WLANConfig11b_AuthenticationMethod_itemname#></a></th>
 					<td>
-						<select name="band0_auth_mode_x" class="input_option" onChange="auth_mehtod_change(0, this.value);">
+						<select id="band0_auth_mode_x" name="band0_auth_mode_x" class="input_option" onChange="auth_mehtod_change(0, this.value);">
 							<option value="open"    <% nvram_match("wl0_auth_mode_x", "open",   "selected"); %>>Open System</option>
 							<option value="shared"  <% nvram_match("wl0_auth_mode_x", "shared", "selected"); %>>Shared Key</option>
 							<option value="psk"     <% nvram_match("wl0_auth_mode_x", "psk",    "selected"); %>>WPA-Personal</option>
@@ -4059,7 +4096,7 @@ function handleAcsCh13(channel){
 				<tr id="band1_auth_mode_x_field">
 					<th><a class="hintstyle" href="javascript:void(0);" onClick="openHint(0, 5);"><#WLANConfig11b_AuthenticationMethod_itemname#></a></th>
 					<td>
-						<select name="band1_auth_mode_x" class="input_option" onChange="auth_mehtod_change(1, this.value);">
+						<select id="band1_auth_mode_x" name="band1_auth_mode_x" class="input_option" onChange="auth_mehtod_change(1, this.value);">
 							<option value="open"    <% nvram_match("wl1_auth_mode_x", "open",   "selected"); %>>Open System</option>
 							<option value="shared"  <% nvram_match("wl1_auth_mode_x", "shared", "selected"); %>>Shared Key</option>
 							<option value="psk"     <% nvram_match("wl1_auth_mode_x", "psk",    "selected"); %>>WPA-Personal</option>

@@ -2,6 +2,9 @@ import base64
 import os
 
 
+def String_sqlit_noendline(str1, str2):
+    return str1.split(str2)[0]
+
 def String_sqlit_end(str1, str2):
     return str1.split("\r\n" + str2)[0]
 
@@ -73,7 +76,3 @@ def Config_write_File(context,file_name:str,path,end:str,dut_name):
         print("*ERROR*" + str(e))
         raise
 
-
-if __name__ == "__main__":
-    #test()
-    

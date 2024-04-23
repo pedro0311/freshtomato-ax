@@ -259,6 +259,10 @@ static unsigned int sigbones = 0;
 static int ICT_LED_status = -1;
 #endif
 
+#if defined(RTAX58U_V2) || defined(BR63)
+static int check_x_Setting = 0;
+#endif
+
 void watch_sig(int signo) {
 	sigbones |= 1<<signo;
 }
@@ -2947,11 +2951,11 @@ static inline void __handle_led_onoff_button(int led_onoff)
 #endif
 #if defined(GTAX11000_PRO)
 		// TBD, 2.5G LED
-		notify_rc("restart_ledg");
+		notify_rc_and_wait_2min("restart_ledg");
 #endif
 #if defined(GTAXE16000)
 		// TBD, 10G LED
-		notify_rc("restart_ledg");
+		notify_rc_and_wait_2min("restart_ledg");
 #endif
 #ifdef RTCONFIG_LOGO_LED
 		led_control(LED_LOGO, LED_ON);
@@ -3217,8 +3221,15 @@ static inline void handle_turbo_button(void)
 #elif defined(RTCONFIG_BCM_CLED)
 	case BOOST_AURA_RGB_SW:
 		nvram_set_int("ledg_led_enable", *bstatus);
+		if (nvram_get_int("ledg_scheme") != LEDG_SCHEME_OFF)
+		{
+			nvram_set_int("ledg_scheme_old", nvram_get_int("ledg_scheme"));
+			nvram_set_int("ledg_scheme", LEDG_SCHEME_OFF);
+		}
+		else
+			nvram_set_int("ledg_scheme", nvram_get_int("ledg_scheme_old"));
 		nvram_commit();
-		notify_rc("restart_ledg");
+		kill_pidfile_s("/var/run/ledg.pid", SIGTSTP);
 		break;
 #endif
 	case BOOST_GAME_BOOST_SW:
@@ -6974,7 +6985,6 @@ void regular_ddns_check(void)
 	}
 	
 	//_dprintf("WAN IP change!\n");
-	nvram_set("ddns_update_by_wdog", "1");
 	if (wan_unit != last_unit) {
 #ifndef RTCONFIG_INADYN
 		unlink("/tmp/ddns.cache");
@@ -7043,7 +7053,7 @@ void ddns_check(void)
 	}
 
 	if (nvram_match("ddns_regular_check", "1")&& !nvram_match("ddns_server_x", "WWW.ASUS.COM") && !nvram_match("ddns_server_x", "WWW.ASUS.COM.CN")) {
-		int period = nvram_get_int("ddns_regular_period");
+		int period = nvram_get_int("ddns_regular_period"); //minute(s)
 		if (period < 30) period = 60;
 		if (ddns_check_count >= (period*2)) {
 			regular_ddns_check();
@@ -7054,7 +7064,7 @@ void ddns_check(void)
 	}
 
 	if (wan_unit == last_unit && nvram_match("ddns_updated", "1")) { //already updated success
-#ifdef RTCONFIG_IPV6
+#if defined(RTCONFIG_IPV6) && defined(RTCONFIG_INADYN)
 		/* not enable IPv6 or IPv6 already updated success */
 		if (!ipv6_enabled() || nvram_match("ddns_ipv6_update", "0") || (ipv6_enabled() && nvram_match("ddns_ipv6_update", "1") && nvram_match("ddns_ipv6_updated", "1"))) {
 			//logmessage("watchdog", "IPv4/IPv6 already updated success, exit DDNS Retry.\n");
@@ -7065,8 +7075,9 @@ void ddns_check(void)
 #endif
 	}
 
-	if (wan_unit == last_unit) { //Only Time-out, connect_fail, -1 (in asusddns) or not auth_fail (not in asusddns)
+	if (wan_unit == last_unit) { /* DDNS has already been run, ddns_last_wan_unit has been set. */
 		if ( nvram_match("ddns_server_x", "WWW.ASUS.COM") || nvram_match("ddns_server_x", "WWW.ASUS.COM.CN")) {
+			/* Only Time-out, connect_fail, -1 (in asusddns) or not auth_fail (not in asusddns) */
 			if ( !( !strcmp(nvram_safe_get("ddns_return_code_chk"),"Time-out") ||
 				!strcmp(nvram_safe_get("ddns_return_code_chk"),"connect_fail") ||
 				strstr(nvram_safe_get("ddns_return_code_chk"), "-1") ) )
@@ -7089,6 +7100,7 @@ void ddns_check(void)
 	ddns_check_retry--;
 	/* Stop retry and show the return code to UI */
 	if (ddns_check_retry <= 0) {
+		/* If in "ddns_query" then continue to next round, otherwise start ddns. */
 		if (nvram_match("ddns_return_code", "ddns_query")) {
 			nvram_set("ddns_return_code", nvram_safe_get("ddns_return_code_chk"));
 			ddns_recover_min = ((30 + rand_seed_by_time() % 30)*2);
@@ -7105,7 +7117,6 @@ void ddns_check(void)
 	}
 	nvram_set_int("ddns_check_retry", ddns_check_retry);
 
-	nvram_set("ddns_update_by_wdog", "1");
 	if (wan_unit != last_unit) {
 #ifndef RTCONFIG_INADYN
 		unlink("/tmp/ddns.cache");
@@ -8610,7 +8621,7 @@ void cfgsync_check()
   		if (nvram_match("x_Setting", "1") && !pids("cfg_client") && !pids("cfg_server"))
 		{
 			_dprintf("start cfgsync\n");
-			notify_rc("start_cfgsync");
+			notify_rc_and_wait_2min("start_cfgsync");
 		}
 		return;
 	}
@@ -8642,7 +8653,7 @@ void cfgsync_check()
 	)))
 	{
 		_dprintf("start cfgsync\n");
-		notify_rc("start_cfgsync");
+		notify_rc_and_wait_2min("start_cfgsync");
 	}
 #endif	/* RTCONFIG_SW_HW_AUTH */
 }
@@ -9959,6 +9970,12 @@ void watchdog(int sig)
 	if (watchdog_period)
 		return;
 
+#if defined(RTAX58U_V2) || defined(BR63)
+	if (check_x_Setting && nvram_match("x_Setting", "1")) {
+		check_x_Setting = 0;
+		notify_rc("restart_firewall");
+	}
+#endif
 #ifdef RTAX55
 	drop_caches_period = nvram_get_int("drop_caches_period");
 	if  (drop_caches_period) {
@@ -9977,10 +9994,10 @@ void watchdog(int sig)
 			system("top -b -n 1 | head | logger -t top");
 	}
 #if !defined(RTCONFIG_BCM_MFG) && (defined(RTAX82U) || defined(GSAX3000) || defined(GSAX5400) || defined(TUFAX5400) || defined(GTAX11000_PRO) || defined(GTAXE16000) || defined(GTBE98) || defined(GTBE98_PRO) || defined(GTAX6000) || defined(GT10) || defined(RTAX82U_V2) || defined(TUFAX5400_V2) || defined(DSL_AX82U))
-	if (!pids("ledg")) {
-		ledg_count = (ledg_count + 1) % 4 ;
+	if (nvram_get_int("x_Setting") && !pids("ledg")) {
+		ledg_count = (ledg_count + 1) % 2 ;
 		if (!ledg_count) {
-			notify_rc("restart_ledg");
+			notify_rc_and_wait_2min("restart_ledg");
 		}
 	}
 #endif
@@ -10217,6 +10234,10 @@ watchdog_main(int argc, char *argv[])
 		fclose(fp);
 	}
 
+#if defined(RTAX58U_V2) || defined(BR63)
+	if (is_routing_enabled() && nvram_match("x_Setting", "0"))
+		check_x_Setting = 1;
+#endif
 #ifdef RTCONFIG_AMAS
 	/* Prepare timeout value */
 	time_mapping_get(get_productid(), &time_mapping);

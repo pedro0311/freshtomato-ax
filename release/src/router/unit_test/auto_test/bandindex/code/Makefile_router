@@ -1,0 +1,8 @@
+amas_bandindex_test/stamp-h1:
+	@cd unit_test/bandindex_test && rm -f config.cache && \
+	CC=$(CC) AR=$(AR) RANLIB=$(RANLIB) LD=$(LD) \
+	CFLAGS="-Os -Wall $(EXTRACFLAGS) -ffunction-sections -fdata-sections" \
+	LDFLAGS="-ffunction-sections -fdata-sections -Wl,--gc-sections -fPIC" \
+
+amas_bandindex_test:amas_bandindex_test/stamp-h1
+	@$(MAKE) -C unit_test/bandindex_test CC=$(CC) AR=$(AR) RANLIB=$(RANLIB) LD=$(LD)

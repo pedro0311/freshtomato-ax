@@ -3910,7 +3910,6 @@ const unsigned int devpath_idx[4] = {1, 2, 0};    // 2.4G, 5G-1, 5G-2
 			case MODEL_XD4PRO:
 			case MODEL_XC5:
 			case MODEL_CTAX56_XD4:
-			case MODEL_EBA63:
 			case MODEL_RTAX58U:
 			case MODEL_RTAX82U_V2:
 			case MODEL_TUFAX5400_V2:
@@ -3940,6 +3939,7 @@ const unsigned int devpath_idx[4] = {1, 2, 0};    // 2.4G, 5G-1, 5G-2
 			case MODEL_RPAX56:
 			case MODEL_RPAX58:
 			case MODEL_RTAX56U:
+			case MODEL_EBA63:
 				snprintf(macaddr_str, sizeof(macaddr_str), "sb/%d/macaddr", unit);
 				break;
 			case MODEL_RTAX88U:
@@ -4181,7 +4181,7 @@ reset_psr_hwaddr()
 			break;
 	}
 
-	if (model == MODEL_RTAX56U || model == MODEL_RPAX56 || model == MODEL_RPAX58 || model == MODEL_RTAX55 || model == MODEL_TUFAX3000_V2 || model == MODEL_RTAX3000N || model == MODEL_BR63)
+	if (model == MODEL_RTAX56U || model == MODEL_RPAX56 || model == MODEL_RPAX58 || model == MODEL_RTAX55 || model == MODEL_TUFAX3000_V2 || model == MODEL_RTAX3000N || model == MODEL_BR63 || model == MODEL_EBA63)
 		snprintf(macaddr_name, sizeof(macaddr_name), "sb/%d/macaddr", unit);
 	else
 		snprintf(macaddr_name, sizeof(macaddr_name), "%d:macaddr", unit);
@@ -11215,6 +11215,31 @@ int reset_exclbase(int ifnum)
 		return 1;
 	}
 	return 0;
+}
+
+int reset_exclvalid()
+{
+	int i, ifnum=0, acs_valid=0;
+	char exchans[32], exchans_valid[32], wl_tmp[32];
+	char word[256], *next;
+
+	if(nvram_get_int("re_mode") == 1)
+		return 1;
+
+	foreach (word, nvram_safe_get("wl_ifnames"), next)
+		ifnum++;
+
+	for(i=0; i<ifnum; ++i) {
+		sprintf(wl_tmp, "wl%d_chanspec", i);
+		acs_valid = nvram_match(wl_tmp, "0")?1:0;
+		if(!acs_valid)
+			continue;
+
+		sprintf(exchans, "wl%d_acs_excl_chans", i);
+		sprintf(exchans_valid, "wl%d_acs_excl_chans_valid", i);
+		nvram_set(exchans_valid, nvram_safe_get(exchans));
+		_dprintf("\nset exclchans valid[%d]:[%s]=[%s]\n", i, exchans_valid, nvram_safe_get(exchans_valid));
+	}
 }
 
 void dump_acs_excl_chans(char *desc)
