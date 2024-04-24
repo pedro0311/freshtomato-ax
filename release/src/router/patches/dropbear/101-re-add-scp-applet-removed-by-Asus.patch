@@ -1,8 +1,8 @@
 diff --git dropbear/dbmulti.c dropbear/dbmulti.c
-index 3299970..1e5f8d7 100644
+index 1bc70ea..78704c3 100644
 --- dropbear/dbmulti.c
 +++ dropbear/dbmulti.c
-@@ -55,11 +55,13 @@ static int runprog(const char *progname, int argc, char ** argv, int *match) {
+@@ -50,11 +50,13 @@ static int runprog(const char *multipath,
  			return dropbearconvert_main(argc, argv);
  		}
  #endif
@@ -17,7 +17,7 @@ index 3299970..1e5f8d7 100644
  	*match = DROPBEAR_FAILURE;
  	return 1;
  }
-@@ -94,9 +96,11 @@ int main(int argc, char ** argv) {
+@@ -93,9 +95,11 @@ int main(int argc, char ** argv) {
  #ifdef DBMULTI_dropbearconvert
  			"'dropbearconvert' - the key converter\n"
  #endif
