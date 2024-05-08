@@ -1261,7 +1261,7 @@ const zoneinfo_t tz_list[] = {
         {"UTC-8_1",     "Asia/Irkutsk"},	// (GMT+08:00) Irkutsk
         {"UTC-9_1",     "Asia/Seoul"},		// (GMT+09:00) Seoul
         {"UTC-9_3",     "Asia/Yakutsk"},	// (GMT+09:00) Yakutsk
-        {"JST",         "Asia/Tokyo"},		// (GMT+09:00) Osaka, Sapporo, Tokyo
+        {"JST-9",       "Asia/Tokyo"},		// (GMT+09:00) Osaka, Sapporo, Tokyo
         {"CST-9.30",    "Australia/Darwin"},	// (GMT+09:30) Darwin
         {"UTC-9.30DST", "Australia/Adelaide"},	// (GMT+09:30) Adelaide
         {"UTC-10DST_1", "Australia/Canberra"},	// (GMT+10:00) Canberra, Melbourne, Sydney
@@ -1387,6 +1387,10 @@ void time_zone_x_mapping(void)
 	else if (nvram_match("time_zone", "UTC2DST")){	/*Saint-Pierre-et-Miquelon*/
 		nvram_set("time_zone", "UTC3DST");
 	}
+	else if (nvram_match("time_zone", "JST")){	/* convert JST to JST-9 */
+		nvram_set("time_zone", "JST-9");
+	}
+
 
 	len = snprintf(tmpstr, sizeof(tmpstr), "%s", nvram_safe_get("time_zone"));
 	/* replace . with : */
@@ -1405,16 +1409,6 @@ void time_zone_x_mapping(void)
 #endif
 
 	nvram_set("time_zone_x", tmpstr);
-
-	/* special mapping */
-	if (nvram_match("time_zone", "JST"))
-		nvram_set("time_zone_x", "UCT-9");
-#if 0
-	else if (nvram_match("time_zone", "TST-10TDT"))
-		nvram_set("time_zone_x", "UCT-10");
-	else if (nvram_match("time_zone", "CST-9:30CDT"))
-		nvram_set("time_zone_x", "UCT-9:30");
-#endif
 
 	if ((fp = fopen("/etc/TZ", "w")) != NULL) {
 		fprintf(fp, "%s\n", tmpstr);

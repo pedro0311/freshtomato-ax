@@ -1939,12 +1939,23 @@ void nat_setting(char *wan_if, char *wan_ip, char *wanx_if, char *wanx_ip, char 
 				}
 #endif
 				break;
+			case WAN_DSLITE:
+				break;
 			}
 #endif
+#ifdef RTCONFIG_SOFTWIRE46
+			if (get_ipv4_service_by_unit(wan_ifunit(wan_if)) != WAN_DSLITE)
+#ifdef BCM_KF_NETFILTER
+				fprintf(fp, "-A POSTROUTING %s -o %s ! -s %s -j MASQUERADE --mode %s\n", p, wan_if, wan_ip, (nvram_get_int("nat_type") ? "fullcone" : "symmetric"));
+#else
+				fprintf(fp, "-A POSTROUTING %s -o %s ! -s %s -j MASQUERADE\n", p, wan_if, wan_ip);
+#endif
+#else
 #ifdef BCM_KF_NETFILTER
 			fprintf(fp, "-A POSTROUTING %s -o %s ! -s %s -j MASQUERADE --mode %s\n", p, wan_if, wan_ip, (nvram_get_int("nat_type") ? "fullcone" : "symmetric"));
 #else
 			fprintf(fp, "-A POSTROUTING %s -o %s ! -s %s -j MASQUERADE\n", p, wan_if, wan_ip);
+#endif
 #endif
 		}
 
@@ -2621,15 +2632,17 @@ void redirect_setting(void)
 }
 #endif
 
-void write_access_restriction(FILE *fp)
+void write_access_restriction(FILE *fp_ipv4, FILE *fp_ipv6)
 {
 	char *nv, *nvp, *b;
 	char *enable, *srcip, *accessType;
 	int  https_port = 0;
 	int  http_port = 0;
 	int  cnt = 0;
+	int  cnt6 = 0;
 	char webports[16];
 	char sshport[8];
+	FILE *fp;
 
 	if (nvram_match("enable_acc_restriction", "1"))
 	{
@@ -2686,15 +2699,19 @@ void write_access_restriction(FILE *fp)
 #endif
 			if ((atoi(accessType) & ACCESS_TELNET) && nvram_get_int("telnetd_enable") == 1) {
 #ifdef RTCONFIG_PROTECTION_SERVER
-				fprintf(fp, "-A ACCESS_RESTRICTION -s %s -p tcp --dport 23 -j RETURN\n", srcip);
+				// TODO: PROTECTION_SERVER support IPv6
+				fprintf(fp, "-A ACCESS_RESTRICTION -s %s -p tcp --dport 23 -j %s\n", srcip, (fp==fp_ipv6)?"ACCEPT":"RETURN");
 #else
 				fprintf(fp, "-A ACCESS_RESTRICTION -s %s -p tcp --dport 23 -j ACCEPT\n", srcip);
 #endif
 			}
 		}
 		free(nv);
-		if(cnt) {
-			fprintf(fp, "-A ACCESS_RESTRICTION -j DROP\n");
+		if(cnt && fp_ipv4) {
+			fprintf(fp_ipv4, "-A ACCESS_RESTRICTION -j DROP\n");
+		}
+		if(cnt6 && fp_ipv6) {
+			fprintf(fp_ipv6, "-A ACCESS_RESTRICTION -j DROP\n");
 		}
 	}
 }
@@ -2722,8 +2739,6 @@ start_default_filter(int lanunit)
 {
 	// TODO: handle multiple lan
 	FILE *fp;
-	char *nv, *nvp, *b;
-	char *enable, *srcip, *accessType;
 	char *lan_if = nvram_safe_get("lan_ifname");
 	int evalRet, n;
 #ifdef CONFIG_BCMWL5
@@ -2793,83 +2808,11 @@ start_default_filter(int lanunit)
 	wgn_filter_input(fp);
 #endif
 
-	if (nvram_match("enable_acc_restriction", "1"))
-	{
-		int  https_port = 0;
-		int  http_port = 0;
-		int  cnt = 0;
-		char webports[16];
-		char sshport[8];
-#ifdef RTCONFIG_HTTPS
-		int en = nvram_get_int("http_enable");
-		if (en != 0)
-			https_port = nvram_get_int("https_lanport") ? : 443;
-
-		if (en != 1)
-#endif
-		{
-			http_port = nvram_get_int("http_lanport") ? : 80;
-		}
-		if (http_port != 0 && https_port != 0)
-			snprintf(webports, sizeof(webports), "%d,%d", http_port, https_port);
-		else
-			snprintf(webports, sizeof(webports), "%d", http_port != 0 ? http_port : https_port);
-
-#ifdef RTCONFIG_SSH
-		if (nvram_get_int("sshd_enable") != 0)
-			snprintf(sshport, sizeof(sshport), ",%d", nvram_get_int("sshd_port") ? : 22);
-		else
-#endif
-			strcpy(sshport, "");
-
-		fprintf(fp, "-A INPUT -p tcp -m multiport --dport %s%s%s -j ACCESS_RESTRICTION\n",
-			    webports, sshport, nvram_get_int("telnetd_enable") == 1 ? ",23" : "");
-
-		nvp = nv = strdup(nvram_safe_get("restrict_rulelist"));
-		while (nv && (b = strsep(&nvp, "<")) != NULL) {
-			if ((vstrsep(b, ">", &enable, &srcip, &accessType) != 3)) continue;
-			if (!strcmp(enable, "0")) continue;
-
-			cnt++;
-			if (!(atoi(accessType) ^ ACCESS_ALL)) {
-#ifdef RTCONFIG_PROTECTION_SERVER
-				fprintf(fp, "-A ACCESS_RESTRICTION -s %s -j RETURN\n", srcip);
-#else
-				fprintf(fp, "-A ACCESS_RESTRICTION -s %s -j ACCEPT\n", srcip);
-#endif
-				continue;
-			}
-				if (atoi(accessType) & ACCESS_WEBUI) {
-					fprintf(fp, "-A ACCESS_RESTRICTION -s %s -p tcp -m multiport --dport %s -j ACCEPT\n", srcip, webports);
-				}
-#ifdef RTCONFIG_SSH
-			if ((atoi(accessType) & ACCESS_SSH) && nvram_get_int("sshd_enable") != 0 ) {
-#ifdef RTCONFIG_PROTECTION_SERVER
-				fprintf(fp, "-A ACCESS_RESTRICTION -s %s -p tcp --dport %d -j RETURN\n", srcip, nvram_get_int("sshd_port") ? : 22);
-#else
-				fprintf(fp, "-A ACCESS_RESTRICTION -s %s -p tcp --dport %d -j ACCEPT\n", srcip, nvram_get_int("sshd_port") ? : 22);
-#endif
-			}
-#endif
-			if ((atoi(accessType) & ACCESS_TELNET) && nvram_get_int("telnetd_enable") == 1) {
-#ifdef RTCONFIG_PROTECTION_SERVER
-				fprintf(fp, "-A ACCESS_RESTRICTION -s %s -p tcp --dport 23 -j RETURN\n", srcip);
-#else
-				fprintf(fp, "-A ACCESS_RESTRICTION -s %s -p tcp --dport 23 -j ACCEPT\n", srcip);
-#endif
-			}
-		}
-		free(nv);
-		if(cnt) {
-			fprintf(fp, "-A ACCESS_RESTRICTION -j DROP\n");
-		}
-	}
-
 	fprintf(fp, "-A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT\n");
 	fprintf(fp, "-A INPUT -m state --state INVALID -j %s\n", debug ? "ACCEPT" : "DROP");
 
 	/* Specific IP access restriction */
-	write_access_restriction(fp);
+	write_access_restriction(fp, NULL);
 
 #ifdef RTCONFIG_PROTECTION_SERVER
 	if (nvram_get_int("telnetd_enable") != 0
@@ -2938,6 +2881,7 @@ start_default_filter(int lanunit)
 		":INPUT %s [0:0]\n"
 		":FORWARD %s [0:0]\n"
 		":OUTPUT %s [0:0]\n"
+		":ACCESS_RESTRICTION - [0:0]\n"
 		":logaccept - [0:0]\n"
 		":logdrop - [0:0]\n",
 		debug ? "ACCEPT" : "DROP",
@@ -2949,6 +2893,9 @@ start_default_filter(int lanunit)
 		fprintf(fp, "-A INPUT -m state --state INVALID -j %s\n", debug ? "ACCEPT" : "DROP");
 		fprintf(fp, "-A INPUT -i %s -m state --state NEW -j ACCEPT\n", lan_if);
 		fprintf(fp, "-A INPUT -i %s -m state --state NEW -j ACCEPT\n", "lo");
+
+		/* Specific IP access restriction */
+		write_access_restriction(NULL, fp);
 
 #ifdef RTCONFIG_SOFTWIRE46
 		if (!strncmp(nvram_safe_get("territory_code"), "JP", 2)) {
@@ -3477,6 +3424,7 @@ filter_setting(int wan_unit, char *lan_if, char *lan_ip, char *logaccept, char *
 		    ":INPUT ACCEPT [0:0]\n"
 		    ":FORWARD %s [0:0]\n"
 		    ":OUTPUT ACCEPT [0:0]\n"
+		    ":ACCESS_RESTRICTION - [0:0]\n"
 #ifdef RTCONFIG_INTERNETCTRL
 		    ":IControls - [0:0]\n"
 #endif
@@ -3772,7 +3720,11 @@ TRACE_PT("writing Parental Control\n");
 #endif
 
 		/* Specific IP access restriction */
-		write_access_restriction(fp);
+#ifdef RTCONFIG_IPV6
+		write_access_restriction(fp, fp_ipv6);
+#else
+		write_access_restriction(fp, NULL);
+#endif
 
 #ifdef RTCONFIG_PROTECTION_SERVER
 		if (nvram_get_int("telnetd_enable") != 0
@@ -3855,6 +3807,7 @@ TRACE_PT("writing Parental Control\n");
 		case WAN_MAPE:
 		case WAN_V6PLUS:
 		case WAN_OCNVC:
+		case WAN_DSLITE:
 #endif
 		case WAN_DISABLED:
 			break;
@@ -3992,6 +3945,7 @@ TRACE_PT("writing Parental Control\n");
 			case WAN_MAPE:
 			case WAN_V6PLUS:
 			case WAN_OCNVC:
+			case WAN_DSLITE:
 				fprintf(fp_ipv6, "-A INPUT -p 4 -j %s\n", "ACCEPT");
 				break;
 			}
@@ -4144,7 +4098,7 @@ TRACE_PT("writing Parental Control\n");
 	    dualwan_unit__usbif(wan_unit) ||
 #endif
 #ifdef RTCONFIG_SOFTWIRE46
-	    wan_proto == WAN_LW4O6 || wan_proto == WAN_MAPE || wan_proto == WAN_V6PLUS || wan_proto == WAN_OCNVC ||
+	    wan_proto == WAN_LW4O6 || wan_proto == WAN_MAPE || wan_proto == WAN_V6PLUS || wan_proto == WAN_OCNVC || wan_proto == WAN_DSLITE ||
 #endif
 	    wan_proto == WAN_PPPOE || wan_proto == WAN_PPTP || wan_proto == WAN_L2TP) {
 		fprintf(fp, "-A FORWARD -p tcp -m tcp --tcp-flags SYN,RST SYN -j TCPMSS --clamp-mss-to-pmtu\n");
@@ -4951,6 +4905,7 @@ filter_setting2(char *lan_if, char *lan_ip, char *logaccept, char *logdrop)
 		    ":INPUT ACCEPT [0:0]\n"
 		    ":FORWARD %s [0:0]\n"
 		    ":OUTPUT ACCEPT [0:0]\n"
+		    ":ACCESS_RESTRICTION - [0:0]\n"
 #ifdef RTCONFIG_INTERNETCTRL
 		    ":IControls - [0:0]\n"
 #endif
@@ -5260,7 +5215,11 @@ TRACE_PT("writing Parental Control\n");
 #endif
 
 		/* Specific IP access restriction */
-		write_access_restriction(fp);
+#ifdef RTCONFIG_IPV6
+		write_access_restriction(fp, fp_ipv6);
+#else
+		write_access_restriction(fp, NULL);
+#endif
 
 #ifdef RTCONFIG_PROTECTION_SERVER
 		if (nvram_get_int("telnetd_enable") != 0
@@ -5355,6 +5314,7 @@ TRACE_PT("writing Parental Control\n");
 			case WAN_MAPE:
 			case WAN_V6PLUS:
 			case WAN_OCNVC:
+			case WAN_DSLITE:
 #endif
 			case WAN_DISABLED:
 				continue;
@@ -5475,6 +5435,7 @@ TRACE_PT("writing Parental Control\n");
 				case WAN_MAPE:
 				case WAN_V6PLUS:
 				case WAN_OCNVC:
+				case WAN_DSLITE:
 					fprintf(fp_ipv6, "-A INPUT -p 4 -j %s\n", "ACCEPT");
 					break;
 				default:
@@ -5633,7 +5594,7 @@ TRACE_PT("writing Parental Control\n");
 		    dualwan_unit__usbif(unit) ||
 #endif
 #ifdef RTCONFIG_SOFTWIRE46
-		    wan_proto == WAN_LW4O6 || wan_proto == WAN_MAPE || wan_proto == WAN_V6PLUS || wan_proto == WAN_OCNVC ||
+		    wan_proto == WAN_LW4O6 || wan_proto == WAN_MAPE || wan_proto == WAN_V6PLUS || wan_proto == WAN_OCNVC || wan_proto == WAN_DSLITE ||
 #endif
 		    wan_proto == WAN_PPPOE || wan_proto == WAN_PPTP || wan_proto == WAN_L2TP) {
 		clamp_mss:
@@ -6649,6 +6610,7 @@ mangle_setting(char *wan_if, char *wan_ip, char *lan_if, char *lan_ip, char *log
 		case WAN_MAPE:
 		case WAN_V6PLUS:
 		case WAN_OCNVC:
+		case WAN_DSLITE:
 #ifdef RTCONFIG_BCMARM
 #ifdef HND_ROUTER
 			if (!nvram_match("fc_pt_war", "1"))
@@ -7085,7 +7047,7 @@ int start_firewall(int wanunit, int lanunit)
 	char wanx_if[IFNAMSIZ+1], wanx_ip[32];
 	char prefix[] = "wanXXXXXXXXXX_", tmp[100];
 	int lock;
-	char rp_if[32] = {0};
+	char rp_if[32] __attribute__((unused)) = {0};
 
 	if (!is_routing_enabled())
 		return -1;

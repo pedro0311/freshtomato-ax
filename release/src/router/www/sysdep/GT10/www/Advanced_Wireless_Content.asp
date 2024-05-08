@@ -1075,6 +1075,13 @@ function applyRule(){
 							variable['wl0_bw_160'] = '0';
 						}
 
+						if ($('#band2_160').is(':checked')) {
+							variable['wl1_bw_160'] = '1';
+						}
+						else {
+							variable['wl1_bw_160'] = '0';
+						}
+
 						if(document.form.wl_auth_mode_x.value == 'psk2'
 						|| document.form.wl_auth_mode_x.value == 'sae'
 						|| document.form.wl_auth_mode_x.value == 'pskpsk2'
@@ -1225,6 +1232,13 @@ function applyRule(){
 					}
 					else {
 						variable['wl0_bw_160'] = '0';
+					}
+
+					if ($('#band2_160').is(':checked')) {
+						variable['wl1_bw_160'] = '1';
+					}
+					else {
+						variable['wl1_bw_160'] = '0';
 					}
 
 					variable['wl1_ssid'] = document.form.wl_ssid.value;
@@ -1393,11 +1407,21 @@ function applyRule(){
 					}
 				}
 
-				if ($('#enable_160mhz').is(':checked')){
-					variable['wl1_bw_160'] = '1';
+				if(based_modelid === 'GT10'){
+					if ($('#band2_160').is(':checked')) {
+						variable['wl1_bw_160'] = '1';
+					}
+					else {
+						variable['wl1_bw_160'] = '0';
+					}
 				}
-				else {
-					variable['wl1_bw_160'] = '0';
+				else{
+					if ($('#enable_160mhz').is(':checked')){
+						variable['wl1_bw_160'] = '1';
+					}
+					else {
+						variable['wl1_bw_160'] = '0';
+					}
 				}
 			}
 		}

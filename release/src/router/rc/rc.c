@@ -1323,6 +1323,11 @@ static int rctest_main(int argc, char *argv[])
 		else if (strcmp(argv[1], "ch_band") == 0) {
 			printf("ch_band of %s: %d\n", argv[2], wl_get_chlist_band(argv[2]));
 		}
+#if defined(RTCONFIG_HND_ROUTER_AX_6756) || defined(RTCONFIG_HND_ROUTER_BE_4916)
+		else if (strcmp(argv[1], "set_chwt") == 0) {
+			acs_set_chwt(atoi(argv[2]));
+		}
+#endif
 #if 0
 #if defined(EBG19)
 		else if (strcmp(argv[1], "readv") == 0) {
@@ -2231,6 +2236,7 @@ static const applets_t applets[] = {
 	{ "auto46det", 			auto46det_main			},
 	{ "v6plusd", 			v6plusd_main			},
 	{ "ocnvcd", 			ocnvcd_main			},
+	{ "dslited", 			dslited_main			},
 #endif
 #if defined(RTCONFIG_RALINK) || defined(RTCONFIG_EXT_RTL8365MB) || defined(RTCONFIG_EXT_RTL8370MB) || defined(RTAX55) || defined(RTAX1800) || defined(RTAX58U_V2) || defined(RTAX3000N) || defined(BR63)
 	{ "rtkswitch",			config_rtkswitch		},
@@ -2281,6 +2287,8 @@ static const applets_t applets[] = {
 #endif
 #if defined(RTAX82U) || defined(GSAX3000) || defined(GSAX5400) || defined(TUFAX5400) || defined(GTAX11000_PRO) || defined(GTAXE16000) || defined(GTAX6000) || defined(GT10) || defined(RTAX82U_V2) || defined(TUFAX5400_V2)
 	{ "ledg",			ledg_main			},
+#endif
+#if defined(RTAX82U) || defined(GSAX3000) || defined(GSAX5400) || defined(TUFAX5400) || defined(GTAX6000) || defined(GT10) || defined(RTAX82U_V2) || defined(TUFAX5400_V2)
 	{ "ledbtn",			ledbtn_main			},
 #endif
 #if defined(DSL_AX82U)

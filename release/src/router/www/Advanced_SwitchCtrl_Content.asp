@@ -123,7 +123,6 @@ function disable_lacp_if_conflicts_with_iptv(){
 
 function initial(){
 	if((based_modelid == "RT-AX89U" || based_modelid == "GT-AXY16000")){
-		var wans_dualwan_array = '<% nvram_get("wans_dualwan"); %>'.split(" ");
 		document.form.aqr_hwnat_type.disabled = false;
 		document.form.aqr_link_speed.disabled = false;
 		document.form.aqr_ipg.disabled = false;
@@ -136,6 +135,14 @@ function initial(){
 		if (wans_dualwan_array.indexOf("sfp+") == -1) {
 			document.form.sfpp_module_ipaddr.disabled = true;
 			document.getElementById("sfpp_module_ipaddr").style.color = "#8C8C8C";
+		}
+		if (sfpp2500m_support) {
+			var desc = [ "<#Auto#>", "1Gbps", "2.5Gbps", "10Gbps" ];
+			var val = [ "0", "1000", "2500", "10000" ];
+			var orig_sfpp_speed = '<% nvram_get("sfpp_max_speed"); %>';
+			if (val.indexOf(orig_sfpp_speed) == -1)
+				orig_sfpp_speed = val[0];
+			add_options_x2(document.form.sfpp_max_speed, desc, val, orig_sfpp_speed);
 		}
 		if (sw_mode != "1") {
 			document.getElementById("sfpp_ipaddr_tr").style.display = "none";

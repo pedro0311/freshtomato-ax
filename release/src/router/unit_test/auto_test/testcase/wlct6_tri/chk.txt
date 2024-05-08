@@ -1,2 +1,7 @@
 SWITCH=DEVICE_0
-CHECKFILE=/jffs/amas_bhopt.log
+CHECKFILE=/jffs/amas_wlcconnect.log
+Receive event: RESTART_CONNECTING
+BandIndex\(2\) Unit\(2\) Scanned AP
+Ready to connect to AP\(NULL\)
+BandIndex\(0\) Unit\(0\) Scanned AP
+Ready to connect to AP\(NULL\)

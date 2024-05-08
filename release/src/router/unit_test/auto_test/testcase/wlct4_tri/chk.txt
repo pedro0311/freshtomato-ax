@@ -1,4 +1,6 @@
+COMPARE=DEVICE_0,nvram get amas_wlc2_state,=,,2
 SWITCH=DEVICE_0
-CHECKFILE=/jffs/amas_bhopt.log
-Band\(2\) Action mode: AMAS_WLCCONNECT_ACTION_MODE_ACTION_START. Connected and skip re-connecting.
-Band\(0\) Connecting to AP\(
+CHECKFILE=/jffs/amas_wlcconnect.log
+Receive event: START_CONNECTING
+BandIndex\(1\) Unit\(1\) Not USE. Disconnect it
+The Request Done.

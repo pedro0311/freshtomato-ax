@@ -329,12 +329,14 @@ apply.pppoe = function(){
 		}
 		else{
 			if(isWANChanged() || window.pppAuthFailChecked){
-				httpApi.nvramSet((function(){
-					qisPostData.action_mode = "apply";
-					qisPostData.rc_service = "restart_wan_if " + systemVariable.ethWanIf;
-					return qisPostData;
-				})());
+				if(!qisPostData.hasOwnProperty("ipv6_service")){
 
+					httpApi.nvramSet((function(){
+						qisPostData.action_mode = "apply";
+						qisPostData.rc_service = "restart_wan_if " + systemVariable.ethWanIf;
+						return qisPostData;
+					})());
+				}
 				updateOriginWan();
 			}
 	
@@ -450,6 +452,31 @@ apply.ocnvc = function(){
 		updateOriginWan();
 	}
 	
+	goTo.Wireless();
+};
+
+apply.dslite = function(){
+	if($("#wan_dhcp_option_checkbox").is(":checked")){
+		$("#wan_dhcp_option_checkbox").prop("checked", false);
+		$("#wan_dhcp_option_checkbox").prev().toggleClass('ui-checkbox-on ui-checkbox-off');
+	}
+
+	if(isWANChanged()){
+		$.ajax({
+			url: "/s46reset.cgi",
+
+			success: function( response ) {
+			}
+		});
+		httpApi.nvramSet((function(){
+			qisPostData.action_mode = "apply";
+			qisPostData.rc_service = "restart_wan_if " + systemVariable.ethWanIf;
+			return qisPostData;
+		})());
+
+		updateOriginWan();
+	}
+
 	goTo.Wireless();
 };
 
@@ -846,7 +873,7 @@ apply.wlcKey = function(){
 			qisPostData["wlc" + unit + "_wep"] = wep;
 			isWepAuthMode = true;
 		}
-		else if(auth_mode == "psk" || auth_mode == "psk2"){
+		else if(auth_mode == "psk" || auth_mode == "psk2" || auth_mode == "sae"){
 			qisPostData["wlc" + unit + "_crypto"] = $("#wlc_crypto_manual").val();
 		}
 	}
@@ -908,7 +935,7 @@ apply.wlcKey = function(){
 				systemVariable.selectedAP['wlc' + unit + '_wep'] = wep;
 				isWepAuthMode = true;
 			}
-			else if(auth_mode == "psk" || auth_mode == "psk2"){
+			else if(auth_mode == "psk" || auth_mode == "psk2" || auth_mode == "sae"){
 				systemVariable.selectedAP['encryption'] = $("#wlc_crypto_manual").val();
 			}
 
@@ -1196,7 +1223,7 @@ apply.submitQIS = function(){
 			if(isSupport("yadns") && isSwMode("RT")){
 				return goTo.Yadns;
 			}
-			else if(systemVariable.isNewFw != 0 && !isSupport("amas_bdl")){
+			else if(systemVariable.isNewFw != 0){
 				return goTo.Update;
 			}
 			else{
@@ -2043,7 +2070,7 @@ abort.wireless = function(){
 			else
 				goTo.loadPage("lanStatic_setting", true);
 		}
-		else if(systemVariable.manualWanType == "DHCP" || systemVariable.manualWanType == "V6PLUS" || systemVariable.manualWanType == "OCNVC"){
+		else if(systemVariable.manualWanType == "DHCP" || systemVariable.manualWanType == "V6PLUS" || systemVariable.manualWanType == "OCNVC" || systemVariable.manualWanType == "DSLITE"){
 			goTo.loadPage("wan_setting", true);
 		}
 		else if(systemVariable.detwanResult.wanType == "DHCP" || systemVariable.detwanResult.wanType == "CONNECTED"){
@@ -2237,6 +2264,9 @@ abort.wan46 = function(wantype){
 
 	if(wantype=="OCNVC")
 		postDataModel.remove(wanObj.ocnvc);
+
+	if(wantype=="DSLITE_XPASS" || wantype=="DSLITE_TRANSIX")
+		postDataModel.remove(wanObj.dslite);
 
 	goTo.advSetting();
 	$("#wan46_page").empty();
@@ -2549,8 +2579,11 @@ goTo.autoWan = function(skip_auto46det_flag){
 			case "OCNVC":
 				goTo.wan46();
 				break;
-			case "":
-				goTo.Waiting46();
+			case "DSLITE_XPASS":
+				goTo.wan46();
+				break;
+			case "DSLITE_TRANSIX":
+				goTo.wan46();
 				break;
 			default:
 				skip_auto46det++;
@@ -3107,6 +3140,23 @@ goTo.OCNVC = function(){
 	
 	apply.ocnvc();
 };
+
+goTo.DSLITE = function(){
+	if(systemVariable.originWanType.toLowerCase() !== "dslite"){
+		postDataModel.remove(wanObj.all);
+
+		postDataModel.insert(wanObj.general);
+		postDataModel.insert(wanObj.dslite);
+		qisPostData.wan_proto = "dslite";
+	}
+
+	if(systemVariable.manualWanSetup){
+		systemVariable.manualWanType = 'DSLITE';
+	}
+
+	apply.dslite();
+};
+
 
 goTo.PPTP = function(){
 	postDataModel.insert(wanObj.general);
@@ -4320,6 +4370,12 @@ goTo.NoWan = function(){
 					case "OCNVC":
 						goTo.wan46();
 						break;
+					case "DSLITE_XPASS":
+						goTo.wan46();
+						break;
+					case "DSLITE_TRANSIX":
+						goTo.wan46();
+						break;
 					default:
 						if(isPage("noWan_page")){
 							setTimeout(arguments.callee, 1000);
@@ -4522,14 +4578,7 @@ goTo.Waiting46 = function(){
 };
 
 goTo.leaveQIS = function(){
-	if(isSupport("amas") && isSupport("amas_bdl") && (isSwMode("RT") || isSwMode("AP"))){
-		httpApi.log("goTo.leaveQIS", "goTo.amasbundle()", systemVariable.qisSession);
-		goTo.amasbundle();
-	}
-	else{
-		httpApi.log("goTo.leaveQIS", "go index page", systemVariable.qisSession);
-		location.href = "/";
-	}
+	location.href = "/";
 }
 
 goTo.AsusPP = function(){
@@ -4644,7 +4693,7 @@ goTo.WANOption = function(){
 		var title_div = $("<div>")
 						.attr("id", "usb_bk")
 						.addClass("selectBar")
-						.html("USB")
+						.html("<#dualwan_usb_backup#>")
 						.click(function(){
 							apply.USBBackup();
 						});

@@ -9,4 +9,4 @@ amas_ipc -m 2 -e RESTART_CONNECTING
 SLEEP=10
 IFGO=120=nvram get amas_wlc0_state=2
 IFGO=120=nvram get amas_wlc2_state=2
-rm -rf /jffs/amas_bhopt.log
+rm -rf /jffs/amas_wlcconnect.log

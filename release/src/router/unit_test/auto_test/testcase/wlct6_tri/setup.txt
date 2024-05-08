@@ -5,9 +5,9 @@ nvram set amas_wlc_active=50
 nvram set amas_wlc0_priority=3
 nvram set amas_wlc2_priority=0
 nvram commit
-rm -rf /jffs/amas_bhopt.log
+rm -rf /jffs/amas_wlcconnect.log
 SWITCH=DEVICE_1
 wl -i $(nvram get wl0_ifname) radio off
 SLEEP=5
-wl -i $(nvram get wl1_ifname) radio off
+wl -i $(nvram get wl2_ifname) radio off
 SLEEP=5

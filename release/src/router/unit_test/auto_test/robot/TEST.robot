@@ -9,21 +9,9 @@ Library           SeleniumLibrary
 Library           Telnet
 Library           String
 Library           auto_test.py
-
-*** Variables ***
-${PATH_COMMON}    D:\\auto_test\\testcase
-${DEVICE_0_IP}    192.168.50.1
-${DEVICE_0_USER}    admin
-${DEVICE_0_PWD}    adminAdmin123@
-${DEVICE_1_IP}    192.168.50.121
-${DEVICE_1_USER}    admin
-${DEVICE_1_PWD}    adminAdmin123@
-${COM_ENT_FH}     0
-
-
-
-
-
+Library           freewifi.py
+Resource          TEST.resource
+Library           DateTime
 
 *** Test Cases ***
 ob_eth_recover
@@ -50,8 +38,7 @@ channel_plan_eap_qb
 
 channel_plan_eap_db
     [Tags]    AMAS_CHANNEL_PLAN    AMAS_CENTRAL_CONTROL
-    [Template]    testcase
-    ${PATH_COMMON}\\aimesh\\channel_plan_eap_db
+    testcase    ${PATH_COMMON}\\aimesh\\channel_plan_eap_db
 
 channel_plan_manual_eap_qb
     [Documentation]    Channel Plan by manual驗證 for ethernet backhaul mode
@@ -277,6 +264,42 @@ wgn_to_sdn_test
     [Tags]    AMAS_WGN
     testcase    ${PATH_COMMON}\\wgn_to_sdn_test
 
+sdn_freewifi_no_passwd_authentication
+    [Tags]     FREE_WIFI
+    Free_testcase    ${PATH_COMMON}      sdn_freewifi_test_1free
+    ${time}=    Free_testcase    ${PATH_COMMON}      sdn_cpwifi_connect_noauth
+    Free_testcase    ${PATH_COMMON}      sdn_freewifi_test_1free_check      ${time}
+
+sdn_freewifi_cpwifi_2cpl
+    [Tags]     FREE_WIFI
+    Free_testcase    ${PATH_COMMON}      sdn_freewifi_test_2cpl
+    ${time}=    Free_testcase    ${PATH_COMMON}      sdn_cpwifi_connect_authlocal
+    Free_testcase    ${PATH_COMMON}      sdn_freewifi_test_2cpl_check       ${time}
+
+sdn_freewifi_test_2cplno
+    [Tags]     FREE_WIFI
+    Free_testcase    ${PATH_COMMON}      sdn_freewifi_test_2cplno
+    ${time}=    Free_testcase    ${PATH_COMMON}      sdn_cpwifi_connect_noauth
+    Free_testcase    ${PATH_COMMON}      sdn_freewifi_test_2cplno_check     ${time}
+
+sdn_freewifi_test_3cpr
+    [Tags]     FREE_WIFI
+    Free_testcase    ${PATH_COMMON}      sdn_freewifi_test_3cpr
+    ${time}=    Free_testcase    ${PATH_COMMON}      sdn_cpwifi_connect_authradius
+    Free_testcase    ${PATH_COMMON}      sdn_freewifi_test_3cpr_check       ${time}
+
+sdn_freewifi_test_4fc_1
+    [Tags]     FREE_WIFI
+    Free_testcase    ${PATH_COMMON}      sdn_freewifi_test_4fc
+    ${time}=    Free_testcase    ${PATH_COMMON}      sdn_cpwifi_connect_authlocal
+    Free_testcase    ${PATH_COMMON}      sdn_freewifi_test_4fc_check     ${time}
+
+sdn_freewifi_test_4fc_3
+    [Tags]     FREE_WIFI
+    Free_testcase    ${PATH_COMMON}      sdn_freewifi_test_4fc
+    ${time}=    Free_testcase    ${PATH_COMMON}      sdn_cpwifi_connect_noauth
+    Free_testcase    ${PATH_COMMON}      sdn_freewifi_test_1free_check   ${time}
+
 *** Keywords ***
 Test_setup
     LOG    "\nAiMesh Auto test tool v1.3"
@@ -286,15 +309,44 @@ testcase
     [Arguments]    ${path}
     #selectTestCaseScript    ${path}
     selectTestCase    ${path}
-    load_device_config
+    load_device_config      ${DEIVCE_IP}     ${DEVICE_USER}     ${DEVICE_PWD}
     enable_telnet
     telnet_connect_to_devices
     SetupEnviConfig
     sleep    1
     runTestConfig
-    ${flag}=    chkResult
-    Run Keyword IF    ${flag}!=0    FAIL    Else    Log    "Pass"
+    ${flag}     ${fail_log} =    chkResult
+    Run Keyword IF    ${flag}!=0    FAIL     ${fail_log}      Else    Log    "Pass"
 
+free_testcase
+    [Arguments]    ${PATH_COMMON}    ${free_casename}   ${time_open}=0
+    ${freewififlag}     ${wifi_obj}     freewifi     ${PATH_COMMON}      ${free_casename}
+    selectTestCase      ${PATH_COMMON}\\${free_casename}
+    Log To Console    ${DEIVCE_IP}
+    load_device_config      ${DEIVCE_IP}     ${DEVICE_USER}     ${DEVICE_PWD}
+    ${wificlient}=       freewifi_load_device_config
+    Log To Console    wificlient:${wificlient}
+    IF    ${wificlient}!=1
+        enable_telnet
+        telnet_connect_to_devices
+        SetupEnviConfig
+        runTestConfig
+    END
+    ${time}=    freewifi_chk      ${freewififlag}     ${wifi_obj}
+    IF    ${wificlient}!=1
+        ${flag}     ${fail_log}=      chkResult
+        IF    ${flag}==1
+            Fail    ${fail_log}
+        END
+        Log To Console    time_open:${time_open}
+        IF    '${time_open}' != '0'
+            ${time_result}=     timeout_test    ${time_open}     ${TIME_OUT}
+            IF    ${time_result} == False
+                Fail    The connection is not properly disconnected.
+            END
+        END
+    END
+    [Return]    ${time}
 Test_recover
     recover_settings
     telnet_exit_devices

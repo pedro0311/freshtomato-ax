@@ -1175,6 +1175,9 @@ function Get_Component_Setting_Profile(_type){
 		var dns_server_parm = {"title":"<#LANHostConfig_x_LDNSServer1_itemname#> (option)", "type":"text", "id":"wgc_dns", "need_check":false, "show_item":["wireguard"], "maxlength":128};/* untranslated */
 		$interface_content_container.append(Get_Component_Input(dns_server_parm));
 
+		var wgc_mtu_parm = {"title":"MTU (option)", "type":"text", "id":"wgc_mtu", "need_check":false, "show_item":["wireguard"], "maxlength":4};
+		$interface_content_container.append(Get_Component_Input(wgc_mtu_parm));
+
 		var peer_title_parm = {"title":"<#vpnc_peer#>", "show_item":["wireguard"], "slide_target":"peer"};
 		$content_container.append(Get_Component_Slide_Title(peer_title_parm));
 
@@ -2432,6 +2435,7 @@ function set_profile_data(_obj, _data){
 		var $wgc_priv = $(_obj).find("#wgc_priv");
 		var $wgc_addr = $(_obj).find("#wgc_addr");
 		var $wgc_dns = $(_obj).find("#wgc_dns");
+		var $wgc_mtu = $(_obj).find("#wgc_mtu");
 		var $wgc_ppub = $(_obj).find("#wgc_ppub");
 		var $wgc_psk = $(_obj).find("#wgc_psk");
 		var $wgc_aips = $(_obj).find("#wgc_aips");
@@ -2487,6 +2491,7 @@ function set_profile_data(_obj, _data){
 			$wgc_priv.val(htmlEnDeCode.htmlEncode(httpApi.nvramGet(["wgc"+wgc_unit+"_priv"], true)["wgc"+wgc_unit+"_priv"]));
 			$wgc_addr.val(htmlEnDeCode.htmlEncode(httpApi.nvramGet(["wgc"+wgc_unit+"_addr"], true)["wgc"+wgc_unit+"_addr"]));
 			$wgc_dns.val(htmlEnDeCode.htmlEncode(httpApi.nvramGet(["wgc"+wgc_unit+"_dns"], true)["wgc"+wgc_unit+"_dns"]));
+			$wgc_mtu.val(htmlEnDeCode.htmlEncode(httpApi.nvramGet(["wgc"+wgc_unit+"_mtu"], true)["wgc"+wgc_unit+"_mtu"]));
 			$wgc_ppub.val(htmlEnDeCode.htmlEncode(httpApi.nvramGet(["wgc"+wgc_unit+"_ppub"], true)["wgc"+wgc_unit+"_ppub"]));
 			$wgc_psk.val(htmlEnDeCode.htmlEncode(httpApi.nvramGet(["wgc"+wgc_unit+"_psk"], true)["wgc"+wgc_unit+"_psk"]));
 			$wgc_aips.val(htmlEnDeCode.htmlEncode(httpApi.nvramGet(["wgc"+wgc_unit+"_aips"], true)["wgc"+wgc_unit+"_aips"]));
@@ -2531,6 +2536,7 @@ function set_profile_data(_obj, _data){
 			$wgc_priv.val(htmlEnDeCode.htmlEncode(httpApi.nvramDefaultGet(["wgc_priv"]).wgc_priv));
 			$wgc_addr.val(htmlEnDeCode.htmlEncode(httpApi.nvramDefaultGet(["wgc_addr"]).wgc_addr));
 			$wgc_dns.val(htmlEnDeCode.htmlEncode(httpApi.nvramDefaultGet(["wgc_dns"]).wgc_dns));
+			$wgc_mtu.val(htmlEnDeCode.htmlEncode(httpApi.nvramDefaultGet(["wgc_mtu"]).wgc_mtu));
 			$wgc_ppub.val(htmlEnDeCode.htmlEncode(httpApi.nvramDefaultGet(["wgc_ppub"]).wgc_ppub));
 			$wgc_psk.val(htmlEnDeCode.htmlEncode(httpApi.nvramDefaultGet(["wgc_psk"]).wgc_psk));
 			$wgc_aips.val(htmlEnDeCode.htmlEncode(httpApi.nvramDefaultGet(["wgc_aips"]).wgc_aips));
@@ -2837,6 +2843,7 @@ function set_apply_btn_status(_obj, _data){
 						var wgc_priv = $(_obj).find("#wgc_priv").val();
 						var wgc_addr = $(_obj).find("#wgc_addr").val();
 						var wgc_dns = $(_obj).find("#wgc_dns").val();
+						var wgc_mtu = $(_obj).find("#wgc_mtu").val();
 						var wgc_ppub = $(_obj).find("#wgc_ppub").val();
 						var wgc_psk = $(_obj).find("#wgc_psk").val();
 						var wgc_aips = $(_obj).find("#wgc_aips").val();
@@ -2850,6 +2857,7 @@ function set_apply_btn_status(_obj, _data){
 						nvramSet_obj["wgc_priv"] = wgc_priv;
 						nvramSet_obj["wgc_addr"] = wgc_addr;
 						nvramSet_obj["wgc_dns"] = wgc_dns;
+						nvramSet_obj["wgc_mtu"] = wgc_mtu;
 						nvramSet_obj["wgc_ppub"] = wgc_ppub;
 						nvramSet_obj["wgc_psk"] = wgc_psk;
 						nvramSet_obj["wgc_aips"] = wgc_aips;
@@ -2870,6 +2878,7 @@ function set_apply_btn_status(_obj, _data){
 						nvramSet_obj["wgc_priv"] = ssk_wgc_priv;
 						nvramSet_obj["wgc_addr"] = "10.14.0.2/16";
 						nvramSet_obj["wgc_dns"] = "162.252.172.57,149.154.159.92";
+						nvramSet_obj["wgc_mtu"] = "";
 						nvramSet_obj["wgc_ppub"] = ssk_wgc_ppub;	
 						nvramSet_obj["wgc_psk"] = "";
 						nvramSet_obj["wgc_aips"] = "0.0.0.0/0";
@@ -3095,6 +3104,7 @@ function set_del_profile(_obj, _data){
 					nvramSet_obj["wgc_priv"] = httpApi.nvramDefaultGet(["wgc_priv"]).wgc_priv;
 					nvramSet_obj["wgc_addr"] = httpApi.nvramDefaultGet(["wgc_addr"]).wgc_addr;
 					nvramSet_obj["wgc_dns"] = httpApi.nvramDefaultGet(["wgc_dns"]).wgc_dns;
+					nvramSet_obj["wgc_mtu"] = httpApi.nvramDefaultGet(["wgc_mtu"]).wgc_mtu;
 					nvramSet_obj["wgc_ppub"] = httpApi.nvramDefaultGet(["wgc_ppub"]).wgc_ppub;
 					nvramSet_obj["wgc_psk"] = httpApi.nvramDefaultGet(["wgc_psk"]).wgc_psk;
 					nvramSet_obj["wgc_aips"] = httpApi.nvramDefaultGet(["wgc_aips"]).wgc_aips;
@@ -3730,6 +3740,17 @@ function validate_format(_obj){
 			if(isValid_wgc_dns.isError){
 				$wgc_dns.show_validate_hint(isValid_wgc_dns.errReason);
 				$wgc_dns.focus();
+				return false;
+			}
+		}
+
+		var $wgc_mtu = $(_obj).find("#wgc_mtu");
+		$wgc_mtu.val($wgc_mtu.val().replace(/\s+/g, ''));//remove space
+		if($wgc_mtu.val() != ""){
+			var isValid_wgc_mtu = valid_num_range($wgc_mtu.val(), 1280, 1440);
+			if(isValid_wgc_mtu.isError){
+				$wgc_mtu.show_validate_hint(isValid_wgc_mtu.errReason);
+				$wgc_mtu.focus();
 				return false;
 			}
 		}
