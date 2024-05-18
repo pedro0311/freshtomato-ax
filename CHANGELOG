@@ -5,6 +5,15 @@ FreshTomato-AX Changelog
 
 
 
+2024.2          2024.05.19
+---------------------------
+- merge GPL_TUF_AX3000_V2_3004_388_24353
+- rc: firewall.c - fix write_access_restriction() that's broken in 24353
+- router: dropbear: re-add scp applet with patch (adjust for GPL 3.0.0.4.388.24353)
+- router: iperf3 - fix building under newer autoconf versions 
+- others: cru - improve cru locking to prevent concurrent updates
+
+
 2024.1          2024.02.14
 ---------------------------
 
