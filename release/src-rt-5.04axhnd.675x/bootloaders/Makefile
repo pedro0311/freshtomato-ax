@@ -643,7 +643,7 @@ endif
 define gen_emmc_bootstrap_bins
 	# FIXME ... these sizes should not be hardcoded
 	dd if=/dev/zero of=obj/binaries/bootstrap_image_emmc_userdata_part.bin bs=1M count=3; \
-	sgdisk -n 3:1MiB:+1MiB -c 3:fit1 obj/binaries/bootstrap_image_emmc_userdata_part.bin; \
+	/usr/sbin/sgdisk -n 3:1MiB:+1MiB -c 3:fit1 obj/binaries/bootstrap_image_emmc_userdata_part.bin; \
 	dd if=obj/binaries/$(BOOTSTRAPFIT) of=obj/binaries/bootstrap_image_emmc_userdata_part.bin bs=512 seek=2048 conv=notrunc; \
 	cp $(LOADERIMG) $(objdir)/binaries/bootstrap_image_emmc_boot_part.bin; 
 endef

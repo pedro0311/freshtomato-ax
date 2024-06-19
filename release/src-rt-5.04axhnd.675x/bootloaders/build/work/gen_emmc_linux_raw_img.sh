@@ -65,7 +65,7 @@ rm -f ${linux_raw_img}.temp
 dd if=/dev/zero of=${linux_raw_img}.temp bs=1M count=$tot_len_mb; 
 
 # Create partitions on full binary
-sgdisk -a 512 -n 1:${metadata1_offs_kb}KiB:+${metadata_len_kb}KiB -c 1:metadata1 -n 2:${metadata2_offs_kb}KiB:+${metadata_len_kb}KiB -c 2:metadata2 -n 3:${bootfs1_offs_mb}MiB:+${bootfs_len_mb}MiB -c 3:bootfs1 -n 4:${rootfs1_offs_mb}MiB:+${rootfs_len_mb}MiB -c 4:rootfs1 -n 5::+${bootfs_len_mb}MiB -c 5:bootfs2 -n 6::+${rootfs_len_mb}MiB -c 6:rootfs2 -n 7::+${data_len_mb}MiB  -c 7:data -n 8::+${defaults_len_mb}MiB -c 8:defaults ${linux_raw_img}.temp;
+/usr/sbin/sgdisk -a 512 -n 1:${metadata1_offs_kb}KiB:+${metadata_len_kb}KiB -c 1:metadata1 -n 2:${metadata2_offs_kb}KiB:+${metadata_len_kb}KiB -c 2:metadata2 -n 3:${bootfs1_offs_mb}MiB:+${bootfs_len_mb}MiB -c 3:bootfs1 -n 4:${rootfs1_offs_mb}MiB:+${rootfs_len_mb}MiB -c 4:rootfs1 -n 5::+${bootfs_len_mb}MiB -c 5:bootfs2 -n 6::+${rootfs_len_mb}MiB -c 6:rootfs2 -n 7::+${data_len_mb}MiB  -c 7:data -n 8::+${defaults_len_mb}MiB -c 8:defaults ${linux_raw_img}.temp;
 
 # Copy over metadata
 dd if=$metadata_bin of=${linux_raw_img}.temp bs=1KiB seek=${metadata1_offs_kb} count=${metadata_len_kb} conv=notrunc;
