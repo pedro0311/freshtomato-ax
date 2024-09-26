@@ -2070,7 +2070,7 @@ for(var index in isWL_map){
 	if(index == "0"){
 		sorter["wired_index"] = 3;
 		sorter["wired_display"] = true;
-		sorter["ssortingMethod_wired"] = "increase";
+		sorter["sortingMethod_wired"] = "increase";
 	}
 	else{
 		wl_list["wl" + index + ""] = new Array();
