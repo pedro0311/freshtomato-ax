@@ -322,7 +322,11 @@ int read_wgc_config_file(const char* file_path, int wgc_unit)
 		while (fgets(buf, sizeof(buf), fp))
 		{
 			strtok(buf, "\r\n");
+#ifdef TCONFIG_FTAX
 			if (buf[0] == '[' || buf[0] == '#' || buf[0] == '\n' || buf[0] == '\r')
+#else
+			if (buf[0] == '[' || buf[0] == '#' || buf[0] == '\n')
+#endif /* TCONFIG_FTAX */
 				continue;
 			else if (!strncmp(buf, "PrivateKey", 10))
 				nvram_pf_set(wgc_prefix, "priv", _get_wgconf_val(buf));
