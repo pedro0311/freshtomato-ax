@@ -428,7 +428,11 @@ int is_wgc_connected(int unit)
 	memset(buf, 0 , sizeof(buf));
 	if (f_read_string(filename, buf, sizeof(buf)) > 0) {
 		char *p = strstr(buf, "sec:");
+#ifdef TCONFIG_FTAX
+		unsigned long long t = (p) ? strtoull (p + 4, NULL, 0) : 999;
+#else
 		unsigned long long t = (p) ? strtoull (p + 4, NULL, 0) : 0;
+#endif /* TCONFIG_FTAX */
 		if (strstr(buf, "Now"))
 			return 1;
 		else if (t <= 180)
