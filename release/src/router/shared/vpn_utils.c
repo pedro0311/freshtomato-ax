@@ -308,6 +308,11 @@ int read_wgc_config_file(const char* file_path, int wgc_unit)
 	char wgc_prefix[8] = {0};
 	FILE *fp;
 	char buf[256] = {0};
+#ifdef TCONFIG_FTAX
+	char allowedips[4096] = {0};
+	char dns[128] = {0};
+	char addresses[64] = {0};
+#endif /* TCONFIG_FTAX */
 
 	if (!file_path || file_path[0] == '\0')
 		return -1;
@@ -331,15 +336,39 @@ int read_wgc_config_file(const char* file_path, int wgc_unit)
 			else if (!strncmp(buf, "PrivateKey", 10))
 				nvram_pf_set(wgc_prefix, "priv", _get_wgconf_val(buf));
 			else if (!strncmp(buf, "Address", 7))
+#ifdef TCONFIG_FTAX
+			{
+				if (*addresses)
+					 strlcat(addresses, ",", sizeof(addresses));
+				strlcat(addresses, _get_wgconf_val(buf), sizeof(addresses));
+			}
+#else
 				nvram_pf_set(wgc_prefix, "addr", _get_wgconf_val(buf));
+#endif /* TCONFIG_FTAX */
 			else if (!strncmp(buf, "DNS", 3))
+#ifdef TCONFIG_FTAX
+			{
+				if (*dns)
+					strlcat(dns, ",", sizeof(dns));
+				strlcat(dns, _get_wgconf_val(buf), sizeof(dns));
+			}
+#else
 				nvram_pf_set(wgc_prefix, "dns", _get_wgconf_val(buf));
+#endif /* TCONFIG_FTAX */
 			else if (!strncmp(buf, "PublicKey", 9))
 				nvram_pf_set(wgc_prefix, "ppub", _get_wgconf_val(buf));
 			else if (!strncmp(buf, "PresharedKey", 12))
 				nvram_pf_set(wgc_prefix, "psk", _get_wgconf_val(buf));
 			else if (!strncmp(buf, "AllowedIPs", 10))
+#ifdef TCONFIG_FTAX
+			{
+				if (*allowedips)
+					strlcat(allowedips, ",", sizeof(allowedips));
+				strlcat(allowedips, _get_wgconf_val(buf), sizeof(allowedips));
+			}
+#else
 				nvram_pf_set(wgc_prefix, "aips", _get_wgconf_val(buf));
+#endif /* TCONFIG_FTAX */
 			else if (!strncmp(buf, "Endpoint", 8))
 			{
 				char *ep, *p;
@@ -369,6 +398,14 @@ int read_wgc_config_file(const char* file_path, int wgc_unit)
 			}
 		}
 		fclose(fp);
+#ifdef TCONFIG_FTAX
+		if (*allowedips)
+			nvram_pf_set(wgc_prefix, "aips", allowedips);
+		if (*dns)
+			nvram_pf_set(wgc_prefix, "dns", dns);
+		if (*addresses)
+			nvram_pf_set(wgc_prefix, "addr", addresses);
+#endif /* TCONFIG_FTAX */
 	}
 	else
 		return -1;
