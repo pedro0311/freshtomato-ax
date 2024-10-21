@@ -1,8 +1,6 @@
-diff --git dnsmasq/src/config.h dnsmasq/src/config.h
-index cc1c465..64a3a59 100644
 --- dnsmasq/src/config.h
 +++ dnsmasq/src/config.h
-@@ -79,6 +79,12 @@ HAVE_BROKEN_RTC
+@@ -82,6 +82,12 @@ HAVE_BROKEN_RTC
     NOTE: when enabling or disabling this, be sure to delete any old
     leases file, otherwise dnsmasq may get very confused.
  
@@ -15,7 +13,7 @@ index cc1c465..64a3a59 100644
  HAVE_TFTP
     define this to get dnsmasq's built-in TFTP server.
  
-@@ -172,6 +178,7 @@ RESOLVFILE
+@@ -175,6 +181,7 @@ RESOLVFILE
  */
  
  /* #define HAVE_BROKEN_RTC */
@@ -23,11 +21,9 @@ index cc1c465..64a3a59 100644
  
  /* The default set of options to build. Built with these options, dnsmasq
     has no library dependencies other than libc */
-diff --git dnsmasq/src/dnsmasq.c dnsmasq/src/dnsmasq.c
-index ecbffd7..9222ff7 100644
 --- dnsmasq/src/dnsmasq.c
 +++ dnsmasq/src/dnsmasq.c
-@@ -947,14 +947,14 @@ int main (int argc, char **argv)
+@@ -944,14 +944,14 @@ int main (int argc, char **argv)
    if (!option_bool(OPT_NOWILD)) 
      for (if_tmp = daemon->if_names; if_tmp; if_tmp = if_tmp->next)
        if (if_tmp->name && !(if_tmp->flags & INAME_USED))
@@ -44,7 +40,7 @@ index ecbffd7..9222ff7 100644
  	my_syslog(LOG_WARNING, _("warning: no upstream servers configured"));
      } 
  
-@@ -1583,6 +1583,10 @@ static void async_event(int pipe, time_t now)
+@@ -1580,6 +1580,10 @@ static void async_event(int pipe, time_t now)
  	   we leave them logging to the old file. */
  	if (daemon->log_file != NULL)
  	  log_reopen(daemon->log_file);
@@ -55,7 +51,7 @@ index ecbffd7..9222ff7 100644
  	break;
  
        case EVENT_NEWADDR:
-@@ -1627,6 +1631,10 @@ static void async_event(int pipe, time_t now)
+@@ -1624,6 +1628,10 @@ static void async_event(int pipe, time_t now)
  	  }
  #endif
  	
@@ -66,8 +62,6 @@ index ecbffd7..9222ff7 100644
  	if (daemon->lease_stream)
  	  fclose(daemon->lease_stream);
  
-diff --git dnsmasq/src/dnsmasq.h dnsmasq/src/dnsmasq.h
-index 6829088..13ab374 100644
 --- dnsmasq/src/dnsmasq.h
 +++ dnsmasq/src/dnsmasq.h
 @@ -95,7 +95,11 @@ typedef unsigned long long u64;
@@ -82,7 +76,7 @@ index 6829088..13ab374 100644
  #include <sys/wait.h>
  #include <sys/time.h>
  #include <sys/un.h>
-@@ -1446,6 +1450,7 @@ u32 rand32(void);
+@@ -1457,6 +1461,7 @@ u32 rand32(void);
  u64 rand64(void);
  int rr_on_list(struct rrlist *list, unsigned short rr);
  int legal_hostname(char *name);
@@ -90,7 +84,7 @@ index 6829088..13ab374 100644
  char *canonicalise(char *in, int *nomem);
  unsigned char *do_rfc1035_name(unsigned char *p, char *sval, char *limit);
  void *safe_malloc(size_t size);
-@@ -1572,6 +1577,9 @@ char *host_from_dns(struct in_addr addr);
+@@ -1583,6 +1588,9 @@ char *host_from_dns(struct in_addr addr);
  
  /* lease.c */
  #ifdef HAVE_DHCP
@@ -100,7 +94,7 @@ index 6829088..13ab374 100644
  void lease_update_file(time_t now);
  void lease_update_dns(int force);
  void lease_init(time_t now);
-@@ -1598,6 +1606,7 @@ void lease_set_expires(struct dhcp_lease *lease, unsigned int len, time_t now);
+@@ -1609,6 +1617,7 @@ void lease_set_expires(struct dhcp_lease *lease, unsigned int len, time_t now);
  void lease_set_interface(struct dhcp_lease *lease, int interface, time_t now);
  struct dhcp_lease *lease_find_by_client(unsigned char *hwaddr, int hw_len, int hw_type,  
  					unsigned char *clid, int clid_len);
@@ -108,8 +102,6 @@ index 6829088..13ab374 100644
  struct dhcp_lease *lease_find_by_addr(struct in_addr addr);
  struct in_addr lease_find_max_addr(struct dhcp_context *context);
  void lease_prune(struct dhcp_lease *target, time_t now);
-diff --git dnsmasq/src/forward.c dnsmasq/src/forward.c
-index 6c36cde..18bd291 100644
 --- dnsmasq/src/forward.c
 +++ dnsmasq/src/forward.c
 @@ -104,7 +104,10 @@ int send_from(int fd, int nowild, char *packet, size_t len,
@@ -123,8 +115,6 @@ index 6c36cde..18bd291 100644
  #endif
        return 0;
      }
-diff --git dnsmasq/src/lease.c dnsmasq/src/lease.c
-index e562436..ba0dc55 100644
 --- dnsmasq/src/lease.c
 +++ dnsmasq/src/lease.c
 @@ -113,12 +113,14 @@ static int read_leases(time_t now, FILE *leasestream)
@@ -234,11 +224,9 @@ index e562436..ba0dc55 100644
    
    if (lease->hostname && name && hostname_isequal(lease->hostname, name))
      {
-diff --git dnsmasq/src/option.c dnsmasq/src/option.c
-index 3eeda18..ae84808 100644
 --- dnsmasq/src/option.c
 +++ dnsmasq/src/option.c
-@@ -2405,6 +2405,7 @@ static int one_opt(int option, char *arg, char *errstr, char *gen_err, int comma
+@@ -2424,6 +2424,7 @@ static int one_opt(int option, char *arg, char *errstr, char *gen_err, int comma
  	break;
        }
        
@@ -246,7 +234,7 @@ index 3eeda18..ae84808 100644
      case LOPT_AUTHSERV: /* --auth-server */
        comma = split(arg);
        
-@@ -2574,6 +2575,7 @@ static int one_opt(int option, char *arg, char *errstr, char *gen_err, int comma
+@@ -2593,6 +2594,7 @@ static int one_opt(int option, char *arg, char *errstr, char *gen_err, int comma
  	}
  
        break;
@@ -254,8 +242,6 @@ index 3eeda18..ae84808 100644
  
      case 's':         /* --domain */
      case LOPT_SYNTH:  /* --synth-domain */
-diff --git dnsmasq/src/rfc2131.c dnsmasq/src/rfc2131.c
-index a539c42..87ac72e 100644
 --- dnsmasq/src/rfc2131.c
 +++ dnsmasq/src/rfc2131.c
 @@ -244,7 +244,11 @@ size_t dhcp_reply(struct dhcp_context *context, char *iface_name, int int_index,
@@ -288,8 +274,6 @@ index a539c42..87ac72e 100644
  	client_hostname = daemon->dhcp_buff;
      }
  
-diff --git dnsmasq/src/rfc3315.c dnsmasq/src/rfc3315.c
-index bd448c7..0cab7d4 100644
 --- dnsmasq/src/rfc3315.c
 +++ dnsmasq/src/rfc3315.c
 @@ -169,7 +169,8 @@ static int dhcp6_maybe_relay(struct state *state, unsigned char *inbuff, size_t
@@ -331,8 +315,6 @@ index bd448c7..0cab7d4 100644
  	if (ignore)
  	  return 0;
  	outmsgtype = DHCP6REPLY;
-diff --git dnsmasq/src/util.c dnsmasq/src/util.c
-index 6521e3f..a33b8fb 100644
 --- dnsmasq/src/util.c
 +++ dnsmasq/src/util.c
 @@ -201,13 +201,15 @@ static int check_name(char *in)

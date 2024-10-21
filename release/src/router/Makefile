@@ -27,6 +27,8 @@ define unpatch_files
  done
 endef
 
+export PARALLEL_BUILD := -j$(shell grep -c '^processor' /proc/cpuinfo)
+
 export HND_ROUTER := $(if $(shell pwd | grep -e 'src-rt-[^/]*hnd'),y,)
 ifeq ($(origin HND_ROUTER_AX), undefined)
 export HND_ROUTER_AX := $(if $(shell pwd | grep -e 'src-rt-[^/]*axhnd'),y,)
@@ -3519,7 +3521,7 @@ dnsmasq:  $(if $(RTCONFIG_DNSSEC_OPENSSL),openssl,) $(if $(RTCONFIG_DNSSEC_NETTL
 ifeq ($(TCONFIG_FTAX),y)
 	$(call patch_files,dnsmasq)
 endif
-	$(MAKE) -C dnsmasq \
+	$(MAKE) -C dnsmasq $(PARALLEL_BUILD) \
 	COPTS="-DHAVE_BROKEN_RTC -DHAVE_LEASEFILE_EXPIRE \
 		-DNO_ID -DNO_AUTH -DNO_INOTIFY -DNO_DUMPFILE -DNO_GMP \
 		$(if $(RTCONFIG_IPV6),-DUSE_IPV6,-DNO_IPV6) \

@@ -1,3 +1,8 @@
+version 2.91
+	Fix spurious "resource limit exceeded messages". Thanks to 
+	Dominik Derigs for the bug report.
+	
+
 version 2.90
 	Fix reversion in --rev-server introduced in 2.88 which
 	caused breakage if the prefix length is not exactly divisible
@@ -25,7 +30,52 @@ version 2.90
 	end up in the query also. This bug only seems to cause problems
 	when the usptream server is a DOH/DOT proxy. Thanks to Justin He
 	for the bug report.
+
+	Add configurable caching for arbitrary RR-types.
+
+	Add --filter-rr option, to filter arbitrary RR-types.
+	--filter-rr=ANY has a special meaning: it filters the
+	answers to queries for the ANY RR-type.
 	
+	Add limits on the resources used to do DNSSEC validation.
+	DNSSEC introduces a potential CPU DoS, because a crafted domain
+	can force a validator to a large number of cryptographic
+	operations whilst attempting to do validation. When using TCP
+	transport a DNSKEY RRset contain thousands of members and any
+	RRset can have thousands of signatures. The potential number
+	of signature validations to follow the RFC for validation
+	for one RRset is the cross product of the keys and signatures,
+	so millions. In practice, the actual numbers are much lower,
+	so attacks can be mitigated by limiting the amount of
+	cryptographic "work" to a much lower amount. The actual
+	limits are number a signature validation fails per RRset(20),
+	number of signature validations and hash computations
+	per query(200), number of sub-queries  to fetch  DS and DNSKEY
+	RRsets per query(40), and the number of iterations in a
+	NSEC3 record(150). These values are sensible, but there is, as yet,
+	no standardisation on the values for a "conforming" domain, so a
+	new option --dnssec-limit is provided should they need to be altered.
+	The algorithm to validate DS records has also been altered to reduce
+	the maximum work from cross product of the number of DS records and
+	number of DNSKEYs to the cross product of the number of DS records
+	and supported DS digest types. As the number of DS digest types
+	is in single figures, this reduces the exposure.
+
+	Credit is due to Elias Heftrig, Haya Schulmann, Niklas Vogel,
+	and Michael Waidner from the German National Research Center for
+	Applied Cybersecurity ATHENE for finding this vulnerability.
+
+	CVE 2023-50387 and CVE 2023-50868 apply.
+	Note that the is a security vulnerablity only when DNSSEC validation
+	is enabled.
+	
+	Fix memory-leak when attempting to cache SRV records with zero TTL.
+	Thanks to Damian Sawicki for the bug report.
+
+	Add --max-tcp-connections option to make limit on TCP handling
+	processes configurable.  Also keep stats on how near the limit
+	we're getting, to help with tuning. Patch from Damian Sawicki.
+
 	
 version 2.89
         Fix bug introduced in 2.88 (commit fe91134b) which can result

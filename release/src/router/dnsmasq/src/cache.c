@@ -1,4 +1,4 @@
-/* dnsmasq is Copyright (c) 2000-2023 Simon Kelley
+/* dnsmasq is Copyright (c) 2000-2024 Simon Kelley
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -802,32 +802,28 @@ void cache_end_insert(void)
 	      read_write(daemon->pipe_to_parent, (unsigned char *)name, m, 0);
 	      read_write(daemon->pipe_to_parent, (unsigned char *)&new_chain->ttd, sizeof(new_chain->ttd), 0);
 	      read_write(daemon->pipe_to_parent, (unsigned  char *)&flags, sizeof(flags), 0);
-
-	      if (flags & (F_IPV4 | F_IPV6 | F_DNSKEY | F_DS | F_RR))
+	      read_write(daemon->pipe_to_parent, (unsigned char *)&new_chain->addr, sizeof(new_chain->addr), 0);
+	      
+	      if (flags & F_RR)
 		{
-		  read_write(daemon->pipe_to_parent, (unsigned char *)&new_chain->addr, sizeof(new_chain->addr), 0);
-
-		  if (flags & F_RR)
-		    {
-		      /* A negative RR entry is possible and has no data, obviously. */
-		      if (!(flags & F_NEG) && (flags & F_KEYTAG))
-			blockdata_write(new_chain->addr.rrblock.rrdata, new_chain->addr.rrblock.datalen, daemon->pipe_to_parent);
-		    }
-#ifdef HAVE_DNSSEC
-		  if (flags & F_DNSKEY)
-		    {
-		      read_write(daemon->pipe_to_parent, (unsigned char *)&class, sizeof(class), 0);
-		      blockdata_write(new_chain->addr.key.keydata, new_chain->addr.key.keylen, daemon->pipe_to_parent);
-		    }
-		  else if (flags & F_DS)
-		    {
-		      read_write(daemon->pipe_to_parent, (unsigned char *)&class, sizeof(class), 0);
-		      /* A negative DS entry is possible and has no data, obviously. */
-		      if (!(flags & F_NEG))
-			blockdata_write(new_chain->addr.ds.keydata, new_chain->addr.ds.keylen, daemon->pipe_to_parent);
-		    }
-#endif
+		  /* A negative RR entry is possible and has no data, obviously. */
+		  if (!(flags & F_NEG) && (flags & F_KEYTAG))
+		    blockdata_write(new_chain->addr.rrblock.rrdata, new_chain->addr.rrblock.datalen, daemon->pipe_to_parent);
 		}
+#ifdef HAVE_DNSSEC
+	      if (flags & F_DNSKEY)
+		{
+		  read_write(daemon->pipe_to_parent, (unsigned char *)&class, sizeof(class), 0);
+		  blockdata_write(new_chain->addr.key.keydata, new_chain->addr.key.keylen, daemon->pipe_to_parent);
+		}
+	      else if (flags & F_DS)
+		{
+		  read_write(daemon->pipe_to_parent, (unsigned char *)&class, sizeof(class), 0);
+		  /* A negative DS entry is possible and has no data, obviously. */
+		  if (!(flags & F_NEG))
+		    blockdata_write(new_chain->addr.ds.keydata, new_chain->addr.ds.keylen, daemon->pipe_to_parent);
+		}
+#endif
 	    }
 	}
       
@@ -838,7 +834,18 @@ void cache_end_insert(void)
   if (daemon->pipe_to_parent != -1)
     {
       ssize_t m = -1;
+
       read_write(daemon->pipe_to_parent, (unsigned char *)&m, sizeof(m), 0);
+
+#ifdef HAVE_DNSSEC
+      /* Sneak out possibly updated crypto HWM values. */
+      m = daemon->metrics[METRIC_CRYPTO_HWM];
+      read_write(daemon->pipe_to_parent, (unsigned char *)&m, sizeof(m), 0);
+      m = daemon->metrics[METRIC_SIG_FAIL_HWM];
+      read_write(daemon->pipe_to_parent, (unsigned char *)&m, sizeof(m), 0);
+      m = daemon->metrics[METRIC_WORK_HWM];
+      read_write(daemon->pipe_to_parent, (unsigned char *)&m, sizeof(m), 0);
+#endif
     }
       
   new_chain = NULL;
@@ -857,7 +864,7 @@ int cache_recv_insert(time_t now, int fd)
   
   cache_start_insert();
   
-  while(1)
+  while (1)
     {
  
       if (!read_write(fd, (unsigned char *)&m, sizeof(m), 1))
@@ -865,13 +872,29 @@ int cache_recv_insert(time_t now, int fd)
       
       if (m == -1)
 	{
+#ifdef HAVE_DNSSEC
+	  /* Sneak in possibly updated crypto HWM. */
+	  if (!read_write(fd, (unsigned char *)&m, sizeof(m), 1))
+	    return 0;
+	  if (m > daemon->metrics[METRIC_CRYPTO_HWM])
+	    daemon->metrics[METRIC_CRYPTO_HWM] = m;
+	  if (!read_write(fd, (unsigned char *)&m, sizeof(m), 1))
+	    return 0;
+	  if (m > daemon->metrics[METRIC_SIG_FAIL_HWM])
+	    daemon->metrics[METRIC_SIG_FAIL_HWM] = m;
+	  if (!read_write(fd, (unsigned char *)&m, sizeof(m), 1))
+	    return 0;
+	  if (m > daemon->metrics[METRIC_WORK_HWM])
+	    daemon->metrics[METRIC_WORK_HWM] = m;
+#endif
 	  cache_end_insert();
 	  return 1;
 	}
 
       if (!read_write(fd, (unsigned char *)daemon->namebuff, m, 1) ||
 	  !read_write(fd, (unsigned char *)&ttd, sizeof(ttd), 1) ||
-	  !read_write(fd, (unsigned char *)&flags, sizeof(flags), 1))
+	  !read_write(fd, (unsigned char *)&flags, sizeof(flags), 1) ||
+	  !read_write(fd, (unsigned char *)&addr, sizeof(addr), 1))
 	return 0;
 
       daemon->namebuff[m] = 0;
@@ -902,30 +925,23 @@ int cache_recv_insert(time_t now, int fd)
 	{
 	  unsigned short class = C_IN;
 
-	  if (flags & (F_IPV4 | F_IPV6 | F_DNSKEY | F_DS | F_RR))
-	    {
-	      if (!read_write(fd, (unsigned char *)&addr, sizeof(addr), 1))
-		return 0;
-	      
-	      if ((flags & F_RR) && !(flags & F_NEG) && (flags & F_KEYTAG)
-		  && !(addr.rrblock.rrdata = blockdata_read(fd, addr.rrblock.datalen)))
-		return 0;
+	  if ((flags & F_RR) && !(flags & F_NEG) && (flags & F_KEYTAG)
+	      && !(addr.rrblock.rrdata = blockdata_read(fd, addr.rrblock.datalen)))
+	    return 0;
 #ifdef HAVE_DNSSEC
-	      if (flags & F_DNSKEY)
-		{
-		  if (!read_write(fd, (unsigned char *)&class, sizeof(class), 1) ||
-		      !(addr.key.keydata = blockdata_read(fd, addr.key.keylen)))
-		    return 0;
-		}
-	      else  if (flags & F_DS)
-		{
-		  if (!read_write(fd, (unsigned char *)&class, sizeof(class), 1) ||
-		      (!(flags & F_NEG) && !(addr.key.keydata = blockdata_read(fd, addr.key.keylen))))
-		    return 0;
-		}
-#endif
+	  if (flags & F_DNSKEY)
+	    {
+	      if (!read_write(fd, (unsigned char *)&class, sizeof(class), 1) ||
+		  !(addr.key.keydata = blockdata_read(fd, addr.key.keylen)))
+		return 0;
 	    }
-	  
+	  else  if (flags & F_DS)
+	    {
+	      if (!read_write(fd, (unsigned char *)&class, sizeof(class), 1) ||
+		  (!(flags & F_NEG) && !(addr.key.keydata = blockdata_read(fd, addr.key.keylen))))
+		return 0;
+	    }
+#endif
 	  crecp = really_insert(daemon->namebuff, &addr, class, now, ttl, flags);
 	}
     }
@@ -1809,8 +1825,18 @@ static void dump_cache_entry(struct crec *cache, time_t now)
   p = buff;
   
   *a = 0;
-  if (strlen(n) == 0 && !(cache->flags & F_REVERSE))
-    n = "<Root>";
+
+  if (cache->flags & F_REVERSE)
+    {
+      if ((cache->flags & F_NEG))
+	n = "";
+    }
+  else
+    {
+      if (strlen(n) == 0)
+	n = "<Root>";
+    }
+  
   p += sprintf(p, "%-30.30s ", sanitise(n));
   if ((cache->flags & F_CNAME) && !is_outdated_cname_pointer(cache))
     a = sanitise(cache_get_cname_target(cache));
@@ -1892,6 +1918,11 @@ void dump_cache(time_t now)
     my_syslog(LOG_INFO, _("queries answered from stale cache %u"), daemon->metrics[METRIC_DNS_STALE_ANSWERED]);
 #ifdef HAVE_AUTH
   my_syslog(LOG_INFO, _("queries for authoritative zones %u"), daemon->metrics[METRIC_DNS_AUTH_ANSWERED]);
+#endif
+#ifdef HAVE_DNSSEC
+  my_syslog(LOG_INFO, _("DNSSEC per-query subqueries HWM %u"), daemon->metrics[METRIC_WORK_HWM]);
+  my_syslog(LOG_INFO, _("DNSSEC per-query crypto work HWM %u"), daemon->metrics[METRIC_CRYPTO_HWM]);
+  my_syslog(LOG_INFO, _("DNSSEC per-RRSet signature fails HWM %u"), daemon->metrics[METRIC_SIG_FAIL_HWM]);
 #endif
 
   blockdata_report();
@@ -2052,6 +2083,11 @@ static char *edestr(int ede)
     case EDE_NO_AUTH:                     return "no reachable authority";
     case EDE_NETERR:                      return "network error";
     case EDE_INVALID_DATA:                return "invalid data";
+    case EDE_SIG_E_B_V:                   return "signature expired before valid";
+    case EDE_TOO_EARLY:                   return "too early";
+    case EDE_UNS_NS3_ITER:                return "unsupported NSEC3 iterations value";
+    case EDE_UNABLE_POLICY:               return "uanble to conform to policy";
+    case EDE_SYNTHESIZED:                 return "synthesized";
     default:                              return "unknown";
     }
 }

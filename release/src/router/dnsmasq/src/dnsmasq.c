@@ -1,4 +1,4 @@
-/* dnsmasq is Copyright (c) 2000-2023 Simon Kelley
+/* dnsmasq is Copyright (c) 2000-2024 Simon Kelley
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -131,18 +131,10 @@ int main (int argc, char **argv)
 	 '.' or NAME_ESCAPE then all would have to be escaped, so the 
 	 presentation format would be twice as long as the spec. */
       daemon->keyname = safe_malloc((MAXDNAME * 2) + 1);
-      daemon->workspacename = safe_malloc((MAXDNAME * 2) + 1);
       /* one char flag per possible RR in answer section (may get extended). */
       daemon->rr_status_sz = 64;
       daemon->rr_status = safe_malloc(sizeof(*daemon->rr_status) * daemon->rr_status_sz);
     }
-#endif
-
-#if defined(HAVE_CONNTRACK) && defined(HAVE_UBUS)
-  /* CONNTRACK UBUS code uses this buffer, so if not allocated above,
-     we need to allocate it here. */
-  if (option_bool(OPT_CMARK_ALST_EN) && !daemon->workspacename)
-    daemon->workspacename = safe_malloc((MAXDNAME * 2) + 1);
 #endif
   
 #ifdef HAVE_DHCP
@@ -321,9 +313,12 @@ int main (int argc, char **argv)
     {
       dhcp_init();
 #   ifdef HAVE_LINUX_NETWORK
+      /* Need NET_RAW to send ping. */
       if (!option_bool(OPT_NO_PING))
 	need_cap_net_raw = 1;
-      need_cap_net_admin = 1;
+      /* Need NET_ADMIN to change ARP cache if not always broadcasting. */
+      if (daemon->force_broadcast == NULL || daemon->force_broadcast->list != NULL)
+        need_cap_net_admin = 1;
 #   endif
     }
   
@@ -429,8 +424,8 @@ int main (int argc, char **argv)
     }
 
 #ifdef HAVE_INOTIFY
-  if ((daemon->port != 0 || daemon->dhcp || daemon->doing_dhcp6)
-      && (!option_bool(OPT_NO_RESOLV) || daemon->dynamic_dirs))
+  if ((daemon->port != 0 && !option_bool(OPT_NO_RESOLV)) ||
+      daemon->dynamic_dirs)
     inotify_dnsmasq_init();
   else
     daemon->inotifyfd = -1;
@@ -868,6 +863,8 @@ int main (int argc, char **argv)
 
       if (option_bool(OPT_LOCAL_SERVICE))
 	my_syslog(LOG_INFO, _("DNS service limited to local subnets"));
+      else if (option_bool(OPT_LOCALHOST_SERVICE))
+	my_syslog(LOG_INFO, _("DNS service limited to localhost"));
     }
   
   my_syslog(LOG_INFO, _("compile time options: %s"), compile_opts);
